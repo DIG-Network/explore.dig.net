@@ -56,7 +56,8 @@ export interface CatalogApp {
   category: Category;
   tags: string[];
   url: string;
-  repo: string;
+  /** Public source repository. Absent when the dApp's source is not public (SPEC.md §3.4). */
+  repo?: string;
   author: AppAuthor;
   chain: "chia";
   status: AppStatus;

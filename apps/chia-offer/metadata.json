@@ -1,0 +1,20 @@
+{
+  "$schema": "../app.schema.json",
+  "slug": "chia-offer",
+  "name": "Chia-Offer",
+  "tagline": "Turn any Chia offer file into a short, shareable link with rich asset details and real-time status.",
+  "description": "Chia-Offer turns any Chia offer file into a **short, shareable link** with rich asset details, icons, and real-time status tracking. Paste an offer string, get a short URL whose landing page shows exactly what you pay and what you receive — with high-quality asset icons, complete token metadata, and verification status.\n\n## How it works\n\n- **Paste offer** — copy your Chia offer string into the form.\n- **Auto parse** — the [Dexie.space](https://dexie.space) API instantly parses the offer and extracts every asset.\n- **Enrich** — [SpaceScan](https://spacescan.io) adds asset metadata, icons, and verification status.\n- **Share** — get a short link with complete offer details and live tracking.\n\n## Built for sharing\n\n- Share links carry a rich preview image that unfurls automatically on Twitter/X, Telegram, and Discord.\n- QR codes for any offer, plus one-click copy of the raw offer string.\n- Real-time offer status — active, completed, or expired — with views, shares, and expiry at a glance.\n- Complex multi-component bundles are flagged honestly, with a direct path to inspect them on Dexie.space.\n\nChia-Offer is itself published on the DIG Network — the site is served from an on-chain-anchored store at `chia-offer.on.dig.net`.",
+  "category": "tools",
+  "tags": ["offers", "trading", "dexie", "spacescan", "short-links", "qr"],
+  "url": "https://chia-offer.on.dig.net/",
+  "author": {
+    "name": "Chia-Offer",
+    "url": "https://chia-offer.com"
+  },
+  "chain": "chia",
+  "status": "live",
+  "featured": true,
+  "accentColor": "#3aaa35",
+  "addedDate": "2026-07-03",
+  "placeholderAssets": ["og.png", "hero.png", "tile.png"]
+}

@@ -11,11 +11,11 @@ export const zhCN: PartialMessages = {
   themeToDark: "切换到深色主题",
   languageLabel: "语言",
 
-  heroKicker: "精选 · 开源 · 链上",
+  heroKicker: "精选 · 审核 · 链上",
   heroTitleLead: "生长在",
   heroTitleAccent: "链上的应用。",
   heroIntro:
-    "一份精选的去中心化应用清单，构建于 DIG Network 与 Chia 之上。每个上架应用都开源、在链上结算，并经过审核。",
+    "一份精选的去中心化应用清单，构建于 DIG Network 与 Chia 之上。每个上架应用都在链上结算，并经过审核。",
 
   featuredHeading: "精选推荐",
   allAppsHeading: "全部应用",

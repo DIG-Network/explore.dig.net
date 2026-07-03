@@ -10,12 +10,12 @@ export const ptBR: PartialMessages = {
   themeToDark: "Mudar para tema escuro",
   languageLabel: "Idioma",
 
-  heroKicker: "Curadoria · código aberto · on-chain",
+  heroKicker: "Curadoria · revisado · on-chain",
   heroTitleLead: "Apps que vivem",
   heroTitleAccent: "na blockchain.",
   heroIntro:
     "Uma prateleira com curadoria de aplicativos descentralizados construídos na DIG Network e na " +
-    "Chia. Cada listagem é de código aberto, liquida on-chain e é revisada antes de entrar aqui.",
+    "Chia. Cada listagem liquida on-chain e é revisada antes de entrar aqui.",
 
   featuredHeading: "Destaques",
   allAppsHeading: "Todos os apps",

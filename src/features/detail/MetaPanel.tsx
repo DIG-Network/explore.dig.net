@@ -90,11 +90,13 @@ export function MetaPanel({ app }: { app: CatalogApp }) {
                 {t("linkWebsite")}
               </a>
             </li>
-            <li>
-              <a href={app.repo} target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-            </li>
+            {app.repo && (
+              <li>
+                <a href={app.repo} target="_blank" rel="noopener noreferrer">
+                  GitHub
+                </a>
+              </li>
+            )}
             {links.map(([key, labelKey]) => (
               <li key={key}>
                 <a href={app.links![key]} target="_blank" rel="noopener noreferrer">

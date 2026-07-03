@@ -63,7 +63,6 @@ editor hint and ignored by validation.
 | `category` | enum | one of `payments` `defi` `nft` `gaming` `social` `storage` `identity` `infrastructure` `tools` `other` | Exactly one primary category (drives the filter rail) |
 | `tags` | string[] | 1–8 unique items, each `^[a-z0-9](?:[a-z0-9-]{0,22})[a-z0-9]$` (2–24 chars) | Free-form searchable keywords |
 | `url` | string | `https://` URI | The live dApp — the "Open dApp" target |
-| `repo` | string | `https://github.com/<org>/<repo>` | Public source repository. Listings MUST be open source |
 | `author` | object | `{ name (1–60 chars, required), url? (https) }` | Who ships the dApp |
 | `chain` | const | `"chia"` | The settlement chain (the store lists Chia dApps) |
 | `status` | enum | `live` \| `beta` \| `draft` | §3.2 |
@@ -92,6 +91,7 @@ everything else (including raw HTML) renders as inert plain text:
 
 | Field | Type | Constraint | Meaning |
 |---|---|---|---|
+| `repo` | string | `https://github.com/<org>/<repo>` | Public source repository. Listings SHOULD be open source; omit when the source is not public — the detail page then shows no source link |
 | `version` | string | semver `X.Y.Z(-/+suffix)` | The dApp's own released version |
 | `license` | string | 2–40 chars | SPDX identifier of the dApp's source license |
 | `links` | object | keys fixed: `docs` `discord` `x` `youtube` `blog`; values https URIs | Extra links; add only what exists |
@@ -161,9 +161,14 @@ Every build regenerates, and every deploy serves:
   `siteUrl`, `count`, `apps[]` ordered featured-first, then newest `addedDate`, then name.
   **Agents MUST consume `catalog.json` rather than scraping HTML.**
 - `/app/<slug>` — a prerendered HTML page per listing carrying its own title, meta description,
-  canonical URL, OG/Twitter tags, and `SoftwareApplication` JSON-LD.
-- `/sitemap.xml`, `/robots.txt`, `/llms.txt` — kept in sync with the catalog on every build (a
-  build missing any of them fails, `scripts/check-dist.mjs`).
+  canonical URL, OG/Twitter tags (including the app's OWN `og:image` — sharing a detail page
+  unfurls that app's card, never the generic store card), and `SoftwareApplication` JSON-LD.
+- `/sitemap.xml`, `/robots.txt`, `/llms.txt` — kept in sync with the catalog on every build.
+- The store's own icon set: `/favicon.svg`, `/apple-touch-icon.png` (180×180), `/icon-192.png`,
+  `/icon-512.png`, `/site.webmanifest`, and the store's social card `/og.png` (1200×630).
+- **Build gate** (`scripts/check-dist.mjs`): a build fails unless every file above exists, the
+  home head carries the complete social/OG set, every prerendered app page carries its own
+  canonical + `og:image`, and every OG image in the output is exactly 1200×630.
 - The home page embeds `WebSite` + `ItemList` JSON-LD enumerating the catalog.
 
 Stability: `slug`, the category enum, the §4 file names, and the `catalog.json` field names above
@@ -199,5 +204,5 @@ be renamed or repurposed.
 5. Run `npm ci && npm run validate:apps` — it must print `OK`.
 6. Run `npm run build && npm test` — all green.
 7. Open a PR titled `apps: add <slug>`; state what the dApp does and how you verified the listing.
-   CI must be green; a maintainer reviews for curation fit (open source, on-chain settlement,
-   working product).
+   CI must be green; a maintainer reviews for curation fit (on-chain settlement, a working
+   product, and source availability — open source with a `repo` link is strongly preferred).

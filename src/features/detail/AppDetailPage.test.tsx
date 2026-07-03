@@ -15,6 +15,12 @@ describe("<AppDetailPage>", () => {
     expect(screen.getByRole("heading", { name: "Details" })).toBeInTheDocument();
   });
 
+  it("omits the source CTA when the listing has no public repo", () => {
+    renderWithIntl(<AppDetailPage apps={[makeApp({ slug: "closed", repo: undefined })]} slug="closed" />);
+    expect(screen.queryByRole("link", { name: "View source" })).toBeNull();
+    expect(screen.getByTestId("open-dapp")).toBeInTheDocument();
+  });
+
   it("renders the hero banner only when the listing ships one", () => {
     const app = makeApp({
       slug: "h",

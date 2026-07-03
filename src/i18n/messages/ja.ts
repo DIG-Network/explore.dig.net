@@ -10,11 +10,11 @@ export const ja: PartialMessages = {
   themeToDark: "ダークテーマに切り替え",
   languageLabel: "言語",
 
-  heroKicker: "キュレーション · オープンソース · オンチェーン",
+  heroKicker: "キュレーション · 審査済み · オンチェーン",
   heroTitleLead: "チェーンに生きる",
   heroTitleAccent: "アプリたち。",
   heroIntro:
-    "DIG Network と Chia の上に築かれた分散型アプリの厳選シェルフ。掲載アプリはすべてオープンソースで、オンチェーンで決済し、掲載前に審査されています。",
+    "DIG Network と Chia の上に築かれた分散型アプリの厳選シェルフ。掲載アプリはすべてオンチェーンで決済し、掲載前に審査されています。",
 
   featuredHeading: "注目",
   allAppsHeading: "すべてのアプリ",

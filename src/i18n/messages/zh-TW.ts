@@ -10,11 +10,11 @@ export const zhTW: PartialMessages = {
   themeToDark: "切換至深色主題",
   languageLabel: "語言",
 
-  heroKicker: "精選 · 開源 · 鏈上",
+  heroKicker: "精選 · 審核 · 鏈上",
   heroTitleLead: "生長在",
   heroTitleAccent: "鏈上的應用。",
   heroIntro:
-    "一份精選的去中心化應用清單，構建於 DIG Network 與 Chia 之上。每個上架應用都開源、在鏈上結算，並經過審核。",
+    "一份精選的去中心化應用清單，構建於 DIG Network 與 Chia 之上。每個上架應用都在鏈上結算，並經過審核。",
 
   featuredHeading: "精選推薦",
   allAppsHeading: "全部應用",
