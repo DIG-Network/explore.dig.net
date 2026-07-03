@@ -85,4 +85,18 @@ export const ja: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "まず開いてみたい厳選 dApp。",
+  carouselLabel: "注目のアプリ",
+  carouselRoleDescription: "カルーセル",
+  slideRoleDescription: "スライド",
+  carouselPrev: "前の注目アプリ",
+  carouselNext: "次の注目アプリ",
+  carouselPause: "自動切り替えを一時停止",
+  carouselPlay: "自動切り替えを再開",
+  carouselSlideLabel: "{total} 件中 {n} 件目：{name}",
+  carouselGoTo: "{n} 件目の注目アプリを表示",
+  openAppNamed: "{name} を開く",
+  viewDetails: "詳細を見る",
+  detailCtaHeading: "{name} を開いてみませんか？",
 };

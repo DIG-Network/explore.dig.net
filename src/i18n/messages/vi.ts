@@ -88,4 +88,18 @@ export const vi: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "Những dApp chọn lọc đáng mở đầu tiên.",
+  carouselLabel: "Ứng dụng nổi bật",
+  carouselRoleDescription: "băng chuyền",
+  slideRoleDescription: "trang chiếu",
+  carouselPrev: "Ứng dụng nổi bật trước",
+  carouselNext: "Ứng dụng nổi bật kế tiếp",
+  carouselPause: "Tạm dừng tự động chuyển",
+  carouselPlay: "Tiếp tục tự động chuyển",
+  carouselSlideLabel: "{n} trên {total}: {name}",
+  carouselGoTo: "Hiện ứng dụng nổi bật {n}",
+  openAppNamed: "Mở {name}",
+  viewDetails: "Xem chi tiết",
+  detailCtaHeading: "Sẵn sàng mở {name} chưa?",
 };

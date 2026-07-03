@@ -88,4 +88,18 @@ export const tr: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "İlk açmaya değer, özenle seçilmiş dApp'ler.",
+  carouselLabel: "Öne çıkan uygulamalar",
+  carouselRoleDescription: "karusel",
+  slideRoleDescription: "slayt",
+  carouselPrev: "Önceki öne çıkan uygulama",
+  carouselNext: "Sonraki öne çıkan uygulama",
+  carouselPause: "Otomatik döngüyü duraklat",
+  carouselPlay: "Otomatik döngüyü sürdür",
+  carouselSlideLabel: "{total} içinden {n}: {name}",
+  carouselGoTo: "{n}. öne çıkan uygulamayı göster",
+  openAppNamed: "{name} uygulamasını aç",
+  viewDetails: "Ayrıntıları gör",
+  detailCtaHeading: "{name} uygulamasını açmaya hazır mısınız?",
 };

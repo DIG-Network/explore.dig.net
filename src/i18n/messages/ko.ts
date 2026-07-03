@@ -85,4 +85,18 @@ export const ko: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "가장 먼저 열어볼 만한 엄선된 dApp.",
+  carouselLabel: "추천 앱",
+  carouselRoleDescription: "캐러셀",
+  slideRoleDescription: "슬라이드",
+  carouselPrev: "이전 추천 앱",
+  carouselNext: "다음 추천 앱",
+  carouselPause: "자동 넘김 일시정지",
+  carouselPlay: "자동 넘김 재개",
+  carouselSlideLabel: "{total}개 중 {n}번째: {name}",
+  carouselGoTo: "{n}번째 추천 앱 보기",
+  openAppNamed: "{name} 열기",
+  viewDetails: "자세히 보기",
+  detailCtaHeading: "{name}을(를) 열어볼까요?",
 };

@@ -18,8 +18,10 @@ test.describe("home", () => {
     await expect(page.getByTestId("app-card-xchtip")).toBeVisible();
     await expect(page.getByTestId("app-card-xchannuity")).toBeVisible();
     await expect(page.getByTestId("app-card-cxch")).toBeVisible();
-    // Featured shelf shows the curated app.
-    await expect(page.getByTestId("featured-xchtip")).toBeVisible();
+    // The featured carousel shows a curated slide with a direct Open CTA (which slide leads
+    // rotates by day, so assert the carousel + a slide rather than a specific app).
+    await expect(page.getByTestId("featured-carousel")).toBeVisible();
+    await expect(page.locator(".carousel-viewport .featured-card")).toBeVisible();
     await expectAxeClean(page);
   });
 
@@ -65,6 +67,76 @@ test.describe("home", () => {
     await page.goto("/");
     await page.keyboard.press("Tab");
     await expect(page.locator(".skip-link")).toBeFocused();
+  });
+});
+
+test.describe("featured carousel", () => {
+  // Reduced motion pauses auto-rotation, making the slide change ONLY on explicit interaction —
+  // so these control tests are deterministic (and it exercises the reduced-motion contract).
+  // Emulate BEFORE navigation so matchMedia reports it at first mount.
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+  });
+
+  const activeSlug = (page: Page) => page.locator(".carousel-viewport .featured-card");
+
+  test("auto-rotation stays paused under prefers-reduced-motion", async ({ page }) => {
+    await page.goto("/");
+    const region = page.getByTestId("featured-carousel");
+    await expect(region).toHaveAttribute("data-playing", "false");
+    await expect(page.getByTestId("carousel-playpause")).toHaveAttribute(
+      "aria-label",
+      "Resume auto-rotation",
+    );
+  });
+
+  test("next / prev controls change the slide", async ({ page }) => {
+    await page.goto("/");
+    const before = await activeSlug(page).getAttribute("data-testid");
+    await page.getByTestId("carousel-next").click();
+    const afterNext = await activeSlug(page).getAttribute("data-testid");
+    expect(afterNext).not.toBe(before);
+    await page.getByTestId("carousel-prev").click();
+    await expect(activeSlug(page)).toHaveAttribute("data-testid", before!);
+  });
+
+  test("dot controls jump to a slide and mark the current one", async ({ page }) => {
+    await page.goto("/");
+    await page.getByTestId("carousel-dot-1").click();
+    await expect(page.getByTestId("carousel-dot-1")).toHaveAttribute("aria-current", "true");
+    await expect(page.getByTestId("carousel-dot-0")).toHaveAttribute("aria-current", "false");
+  });
+
+  test("is keyboard operable with the arrow keys", async ({ page }) => {
+    await page.goto("/");
+    const before = await activeSlug(page).getAttribute("data-testid");
+    await page.getByTestId("carousel-next").focus();
+    await page.keyboard.press("ArrowRight");
+    const afterRight = await activeSlug(page).getAttribute("data-testid");
+    expect(afterRight).not.toBe(before);
+    await page.keyboard.press("ArrowLeft");
+    await expect(activeSlug(page)).toHaveAttribute("data-testid", before!);
+  });
+
+  test("announces the current slide via a polite live region", async ({ page }) => {
+    await page.goto("/");
+    const status = page.getByTestId("carousel-status");
+    await expect(status).toHaveAttribute("aria-live", "polite"); // polite while paused
+    await expect(status).not.toBeEmpty();
+    await expectAxeClean(page);
+  });
+
+  test("every featured slide is reachable and opens the live dApp", async ({ page }) => {
+    await page.goto("/");
+    const dots = page.locator(".carousel-dot");
+    const total = await dots.count();
+    expect(total).toBeGreaterThanOrEqual(2);
+    for (let i = 0; i < total; i++) {
+      await dots.nth(i).click();
+      const open = page.locator(".carousel-viewport .featured-actions a.btn-primary");
+      await expect(open).toHaveAttribute("href", /^https?:\/\//);
+      await expect(open).toHaveAttribute("target", "_blank");
+    }
   });
 });
 

@@ -88,4 +88,18 @@ export const ru: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "Избранные dApp, которые стоит открыть первыми.",
+  carouselLabel: "Избранные приложения",
+  carouselRoleDescription: "карусель",
+  slideRoleDescription: "слайд",
+  carouselPrev: "Предыдущее избранное приложение",
+  carouselNext: "Следующее избранное приложение",
+  carouselPause: "Приостановить автопрокрутку",
+  carouselPlay: "Возобновить автопрокрутку",
+  carouselSlideLabel: "{n} из {total}: {name}",
+  carouselGoTo: "Показать избранное приложение {n}",
+  openAppNamed: "Открыть {name}",
+  viewDetails: "Подробнее",
+  detailCtaHeading: "Готовы открыть {name}?",
 };

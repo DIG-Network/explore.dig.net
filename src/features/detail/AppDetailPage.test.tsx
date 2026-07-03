@@ -15,6 +15,16 @@ describe("<AppDetailPage>", () => {
     expect(screen.getByRole("heading", { name: "Details" })).toBeInTheDocument();
   });
 
+  it("repeats a prominent Open CTA in a closing funnel band", () => {
+    const app = makeApp({ slug: "tip", name: "Tipper", url: "https://tip.example/" });
+    renderWithIntl(<AppDetailPage apps={[app]} slug="tip" />);
+    const cta = screen.getByTestId("detail-cta");
+    expect(cta).toHaveTextContent("Ready to open Tipper?");
+    const open = screen.getByTestId("open-dapp-cta");
+    expect(open).toHaveAttribute("href", "https://tip.example/");
+    expect(open).toHaveAttribute("aria-label", "Open Tipper");
+  });
+
   it("omits the source CTA when the listing has no public repo", () => {
     renderWithIntl(<AppDetailPage apps={[makeApp({ slug: "closed", repo: undefined })]} slug="closed" />);
     expect(screen.queryByRole("link", { name: "View source" })).toBeNull();

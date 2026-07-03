@@ -88,4 +88,18 @@ export const de: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "Handverlesene dApps, die man zuerst öffnen sollte.",
+  carouselLabel: "Empfohlene Apps",
+  carouselRoleDescription: "Karussell",
+  slideRoleDescription: "Folie",
+  carouselPrev: "Vorherige empfohlene App",
+  carouselNext: "Nächste empfohlene App",
+  carouselPause: "Automatische Rotation pausieren",
+  carouselPlay: "Automatische Rotation fortsetzen",
+  carouselSlideLabel: "{n} von {total}: {name}",
+  carouselGoTo: "Empfohlene App {n} anzeigen",
+  openAppNamed: "{name} öffnen",
+  viewDetails: "Details ansehen",
+  detailCtaHeading: "Bereit, {name} zu öffnen?",
 };

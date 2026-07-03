@@ -85,4 +85,18 @@ export const zhTW: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "值得優先開啟的精選 dApp。",
+  carouselLabel: "精選應用",
+  carouselRoleDescription: "輪播",
+  slideRoleDescription: "投影片",
+  carouselPrev: "上一個精選應用",
+  carouselNext: "下一個精選應用",
+  carouselPause: "暫停自動輪播",
+  carouselPlay: "繼續自動輪播",
+  carouselSlideLabel: "第 {n}/{total} 個：{name}",
+  carouselGoTo: "顯示第 {n} 個精選應用",
+  openAppNamed: "開啟 {name}",
+  viewDetails: "查看詳情",
+  detailCtaHeading: "準備好開啟 {name} 了嗎？",
 };

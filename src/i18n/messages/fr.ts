@@ -88,4 +88,18 @@ export const fr: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "Des dApps triées sur le volet, à ouvrir en premier.",
+  carouselLabel: "Applications à la une",
+  carouselRoleDescription: "carrousel",
+  slideRoleDescription: "diapositive",
+  carouselPrev: "Application à la une précédente",
+  carouselNext: "Application à la une suivante",
+  carouselPause: "Mettre en pause la rotation automatique",
+  carouselPlay: "Reprendre la rotation automatique",
+  carouselSlideLabel: "{n} sur {total} : {name}",
+  carouselGoTo: "Afficher l'application à la une {n}",
+  openAppNamed: "Ouvrir {name}",
+  viewDetails: "Voir les détails",
+  detailCtaHeading: "Prêt à ouvrir {name} ?",
 };

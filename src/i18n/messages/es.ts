@@ -88,4 +88,18 @@ export const es: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "dApps seleccionadas que vale la pena abrir primero.",
+  carouselLabel: "Apps destacadas",
+  carouselRoleDescription: "carrusel",
+  slideRoleDescription: "diapositiva",
+  carouselPrev: "App destacada anterior",
+  carouselNext: "App destacada siguiente",
+  carouselPause: "Pausar la rotación automática",
+  carouselPlay: "Reanudar la rotación automática",
+  carouselSlideLabel: "{n} de {total}: {name}",
+  carouselGoTo: "Mostrar la app destacada {n}",
+  openAppNamed: "Abrir {name}",
+  viewDetails: "Ver detalles",
+  detailCtaHeading: "¿Listo para abrir {name}?",
 };
