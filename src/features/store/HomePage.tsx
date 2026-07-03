@@ -12,7 +12,7 @@ import {
   type CategoryFilter,
 } from "@/catalog/catalog";
 import { useT } from "@/i18n/useT";
-import { FeaturedShowcase } from "./FeaturedShowcase";
+import { FeaturedCarousel } from "./FeaturedCarousel";
 import { FilterBar } from "./FilterBar";
 import { AppCard } from "./AppCard";
 
@@ -79,7 +79,7 @@ export function HomePage({ apps, search }: HomePageProps) {
         <p className="hero-intro">{t("heroIntro")}</p>
       </section>
 
-      <FeaturedShowcase apps={featured} />
+      <FeaturedCarousel apps={featured} />
 
       <section className="all-apps" aria-labelledby="all-apps-heading">
         <div className="section-head">

@@ -88,4 +88,18 @@ export const id: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "dApp pilihan yang layak dibuka lebih dulu.",
+  carouselLabel: "Aplikasi unggulan",
+  carouselRoleDescription: "korsel",
+  slideRoleDescription: "slide",
+  carouselPrev: "Aplikasi unggulan sebelumnya",
+  carouselNext: "Aplikasi unggulan berikutnya",
+  carouselPause: "Jeda rotasi otomatis",
+  carouselPlay: "Lanjutkan rotasi otomatis",
+  carouselSlideLabel: "{n} dari {total}: {name}",
+  carouselGoTo: "Tampilkan aplikasi unggulan {n}",
+  openAppNamed: "Buka {name}",
+  viewDetails: "Lihat detail",
+  detailCtaHeading: "Siap membuka {name}?",
 };

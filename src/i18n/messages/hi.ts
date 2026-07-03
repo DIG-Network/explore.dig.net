@@ -88,4 +88,18 @@ export const hi: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "चुनिंदा dApp, जिन्हें सबसे पहले खोलना चाहिए।",
+  carouselLabel: "विशेष ऐप्स",
+  carouselRoleDescription: "कैरोसेल",
+  slideRoleDescription: "स्लाइड",
+  carouselPrev: "पिछला विशेष ऐप",
+  carouselNext: "अगला विशेष ऐप",
+  carouselPause: "स्वतः घूर्णन रोकें",
+  carouselPlay: "स्वतः घूर्णन फिर से शुरू करें",
+  carouselSlideLabel: "{total} में से {n}: {name}",
+  carouselGoTo: "विशेष ऐप {n} दिखाएँ",
+  openAppNamed: "{name} खोलें",
+  viewDetails: "विवरण देखें",
+  detailCtaHeading: "{name} खोलने के लिए तैयार हैं?",
 };

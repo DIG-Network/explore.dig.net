@@ -86,4 +86,18 @@ export const zhCN: PartialMessages = {
   footerGitHub: "GitHub",
   footerDiscord: "Discord",
   versionLabel: "v{version}",
+
+  featuredIntro: "值得优先打开的精选 dApp。",
+  carouselLabel: "精选应用",
+  carouselRoleDescription: "轮播",
+  slideRoleDescription: "幻灯片",
+  carouselPrev: "上一个精选应用",
+  carouselNext: "下一个精选应用",
+  carouselPause: "暂停自动轮播",
+  carouselPlay: "继续自动轮播",
+  carouselSlideLabel: "第 {n}/{total} 个：{name}",
+  carouselGoTo: "显示第 {n} 个精选应用",
+  openAppNamed: "打开 {name}",
+  viewDetails: "查看详情",
+  detailCtaHeading: "准备好打开 {name} 了吗？",
 };

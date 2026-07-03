@@ -5,11 +5,18 @@ import { makeApp } from "@/test/fixtures";
 import { AppCard } from "./AppCard";
 
 describe("<AppCard>", () => {
-  it("links the whole card to the detail page", () => {
+  it("links the card body to the detail page", () => {
     renderWithIntl(<AppCard app={makeApp({ slug: "tipper", name: "Tipper" })} />);
-    const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "/app/tipper");
+    expect(screen.getByTestId("app-card-link-tipper")).toHaveAttribute("href", "/app/tipper");
     expect(screen.getByRole("heading", { level: 3, name: "Tipper" })).toBeInTheDocument();
+  });
+
+  it("funnels straight into the dApp with a direct, named Open CTA", () => {
+    renderWithIntl(<AppCard app={makeApp({ slug: "tipper", name: "Tipper", url: "https://tipper.example/" })} />);
+    const open = screen.getByRole("link", { name: "Open Tipper" });
+    expect(open).toHaveAttribute("href", "https://tipper.example/");
+    expect(open).toHaveAttribute("target", "_blank");
+    expect(open).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("shows tagline, category chip, and status badge", () => {

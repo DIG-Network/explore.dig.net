@@ -22,8 +22,20 @@ export const en = {
     "settles on-chain and is reviewed before it ships here.",
 
   featuredHeading: "Featured",
+  featuredIntro: "Hand-picked dApps worth opening first.",
   allAppsHeading: "All apps",
   appsCount: "{count, plural, one {# app} other {# apps}}",
+
+  // Featured carousel (ARIA + controls). "carousel" / "slide" are aria-roledescriptions.
+  carouselLabel: "Featured apps",
+  carouselRoleDescription: "carousel",
+  slideRoleDescription: "slide",
+  carouselPrev: "Previous featured app",
+  carouselNext: "Next featured app",
+  carouselPause: "Pause auto-rotation",
+  carouselPlay: "Resume auto-rotation",
+  carouselSlideLabel: "{n} of {total}: {name}",
+  carouselGoTo: "Show featured app {n}",
 
   searchLabel: "Search apps",
   searchPlaceholder: "Search by name, tag, or what it does…",
@@ -50,6 +62,9 @@ export const en = {
   featuredBadge: "Featured",
 
   openApp: "Open dApp",
+  openAppNamed: "Open {name}",
+  viewDetails: "View details",
+  detailCtaHeading: "Ready to open {name}?",
   viewSource: "View source",
   backToStore: "Back to the store",
   aboutHeading: "About",

@@ -179,6 +179,19 @@ be renamed or repurposed.
 
 - **Theme:** DIG brand light + dark; **dark is the default**. An explicit user choice persists
   (`localStorage["explore.theme"]`).
+- **Featured carousel:** the featured shelf (every `featured: true` listing, §4.3 — no additional
+  metadata is required for carousel eligibility) is presented as an auto-rotating carousel that
+  gives every featured listing EQUAL exposure. The lead slide is chosen deterministically by a
+  stable daily seed (prerender-safe — never `Math.random`), so a different featured listing leads
+  on each day's build while a given render is stable; auto-advance then cycles through all featured
+  slides. Auto-rotation MUST pause on pointer hover, on keyboard focus within the carousel, and
+  under `prefers-reduced-motion`. The carousel MUST be operable by pointer AND keyboard (arrow keys
+  + previous/next + a slide-picker + a play/pause rotation control), expose the ARIA carousel
+  pattern (region with `aria-roledescription="carousel"`, each slide a `group` with
+  `aria-roledescription="slide"`), and announce the current slide through a polite live region
+  (WCAG 2.2 AA). Each slide carries a prominent "Open dApp" call-to-action linking to the listing's
+  `url`. A single featured listing renders as a static hero (no rotation controls); zero featured
+  listings render no shelf.
 - **i18n:** all store chrome is react-intl over the ecosystem's 14 locales (en, zh-CN, zh-TW, ko,
   ja, ru, es, pt-BR, fr, de, tr, vi, id, hi); browser-locale detection with a persisted explicit
   choice (`localStorage["explore.locale"]`). Listing content (name/tagline/description) is

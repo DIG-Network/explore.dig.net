@@ -96,6 +96,28 @@ export function AppDetailPage({ apps, slug }: AppDetailPageProps) {
         </div>
         <MetaPanel app={app} />
       </div>
+
+      <aside className="detail-cta" data-testid="detail-cta" aria-labelledby="detail-cta-heading">
+        <div className="detail-cta-copy">
+          <h2 id="detail-cta-heading">{t("detailCtaHeading", { name: app.name })}</h2>
+          <p>{app.tagline}</p>
+        </div>
+        <div className="detail-cta-actions">
+          <a
+            className="btn btn-primary btn-lg"
+            href={app.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t("openAppNamed", { name: app.name })}
+            data-testid="open-dapp-cta"
+          >
+            {t("openApp")}
+            <span aria-hidden="true" className="btn-arrow">
+              →
+            </span>
+          </a>
+        </div>
+      </aside>
     </div>
   );
 }
