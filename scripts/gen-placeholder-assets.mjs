@@ -7,7 +7,10 @@
 // Usage:
 //   node scripts/gen-placeholder-assets.mjs <slug> [asset ...]
 //     asset ∈ icon-512 | icon-1024 | og | hero | tile   (default: og hero tile icon-512)
-//   node scripts/gen-placeholder-assets.mjs --store-og   (regenerate the store's own public/og.png)
+//   node scripts/gen-placeholder-assets.mjs --store-og     (regenerate the store's own public/og.png)
+//   node scripts/gen-placeholder-assets.mjs --store-icons  (regenerate the store's PNG icon set:
+//     public/apple-touch-icon.png 180×180, icon-192.png, icon-512.png — full-bleed renders of the
+//     compass mark from public/favicon.svg, safe-zone-centred so icon-512 works as maskable)
 //
 // Reads apps/<slug>/metadata.json for name/tagline/accentColor; writes into apps/<slug>/assets/.
 // Remember to record generated files in the listing's `placeholderAssets` (SPEC.md §4.4).
@@ -112,13 +115,33 @@ function iconHtml({ name, accent, width }) {
 function storeOgHtml() {
   return bannerHtml({
     name: "explore.dig.net",
-    tagline: "The curated dApp store for the DIG Network — open source, on-chain, reviewed.",
+    // U+2011 non-breaking hyphen keeps "on-chain" from splitting across the line wrap.
+    tagline: "The curated dApp store for the DIG Network — on‑chain, reviewed, ready to open.",
     accent: "#FF00DE",
     width: 1200,
     height: 630,
     footerMark: false,
     kicker: "The dApp store · DIG Network",
   });
+}
+
+/**
+ * The store's own PNG icons (apple-touch-icon + manifest icons): the compass mark from
+ * public/favicon.svg rendered full-bleed on the DIG navy. Full-bleed (no transparent rounded
+ * corners) so home-screen masks and the manifest's `maskable` purpose both crop cleanly; the
+ * mark's own geometry keeps it inside the maskable safe zone.
+ */
+function storeIconHtml(faviconSvg, size) {
+  // Drop the SVG's rounded-corner backdrop; the page paints the backdrop full-bleed instead.
+  const mark = faviconSvg.replace(/<rect[^>]*rx=[^>]*\/>/, "");
+  return pageShell(
+    `<div class="wrap">${mark}</div>`,
+    `
+    body { background: #0A0A20; }
+    .wrap { width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; }
+    .wrap svg { width: ${Math.round(size * 0.86)}px; height: ${Math.round(size * 0.86)}px; }
+    `,
+  );
 }
 
 function escapeHtml(s) {
@@ -141,6 +164,17 @@ async function main() {
   try {
     if (args[0] === "--store-og") {
       await renderPng(browser, storeOgHtml(), 1200, 630, join(ROOT, "public", "og.png"));
+      return;
+    }
+    if (args[0] === "--store-icons") {
+      const favicon = readFileSync(join(ROOT, "public", "favicon.svg"), "utf-8");
+      for (const [file, size] of [
+        ["apple-touch-icon.png", 180],
+        ["icon-192.png", 192],
+        ["icon-512.png", 512],
+      ]) {
+        await renderPng(browser, storeIconHtml(favicon, size), size, size, join(ROOT, "public", file));
+      }
       return;
     }
     const slug = args[0];
