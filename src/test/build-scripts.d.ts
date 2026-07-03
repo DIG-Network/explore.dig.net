@@ -53,6 +53,15 @@ declare module "*prerender-apps.mjs" {
   export function swapSeoBlock(html: string, block: string): string;
 }
 
+declare module "*check-dist.mjs" {
+  export const REQUIRED_DIST_FILES: readonly string[];
+  export function auditHomeHead(html: string): string[];
+  export function auditAppHead(
+    html: string,
+    app: { slug: string; name?: string; assets: { og: string }; detailUrl: string },
+  ): string[];
+}
+
 declare module "*resolve-app-version.mjs" {
   export function resolveAppVersion(): string;
 }
