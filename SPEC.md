@@ -1,0 +1,203 @@
+# explore.dig.net — normative specification
+
+explore.dig.net is the curated dApp store for the DIG Network / Chia ecosystem: a static site
+whose entire content is this repository. **One folder per listed dApp** under `apps/`, holding a
+`metadata.json` and an `assets/` tree. CI validates every listing against this spec on every push
+and pull request; **a listing that violates any MUST in this document fails the build and cannot
+merge**. The machine-executable form of §3–§4 is `scripts/validate-apps.mjs` +
+`apps/app.schema.json`; this document is the authoritative contract they implement.
+
+Key words MUST, MUST NOT, SHOULD, MAY are to be interpreted as in RFC 2119.
+
+---
+
+## 1. Store model
+
+- The store is **curated**: a listing enters by pull request to this repository and ships only
+  after maintainer review + green CI. There is no self-service publishing pipeline.
+- The unit of listing is a **dApp**: a web-served decentralized application that settles on the
+  Chia blockchain.
+- Every listing is **public content**: metadata and assets are served verbatim at
+  `https://explore.dig.net/catalog/<slug>/…` and enumerated in the machine catalog
+  (`/catalog.json`), the sitemap, and `llms.txt`.
+- The store performs **no chain interaction** of its own: it holds no keys, builds no spend
+  bundles, and proxies no wallet traffic. The "Open dApp" CTA is a plain link to the listing's
+  `url`.
+
+## 2. Repository layout (per listing)
+
+```
+apps/
+  app.schema.json          # JSON Schema (2020-12) for metadata.json — normative with §3
+  <slug>/
+    metadata.json          # §3 — the listing metadata
+    assets/                # §4 — the listing art
+      icon-512.png         #   required to list
+      og.png               #   required to list
+      icon-1024.png        #   optional
+      hero.png             #   required to feature
+      tile.png             #   optional
+      screenshots/
+        desktop-01.png …   #   sequential, §4.2
+        mobile-01.png  …
+```
+
+- The folder name MUST equal the metadata `slug`.
+- Slugs MUST be unique across the store.
+- No files other than those named above are permitted in `assets/` (unknown files fail CI).
+
+## 3. `metadata.json` — the listing metadata
+
+`metadata.json` MUST validate against `apps/app.schema.json` (JSON Schema draft 2020-12,
+`additionalProperties: false` — unknown keys fail). A top-level `$schema` key is permitted as an
+editor hint and ignored by validation.
+
+### 3.1 Required fields
+
+| Field | Type | Constraint | Meaning |
+|---|---|---|---|
+| `slug` | string | `^[a-z0-9](?:[a-z0-9-]{1,38})[a-z0-9]$` (3–40 chars, lowercase/digits/hyphens, alnum ends); MUST equal the folder name | URL-safe unique id; the detail page is `/app/<slug>` |
+| `name` | string | 1–40 chars | Display name, as branded (e.g. `xchtip.app`, `cMojo`) |
+| `tagline` | string | 10–120 chars, plain text (no markdown) | One-line pitch on cards + social previews |
+| `description` | string | 80–5000 chars, markdown SUBSET (§3.3) | Long description on the detail page |
+| `category` | enum | one of `payments` `defi` `nft` `gaming` `social` `storage` `identity` `infrastructure` `tools` `other` | Exactly one primary category (drives the filter rail) |
+| `tags` | string[] | 1–8 unique items, each `^[a-z0-9](?:[a-z0-9-]{0,22})[a-z0-9]$` (2–24 chars) | Free-form searchable keywords |
+| `url` | string | `https://` URI | The live dApp — the "Open dApp" target |
+| `repo` | string | `https://github.com/<org>/<repo>` | Public source repository. Listings MUST be open source |
+| `author` | object | `{ name (1–60 chars, required), url? (https) }` | Who ships the dApp |
+| `chain` | const | `"chia"` | The settlement chain (the store lists Chia dApps) |
+| `status` | enum | `live` \| `beta` \| `draft` | §3.2 |
+| `featured` | boolean | — | Curated flag, set by store maintainers only (not self-service). See §4.3 |
+| `accentColor` | string | `^#[0-9a-fA-F]{6}$` | Brand accent; drives the card glow + detail hero tint |
+| `addedDate` | string | ISO 8601 `YYYY-MM-DD` | Date the listing was added; drives default sort |
+
+### 3.2 Status semantics
+
+- `live` — production; real users on Chia mainnet.
+- `beta` — publicly usable pre-release / mainnet-experimental.
+- `draft` — the listing is incomplete or the dApp is not yet public. Draft listings render with a
+  Draft badge and MUST NOT be `featured`.
+
+### 3.3 Description markdown subset
+
+The `description` is rendered by a safe subset renderer. ONLY the following constructs render;
+everything else (including raw HTML) renders as inert plain text:
+
+- paragraphs (blank-line separated), `## ` and `### ` headings (rendered one level down — the
+  page's h1/h2 belong to the store), `- ` / `* ` bullet lists;
+- inline: `**bold**`, `*italic*`, `` `code` ``, `[label](https://…)` — link targets MUST be
+  http(s); other schemes are not linked.
+
+### 3.4 Optional fields
+
+| Field | Type | Constraint | Meaning |
+|---|---|---|---|
+| `version` | string | semver `X.Y.Z(-/+suffix)` | The dApp's own released version |
+| `license` | string | 2–40 chars | SPDX identifier of the dApp's source license |
+| `links` | object | keys fixed: `docs` `discord` `x` `youtube` `blog`; values https URIs | Extra links; add only what exists |
+| `placeholderAssets` | string[] | unique; each one of `icon-512.png` `icon-1024.png` `og.png` `hero.png` `tile.png` | §4.4 — declares which art is branded placeholder |
+
+## 4. Assets — exact requirements
+
+All assets are **PNG** files at the **EXACT pixel dimensions** below (validation reads the PNG
+IHDR; a 1px deviation fails). Sizes are maxima. Paths are relative to `apps/<slug>/assets/`.
+
+### 4.1 Fixed assets
+
+| Path | Exact size (px) | Max bytes | Required |
+|---|---|---|---|
+| `icon-512.png` | 512 × 512 | 512 KiB | **to list** |
+| `og.png` | 1200 × 630 | 1 MiB | **to list** |
+| `icon-1024.png` | 1024 × 1024 | 1 MiB | optional |
+| `hero.png` | 1600 × 900 (16:9) | 2 MiB | **to feature** (§4.3) |
+| `tile.png` | 800 × 450 (16:9) | 1 MiB | optional |
+
+Purpose: `icon-*` — the app medallion on cards and the detail page (1024 for high-DPI reuse);
+`og.png` — the detail page's social-preview card; `hero.png` — the featured-shelf banner and the
+detail-page hero; `tile.png` — compact promotional art for future shelf layouts.
+
+### 4.2 Screenshots — `assets/screenshots/`
+
+| Kind | File name | Exact size (px) | Max bytes | Count |
+|---|---|---|---|---|
+| desktop | `desktop-NN.png` | 1280 × 800 | 2 MiB each | ≤ 8; **≥ 2 required to feature** |
+| mobile | `mobile-NN.png` | 1080 × 1920 | 2 MiB each | ≤ 8 |
+
+- `NN` is two digits, numbered **sequentially from 01 with no gaps** (`desktop-01.png`,
+  `desktop-02.png`, …). Any other file name in `screenshots/` fails validation.
+- **A screenshot MUST be a real capture of the running dApp.** Mock-ups, renders, or branded
+  placeholders are FORBIDDEN as screenshots (they are permitted only for the §4.1 art, per §4.4).
+  `scripts/capture-screenshots.mjs` captures compliant screenshots from the live app.
+- Screenshots SHOULD show the dApp's primary flow first.
+
+### 4.3 Featured listings
+
+A listing with `featured: true` MUST additionally satisfy:
+
+- `status` is NOT `draft`;
+- `hero.png` present (per §4.1);
+- at least 2 desktop screenshots (per §4.2).
+
+`featured` is a curation decision made by store maintainers; submissions SHOULD propose
+`featured: false`.
+
+### 4.4 Placeholder art
+
+While a team's final art is pending, the §4.1 assets (icons, `og.png`, `hero.png`, `tile.png`) MAY
+be clean, branded placeholders — the app's name/monogram and tagline on the store's brand
+canvas (`scripts/gen-placeholder-assets.mjs` generates compliant ones). Every placeholder file
+MUST be declared in `placeholderAssets`; the detail page then discloses "artwork pending" to
+visitors. A declared placeholder that does not exist on disk fails validation. Screenshots MUST
+NEVER be placeholders (§4.2).
+
+## 5. Build artifacts (informative for consumers, normative for this repo)
+
+Every build regenerates, and every deploy serves:
+
+- `/catalog.json` — the machine catalog: every listing's full metadata plus resolved asset URLs
+  (`assets.icon`, `assets.og`, `assets.hero?`, `assets.tile?`, `assets.icon1024?`,
+  `assets.screenshots.desktop[]/mobile[]`, all under `/catalog/<slug>/…`) and `detailUrl`.
+  Top-level: `generatedAt` (ISO 8601 build time), `storeVersion` (this package's semver),
+  `siteUrl`, `count`, `apps[]` ordered featured-first, then newest `addedDate`, then name.
+  **Agents MUST consume `catalog.json` rather than scraping HTML.**
+- `/app/<slug>` — a prerendered HTML page per listing carrying its own title, meta description,
+  canonical URL, OG/Twitter tags, and `SoftwareApplication` JSON-LD.
+- `/sitemap.xml`, `/robots.txt`, `/llms.txt` — kept in sync with the catalog on every build (a
+  build missing any of them fails, `scripts/check-dist.mjs`).
+- The home page embeds `WebSite` + `ItemList` JSON-LD enumerating the catalog.
+
+Stability: `slug`, the category enum, the §4 file names, and the `catalog.json` field names above
+are stable identifiers; new OPTIONAL metadata/catalog fields MAY be added, existing ones MUST NOT
+be renamed or repurposed.
+
+## 6. Store frontend contract
+
+- **Theme:** DIG brand light + dark; **dark is the default**. An explicit user choice persists
+  (`localStorage["explore.theme"]`).
+- **i18n:** all store chrome is react-intl over the ecosystem's 14 locales (en, zh-CN, zh-TW, ko,
+  ja, ru, es, pt-BR, fr, de, tr, vi, id, hi); browser-locale detection with a persisted explicit
+  choice (`localStorage["explore.locale"]`). Listing content (name/tagline/description) is
+  author-provided and not machine-translated.
+- **Accessibility:** WCAG 2.2 AA; CI runs axe over home/detail/not-found at desktop + mobile
+  widths and fails on any violation.
+- **Version exposure (§6.7 ecosystem rule):** the build's semver is visible in the footer, in
+  `<meta name="app-version">`, and at `window.__APP_VERSION__`.
+- **Bug reporting:** the shared `@dignetwork/components` `<BugReportButton repo="explore.dig.net">`
+  is mounted at the shell; its API host `api.bugreport.dig.net` is allowed in the CSP.
+- **Routing:** `/` (home), `/app/<slug>` (detail), anything else renders the not-found state. The
+  filter state mirrors to the URL as `?category=<cat>&q=<text>`.
+
+## 7. Submission checklist (author-facing)
+
+1. Fork the repo; create `apps/<slug>/` (slug: lowercase letters/digits/hyphens, 3–40 chars).
+2. Write `metadata.json` with every §3.1 required field (`"$schema": "../app.schema.json"`
+   recommended for editor validation). Propose `featured: false`.
+3. Add `assets/icon-512.png` (512×512) and `assets/og.png` (1200×630) — real brand art, or
+   generated placeholders declared in `placeholderAssets`.
+4. Capture real screenshots of the running dApp: at least one `desktop-01.png` (1280×800) is
+   strongly recommended; mobile (1080×1920) welcome. Number sequentially from 01.
+5. Run `npm ci && npm run validate:apps` — it must print `OK`.
+6. Run `npm run build && npm test` — all green.
+7. Open a PR titled `apps: add <slug>`; state what the dApp does and how you verified the listing.
+   CI must be green; a maintainer reviews for curation fit (open source, on-chain settlement,
+   working product).
