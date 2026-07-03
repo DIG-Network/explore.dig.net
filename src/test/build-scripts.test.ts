@@ -10,6 +10,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { readPngSize, validateApps, ASSET_RULES, SCREENSHOT_RULES } from "../../scripts/validate-apps.mjs";
 import { buildCatalog, renderLlmsTxt, renderSitemap } from "../../scripts/build-catalog.mjs";
 import { appSeoBlock, homeItemListLd, swapSeoBlock } from "../../scripts/prerender-apps.mjs";
+import { auditAppHead, auditHomeHead, REQUIRED_DIST_FILES } from "../../scripts/check-dist.mjs";
 import { resolveAppVersion } from "../../scripts/resolve-app-version.mjs";
 
 // ---------------------------------------------------------------- readPngSize
@@ -108,6 +109,18 @@ describe("validateApps on fixture violations", () => {
     expect(errors.some((e) => e.includes('must not be status "draft"'))).toBe(true);
     expect(errors.some((e) => e.includes("hero.png: REQUIRED to feature"))).toBe(true);
     expect(errors.some((e) => e.includes("featured apps need ≥2 desktop screenshots"))).toBe(true);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("accepts a listing without a repo (repo is optional — not every dApp is open source)", () => {
+    const noRepo: Record<string, unknown> = { ...validMeta };
+    delete noRepo.repo;
+    const dir = writeApp("fixture-app", noRepo);
+    mkdirSync(join(dir, "assets"), { recursive: true });
+    writeFileSync(join(dir, "assets", "icon-512.png"), pngHeader(512, 512));
+    writeFileSync(join(dir, "assets", "og.png"), pngHeader(1200, 630));
+    const { errors } = validateApps(fixtures);
+    expect(errors).toEqual([]);
     rmSync(dir, { recursive: true, force: true });
   });
 
@@ -218,6 +231,8 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
     expect(block).toContain('content="https://explore.dig.net/catalog/demo/og.png"');
     expect(block).toContain('"@type":"SoftwareApplication"');
     expect(block).toContain("&quot;demo&quot;");
+    // The card is described for assistive tech + validators (og:image:alt mirrors the card copy).
+    expect(block).toContain('property="og:image:alt"');
   });
 
   it("home ItemList JSON-LD enumerates the catalog in order", () => {
@@ -236,6 +251,81 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
     expect(out).toContain("NEW");
     expect(out).not.toContain("OLD");
     expect(() => swapSeoBlock("<head></head>", "NEW")).toThrow(/SEO markers/);
+  });
+});
+
+// ------------------------------------------------------------- check-dist
+
+describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
+  const homeHtml = [
+    "<title>explore.dig.net — the curated dApp store for the DIG Network</title>",
+    '<meta name="description" content="Discover curated decentralized apps on the DIG Network and Chia." />',
+    '<link rel="canonical" href="https://explore.dig.net/" />',
+    '<meta property="og:type" content="website" />',
+    '<meta property="og:title" content="explore.dig.net" />',
+    '<meta property="og:description" content="Discover." />',
+    '<meta property="og:url" content="https://explore.dig.net/" />',
+    '<meta property="og:image" content="https://explore.dig.net/og.png" />',
+    '<meta property="og:image:alt" content="explore.dig.net card" />',
+    '<meta name="twitter:card" content="summary_large_image" />',
+    '<meta name="twitter:title" content="explore.dig.net" />',
+    '<meta name="twitter:description" content="Discover." />',
+    '<meta name="twitter:image" content="https://explore.dig.net/og.png" />',
+    '<link rel="apple-touch-icon" href="/apple-touch-icon.png" />',
+    '<link rel="manifest" href="/site.webmanifest" />',
+  ].join("\n");
+
+  it("passes a complete home head", () => {
+    expect(auditHomeHead(homeHtml)).toEqual([]);
+  });
+
+  it("reports every missing home tag by name", () => {
+    const gutted = homeHtml
+      .split("\n")
+      .filter((l) => !l.includes("og:image") && !l.includes("twitter:card") && !l.includes("apple-touch-icon"))
+      .join("\n");
+    const missing = auditHomeHead(gutted);
+    expect(missing.some((m) => m.includes("og:image"))).toBe(true);
+    expect(missing.some((m) => m.includes("twitter:card"))).toBe(true);
+    expect(missing.some((m) => m.includes("apple-touch-icon"))).toBe(true);
+  });
+
+  const app = {
+    slug: "demo",
+    name: "Demo",
+    assets: { og: "/catalog/demo/og.png" },
+    detailUrl: "https://explore.dig.net/app/demo",
+  };
+
+  it("passes an app page whose head carries the app's OWN card", () => {
+    const html = [
+      "<title>Demo — the demo dApp · explore.dig.net</title>",
+      '<link rel="canonical" href="https://explore.dig.net/app/demo" />',
+      '<meta property="og:title" content="Demo — the demo dApp" />',
+      '<meta property="og:image" content="https://explore.dig.net/catalog/demo/og.png" />',
+      '<meta property="og:url" content="https://explore.dig.net/app/demo" />',
+      '<meta name="twitter:card" content="summary_large_image" />',
+      '<meta name="twitter:image" content="https://explore.dig.net/catalog/demo/og.png" />',
+    ].join("\n");
+    expect(auditAppHead(html, app)).toEqual([]);
+  });
+
+  it("flags an app page that still carries the generic store card", () => {
+    const html = [
+      "<title>explore.dig.net</title>",
+      '<link rel="canonical" href="https://explore.dig.net/" />',
+      '<meta property="og:image" content="https://explore.dig.net/og.png" />',
+      '<meta name="twitter:card" content="summary_large_image" />',
+    ].join("\n");
+    const missing = auditAppHead(html, app);
+    expect(missing.some((m) => m.includes("og:image"))).toBe(true);
+    expect(missing.some((m) => m.includes("canonical"))).toBe(true);
+  });
+
+  it("the dist gate requires the full icon set + agent files", () => {
+    for (const f of ["og.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "llms.txt", "sitemap.xml", "site.webmanifest"]) {
+      expect(REQUIRED_DIST_FILES).toContain(f);
+    }
   });
 });
 

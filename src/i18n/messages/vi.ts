@@ -10,12 +10,12 @@ export const vi: PartialMessages = {
   themeToDark: "Chuyển sang giao diện tối",
   languageLabel: "Ngôn ngữ",
 
-  heroKicker: "Tuyển chọn · mã nguồn mở · on-chain",
+  heroKicker: "Tuyển chọn · đã kiểm duyệt · on-chain",
   heroTitleLead: "Những ứng dụng sống",
   heroTitleAccent: "trên chuỗi.",
   heroIntro:
     "Một kệ ứng dụng phi tập trung được tuyển chọn, xây dựng trên DIG Network và Chia. Mỗi ứng " +
-    "dụng đều là mã nguồn mở, thanh toán on-chain và được kiểm duyệt trước khi lên kệ.",
+    "dụng thanh toán on-chain và được kiểm duyệt trước khi lên kệ.",
 
   featuredHeading: "Nổi bật",
   allAppsHeading: "Tất cả ứng dụng",

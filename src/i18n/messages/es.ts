@@ -10,12 +10,12 @@ export const es: PartialMessages = {
   themeToDark: "Cambiar a tema oscuro",
   languageLabel: "Idioma",
 
-  heroKicker: "Seleccionadas · código abierto · on-chain",
+  heroKicker: "Seleccionadas · revisadas · on-chain",
   heroTitleLead: "Apps que viven",
   heroTitleAccent: "en la cadena.",
   heroIntro:
     "Una estantería seleccionada de aplicaciones descentralizadas construidas sobre DIG Network y " +
-    "Chia. Cada aplicación es de código abierto, liquida on-chain y se revisa antes de publicarse.",
+    "Chia. Cada aplicación liquida on-chain y se revisa antes de publicarse.",
 
   featuredHeading: "Destacadas",
   allAppsHeading: "Todas las apps",

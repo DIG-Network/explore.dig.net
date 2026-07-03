@@ -10,12 +10,12 @@ export const de: PartialMessages = {
   themeToDark: "Zum dunklen Design wechseln",
   languageLabel: "Sprache",
 
-  heroKicker: "Kuratiert · Open Source · On-Chain",
+  heroKicker: "Kuratiert · Geprüft · On-Chain",
   heroTitleLead: "Apps, die",
   heroTitleAccent: "on-chain leben.",
   heroIntro:
-    "Ein kuratiertes Regal dezentraler Apps auf DIG Network und Chia. Jeder Eintrag ist Open " +
-    "Source, wird on-chain abgewickelt und vor der Aufnahme geprüft.",
+    "Ein kuratiertes Regal dezentraler Apps auf DIG Network und Chia. Jeder Eintrag wird " +
+    "on-chain abgewickelt und vor der Aufnahme geprüft.",
 
   featuredHeading: "Empfohlen",
   allAppsHeading: "Alle Apps",

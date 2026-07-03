@@ -10,12 +10,12 @@ export const id: PartialMessages = {
   themeToDark: "Beralih ke tema gelap",
   languageLabel: "Bahasa",
 
-  heroKicker: "Terkurasi · sumber terbuka · on-chain",
+  heroKicker: "Terkurasi · ditinjau · on-chain",
   heroTitleLead: "Aplikasi yang hidup",
   heroTitleAccent: "di atas chain.",
   heroIntro:
     "Rak terkurasi berisi aplikasi terdesentralisasi yang dibangun di atas DIG Network dan Chia. " +
-    "Setiap aplikasi bersumber terbuka, diselesaikan on-chain, dan ditinjau sebelum tayang di sini.",
+    "Setiap aplikasi diselesaikan on-chain dan ditinjau sebelum tayang di sini.",
 
   featuredHeading: "Unggulan",
   allAppsHeading: "Semua aplikasi",

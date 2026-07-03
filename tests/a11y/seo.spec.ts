@@ -12,7 +12,11 @@ test.describe("home page head", () => {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://explore.dig.net/");
     await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /og\.png$/);
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveCount(1);
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    // The icon set: SVG favicon + apple-touch-icon + manifest (PNG icons for home screens).
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute("href", "/apple-touch-icon.png");
+    await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/site.webmanifest");
     const ldBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
     const types = ldBlocks.map((s) => (JSON.parse(s) as { "@type": string })["@type"]);
     expect(types).toContain("WebSite");
@@ -41,6 +45,21 @@ test.describe("app detail head (prerendered)", () => {
     expect(ld["@type"]).toBe("SoftwareApplication");
     expect(ld.name).toBe("xchtip.app");
   });
+
+  test("each app page unfurls its OWN card, never the generic store card", async ({ page }) => {
+    await page.goto("/app/chia-offer/");
+    await expect(page).toHaveTitle(/Chia-Offer/);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      "https://explore.dig.net/catalog/chia-offer/og.png",
+    );
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", /Chia-Offer/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      "https://explore.dig.net/app/chia-offer",
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  });
 });
 
 test.describe("agent files", () => {
@@ -53,13 +72,14 @@ test.describe("agent files", () => {
     expect(txt).toContain("/app/xchtip");
     expect(txt).toContain("/app/xchannuity");
     expect(txt).toContain("/app/cxch");
+    expect(txt).toContain("/app/chia-offer");
   });
 
   test("catalog.json is the full machine catalog", async ({ request }) => {
     const res = await request.get("/catalog.json");
     expect(res.ok()).toBe(true);
     const catalog = (await res.json()) as { count: number; apps: Array<{ slug: string; assets: { icon: string } }> };
-    expect(catalog.count).toBeGreaterThanOrEqual(3);
+    expect(catalog.count).toBeGreaterThanOrEqual(4);
     for (const app of catalog.apps) {
       const icon = await request.get(app.assets.icon);
       expect(icon.ok(), `${app.slug} icon missing`).toBe(true);

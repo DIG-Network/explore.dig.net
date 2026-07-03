@@ -71,9 +71,11 @@ export function AppDetailPage({ apps, slug }: AppDetailPageProps) {
           <a className="btn btn-primary" href={app.url} target="_blank" rel="noopener noreferrer" data-testid="open-dapp">
             {t("openApp")}
           </a>
-          <a className="btn btn-ghost" href={app.repo} target="_blank" rel="noopener noreferrer">
-            {t("viewSource")}
-          </a>
+          {app.repo && (
+            <a className="btn btn-ghost" href={app.repo} target="_blank" rel="noopener noreferrer">
+              {t("viewSource")}
+            </a>
+          )}
         </div>
       </header>
 

@@ -13,7 +13,6 @@
     "category",
     "tags",
     "url",
-    "repo",
     "author",
     "chain",
     "status",
@@ -80,7 +79,7 @@
     },
     "repo": {
       "type": "string",
-      "description": "Public source repository (https://github.com/<org>/<repo>).",
+      "description": "Optional: public source repository (https://github.com/<org>/<repo>). Listings SHOULD be open source; omit when the dApp's source is not public — the detail page then shows no source link.",
       "format": "uri",
       "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$"
     },

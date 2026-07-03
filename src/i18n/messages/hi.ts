@@ -10,11 +10,11 @@ export const hi: PartialMessages = {
   themeToDark: "गहरी थीम पर जाएँ",
   languageLabel: "भाषा",
 
-  heroKicker: "चयनित · ओपन सोर्स · ऑन-चेन",
+  heroKicker: "चयनित · समीक्षित · ऑन-चेन",
   heroTitleLead: "ऐसे ऐप जो",
   heroTitleAccent: "चेन पर जीते हैं।",
   heroIntro:
-    "DIG Network और Chia पर बने विकेंद्रीकृत ऐप्स की चयनित शेल्फ़। हर सूचीबद्ध ऐप ओपन सोर्स है, " +
+    "DIG Network और Chia पर बने विकेंद्रीकृत ऐप्स की चयनित शेल्फ़। हर सूचीबद्ध ऐप " +
     "ऑन-चेन सेटल होता है और यहाँ आने से पहले समीक्षा से गुज़रता है।",
 
   featuredHeading: "विशेष",

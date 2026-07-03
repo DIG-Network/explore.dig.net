@@ -10,12 +10,12 @@ export const tr: PartialMessages = {
   themeToDark: "Koyu temaya geç",
   languageLabel: "Dil",
 
-  heroKicker: "Seçilmiş · açık kaynak · zincir üstü",
+  heroKicker: "Seçilmiş · incelenmiş · zincir üstü",
   heroTitleLead: "Zincirde yaşayan",
   heroTitleAccent: "uygulamalar.",
   heroIntro:
     "DIG Network ve Chia üzerine inşa edilmiş, özenle seçilmiş merkeziyetsiz uygulamalar. Her " +
-    "uygulama açık kaynaklıdır, zincir üstünde çalışır ve yayına alınmadan önce incelenir.",
+    "uygulama zincir üstünde çalışır ve yayına alınmadan önce incelenir.",
 
   featuredHeading: "Öne çıkanlar",
   allAppsHeading: "Tüm uygulamalar",

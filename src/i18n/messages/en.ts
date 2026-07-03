@@ -14,12 +14,12 @@ export const en = {
   themeToDark: "Switch to dark theme",
   languageLabel: "Language",
 
-  heroKicker: "Curated · open source · on-chain",
+  heroKicker: "Curated · reviewed · on-chain",
   heroTitleLead: "Apps that live",
   heroTitleAccent: "on chain.",
   heroIntro:
-    "A curated shelf of decentralized apps built on the DIG Network and Chia. Every listing is " +
-    "open source, settles on-chain, and is reviewed before it ships here.",
+    "A curated shelf of decentralized apps built on the DIG Network and Chia. Every listing " +
+    "settles on-chain and is reviewed before it ships here.",
 
   featuredHeading: "Featured",
   allAppsHeading: "All apps",

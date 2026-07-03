@@ -10,11 +10,11 @@ export const ko: PartialMessages = {
   themeToDark: "다크 테마로 전환",
   languageLabel: "언어",
 
-  heroKicker: "큐레이션 · 오픈소스 · 온체인",
+  heroKicker: "큐레이션 · 검토됨 · 온체인",
   heroTitleLead: "체인 위에 사는",
   heroTitleAccent: "앱들.",
   heroIntro:
-    "DIG Network와 Chia 위에 구축된 탈중앙화 앱의 큐레이션 셸프입니다. 모든 앱은 오픈소스이며 온체인에서 정산되고 등록 전에 검토됩니다.",
+    "DIG Network와 Chia 위에 구축된 탈중앙화 앱의 큐레이션 셸프입니다. 모든 앱은 온체인에서 정산되고 등록 전에 검토됩니다.",
 
   featuredHeading: "추천",
   allAppsHeading: "전체 앱",

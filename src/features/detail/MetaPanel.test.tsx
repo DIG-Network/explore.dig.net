@@ -37,8 +37,14 @@ describe("<MetaPanel>", () => {
     expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute("href", "https://docs.example/");
     expect(screen.getByRole("link", { name: "Discord" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "YouTube" })).toBeNull();
-    // Website + GitHub are always present.
+    // Website is always present; GitHub whenever the listing has a public repo.
     expect(screen.getByRole("link", { name: "Website" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GitHub" })).toBeInTheDocument();
+  });
+
+  it("omits the GitHub link when the listing has no public repo", () => {
+    renderWithIntl(<MetaPanel app={makeApp({ repo: undefined })} />);
+    expect(screen.getByRole("link", { name: "Website" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "GitHub" })).toBeNull();
   });
 });
