@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://explore.dig.net/apps/app.schema.json",
+  "title": "explore.dig.net dApp listing metadata",
+  "description": "The normative metadata contract for one dApp listed on explore.dig.net. One folder per dApp: apps/<slug>/metadata.json validating against this schema, plus apps/<slug>/assets/ (see SPEC.md §4 for the exact asset requirements). CI rejects any listing that does not validate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "name",
+    "tagline",
+    "description",
+    "category",
+    "tags",
+    "url",
+    "repo",
+    "author",
+    "chain",
+    "status",
+    "featured",
+    "accentColor",
+    "addedDate"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "description": "URL-safe unique identifier. MUST equal the app's folder name under apps/. Lowercase letters, digits, hyphens; starts and ends alphanumeric; 3-40 chars.",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{1,38})[a-z0-9]$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name as branded (e.g. \"xchtip.app\", \"cMojo\"). 1-40 chars.",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "tagline": {
+      "type": "string",
+      "description": "One-line pitch shown on cards and in social previews. Plain text, no markdown. 10-120 chars.",
+      "minLength": 10,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "description": "Long description shown on the detail page. GitHub-flavored markdown SUBSET: paragraphs, ## / ### headings, **bold**, *italic*, `code`, [links](https://...), - bullet lists. Raw HTML is NOT rendered. 80-5000 chars.",
+      "minLength": 80,
+      "maxLength": 5000
+    },
+    "category": {
+      "type": "string",
+      "description": "Exactly one primary category (drives the store's category filter).",
+      "enum": [
+        "payments",
+        "defi",
+        "nft",
+        "gaming",
+        "social",
+        "storage",
+        "identity",
+        "infrastructure",
+        "tools",
+        "other"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "1-8 free-form lowercase keyword tags (searchable). Each 2-24 chars of [a-z0-9-].",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9](?:[a-z0-9-]{0,22})[a-z0-9]$"
+      }
+    },
+    "url": {
+      "type": "string",
+      "description": "The live dApp's canonical https URL (the \"Open dApp\" target).",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "repo": {
+      "type": "string",
+      "description": "Public source repository (https://github.com/<org>/<repo>).",
+      "format": "uri",
+      "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$"
+    },
+    "author": {
+      "type": "object",
+      "description": "The team or person who ships the dApp.",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "chain": {
+      "type": "string",
+      "description": "The chain the dApp settles on. explore.dig.net lists Chia dApps.",
+      "const": "chia"
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle stage shown as a badge: live = production, real users; beta = usable pre-release / mainnet-experimental; draft = listing incomplete or app not yet public.",
+      "enum": ["live", "beta", "draft"]
+    },
+    "featured": {
+      "type": "boolean",
+      "description": "Curated flag set by store maintainers (not self-service). A featured app MUST carry the full featured asset set (SPEC.md §4.3) and MUST NOT be status \"draft\"."
+    },
+    "accentColor": {
+      "type": "string",
+      "description": "The app's brand accent as a 6-digit hex color (e.g. \"#3fb950\"). Drives the card's ambient glow and the detail page's hero tint.",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "addedDate": {
+      "type": "string",
+      "description": "The date the listing was added to the store (ISO 8601, YYYY-MM-DD). Drives default sort.",
+      "format": "date"
+    },
+    "version": {
+      "type": "string",
+      "description": "Optional: the dApp's own released version (semver).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.+-]+)?$"
+    },
+    "license": {
+      "type": "string",
+      "description": "Optional SPDX license identifier of the dApp's source (e.g. \"MIT\", \"GPL-2.0\").",
+      "minLength": 2,
+      "maxLength": 40
+    },
+    "links": {
+      "type": "object",
+      "description": "Optional extra links, all https. Keys are fixed; add only what exists.",
+      "additionalProperties": false,
+      "properties": {
+        "docs": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "discord": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "x": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "youtube": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "blog": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "placeholderAssets": {
+      "type": "array",
+      "description": "Optional: asset paths (relative to assets/) that are clean BRANDED PLACEHOLDERS pending final art from the author (e.g. [\"hero.png\"]). Screenshots MUST NEVER be placeholders — a screenshot is always a real capture of the running dApp.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(icon-512\\.png|icon-1024\\.png|og\\.png|hero\\.png|tile\\.png)$"
+      }
+    }
+  }
+}

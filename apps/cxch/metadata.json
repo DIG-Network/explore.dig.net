@@ -1,0 +1,33 @@
+{
+  "$schema": "../app.schema.json",
+  "slug": "cxch",
+  "name": "cMojo",
+  "tagline": "Wrapped XCH as a CAT2 — the 1:1 backing lives inside the coin itself.",
+  "description": "cMojo is native XCH expressed as a **CAT2** (Chia Asset Token). Each cMojo mojo is backed **1:1 by a real XCH mojo** — not held in a treasury, bridge, or custodial reserve, but carried *inside the token itself*. A cMojo coin of `N` mojos literally holds `N` mojos of XCH: own the cMojo and you own the XCH; melt it and that exact XCH re-emerges as native coin in the same block.\n\nThe peg is enforced by **Chia consensus itself**:\n\n- **Wrap (mint)** — spend XCH and run the issuance TAIL with a positive delta in the same bundle. Consensus only accepts the bundle when the XCH consumed equals mint + fee + change, so newly minted cMojo is always matched by an equal amount of XCH locked into the coin.\n- **Melt (burn)** — spend cMojo and run the TAIL with a negative delta. The mojos embedded in the coin re-emerge as ordinary XCH in the same block.\n\nThere is **no reserve, vault, or bridge** anyone could drain, freeze, or rug. cMojo ships no bespoke on-chain code — it is assembled entirely from standard, audited Chia puzzles (the `everything_with_signature` TAIL, the standard CAT2 layer, and the standard p2 payment puzzle). The dApp only assembles standard spend bundles; your wallet signs them locally over WalletConnect.",
+  "category": "defi",
+  "tags": [
+    "wrapped-xch",
+    "cat2",
+    "wrap",
+    "melt",
+    "walletconnect"
+  ],
+  "url": "https://cxch.app/",
+  "repo": "https://github.com/DIG-Network/cxch.app",
+  "author": {
+    "name": "DIG Network",
+    "url": "https://dig.net"
+  },
+  "chain": "chia",
+  "status": "beta",
+  "featured": false,
+  "accentColor": "#3fb950",
+  "addedDate": "2026-07-03",
+  "license": "MIT",
+  "placeholderAssets": [
+    "icon-512.png",
+    "og.png",
+    "hero.png",
+    "tile.png"
+  ]
+}

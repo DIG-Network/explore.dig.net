@@ -1,0 +1,91 @@
+// Indonesian catalog. Brand literals stay verbatim.
+import type { PartialMessages } from "./index";
+
+export const id: PartialMessages = {
+  appName: "explore.dig.net",
+  skipToContent: "Lewati ke konten",
+  headerTagline: "Toko dApp DIG Network",
+  submitCta: "Daftarkan dApp Anda",
+  themeToLight: "Beralih ke tema terang",
+  themeToDark: "Beralih ke tema gelap",
+  languageLabel: "Bahasa",
+
+  heroKicker: "Terkurasi · sumber terbuka · on-chain",
+  heroTitleLead: "Aplikasi yang hidup",
+  heroTitleAccent: "di atas chain.",
+  heroIntro:
+    "Rak terkurasi berisi aplikasi terdesentralisasi yang dibangun di atas DIG Network dan Chia. " +
+    "Setiap aplikasi bersumber terbuka, diselesaikan on-chain, dan ditinjau sebelum tayang di sini.",
+
+  featuredHeading: "Unggulan",
+  allAppsHeading: "Semua aplikasi",
+  appsCount: "{count, plural, other {# aplikasi}}",
+
+  searchLabel: "Cari aplikasi",
+  searchPlaceholder: "Cari nama, tag, atau fungsinya…",
+  categoryFilterLabel: "Saring per kategori",
+  categoryAll: "Semua",
+  categoryPayments: "Pembayaran",
+  categoryDefi: "DeFi",
+  categoryNft: "NFT",
+  categoryGaming: "Gim",
+  categorySocial: "Sosial",
+  categoryStorage: "Penyimpanan",
+  categoryIdentity: "Identitas",
+  categoryInfrastructure: "Infrastruktur",
+  categoryTools: "Perkakas",
+  categoryOther: "Lainnya",
+  clearFilters: "Bersihkan filter",
+
+  emptyHeading: "Tidak ada aplikasi yang cocok",
+  emptyBody: "Coba pencarian lain, atau bersihkan filter untuk melihat seluruh rak.",
+
+  statusLive: "Live",
+  statusBeta: "Beta",
+  statusDraft: "Draf",
+  featuredBadge: "Unggulan",
+
+  openApp: "Buka dApp",
+  viewSource: "Lihat sumber",
+  backToStore: "Kembali ke toko",
+  aboutHeading: "Tentang",
+  screenshotsHeading: "Tangkapan layar",
+  detailsHeading: "Detail",
+  categoryLabel: "Kategori",
+  tagsLabel: "Tag",
+  chainLabel: "Chain",
+  statusLabel: "Status",
+  addedLabel: "Terdaftar",
+  authorLabel: "Oleh",
+  licenseLabel: "Lisensi",
+  appVersionLabel: "Versi aplikasi",
+  linksHeading: "Tautan",
+  linkWebsite: "Situs web",
+  linkDocs: "Dokumentasi",
+  linkDiscord: "Discord",
+  linkX: "X",
+  linkYouTube: "YouTube",
+  linkBlog: "Blog",
+  placeholderNote:
+    "Sebagian karya seni pada halaman ini adalah placeholder bermerek sambil menunggu seni final dari tim.",
+
+  notFoundHeading: "Aplikasi itu tidak ada di rak",
+  notFoundBody:
+    "Aplikasi yang Anda cari tidak ada (atau sudah dihapus). Jelajahi toko untuk melihat semua yang tersedia.",
+  notFoundCta: "Jelajahi semua aplikasi",
+
+  iconAlt: "Ikon {name}",
+  heroAlt: "Banner {name}",
+  screenshotDesktopAlt: "{name} — tangkapan layar desktop {n}",
+  screenshotMobileAlt: "{name} — tangkapan layar seluler {n}",
+
+  footerTagline: "Bagian dari DIG Network — lapisan konten dan aplikasi terdesentralisasi di Chia.",
+  footerSubmitLead: "Sedang membangun di Chia?",
+  footerSubmitLink: "Baca spesifikasi pengajuan dan daftarkan dApp Anda",
+  footerCatalog: "Katalog mesin (JSON)",
+  footerDignet: "dig.net",
+  footerDocs: "Dokumentasi",
+  footerGitHub: "GitHub",
+  footerDiscord: "Discord",
+  versionLabel: "v{version}",
+};

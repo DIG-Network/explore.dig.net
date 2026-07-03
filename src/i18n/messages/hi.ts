@@ -1,0 +1,91 @@
+// Hindi catalog. Brand literals stay verbatim.
+import type { PartialMessages } from "./index";
+
+export const hi: PartialMessages = {
+  appName: "explore.dig.net",
+  skipToContent: "सामग्री पर जाएँ",
+  headerTagline: "DIG Network का dApp स्टोर",
+  submitCta: "अपना dApp सूचीबद्ध करें",
+  themeToLight: "हल्की थीम पर जाएँ",
+  themeToDark: "गहरी थीम पर जाएँ",
+  languageLabel: "भाषा",
+
+  heroKicker: "चयनित · ओपन सोर्स · ऑन-चेन",
+  heroTitleLead: "ऐसे ऐप जो",
+  heroTitleAccent: "चेन पर जीते हैं।",
+  heroIntro:
+    "DIG Network और Chia पर बने विकेंद्रीकृत ऐप्स की चयनित शेल्फ़। हर सूचीबद्ध ऐप ओपन सोर्स है, " +
+    "ऑन-चेन सेटल होता है और यहाँ आने से पहले समीक्षा से गुज़रता है।",
+
+  featuredHeading: "विशेष",
+  allAppsHeading: "सभी ऐप्स",
+  appsCount: "{count, plural, one {# ऐप} other {# ऐप्स}}",
+
+  searchLabel: "ऐप खोजें",
+  searchPlaceholder: "नाम, टैग या काम से खोजें…",
+  categoryFilterLabel: "श्रेणी से फ़िल्टर करें",
+  categoryAll: "सभी",
+  categoryPayments: "भुगतान",
+  categoryDefi: "DeFi",
+  categoryNft: "NFT",
+  categoryGaming: "गेमिंग",
+  categorySocial: "सोशल",
+  categoryStorage: "स्टोरेज",
+  categoryIdentity: "पहचान",
+  categoryInfrastructure: "इन्फ्रास्ट्रक्चर",
+  categoryTools: "टूल्स",
+  categoryOther: "अन्य",
+  clearFilters: "फ़िल्टर हटाएँ",
+
+  emptyHeading: "कोई ऐप मेल नहीं खाता",
+  emptyBody: "कोई और खोज आज़माएँ, या पूरी शेल्फ़ देखने के लिए फ़िल्टर हटा दें।",
+
+  statusLive: "लाइव",
+  statusBeta: "बीटा",
+  statusDraft: "ड्राफ़्ट",
+  featuredBadge: "विशेष",
+
+  openApp: "dApp खोलें",
+  viewSource: "सोर्स देखें",
+  backToStore: "स्टोर पर वापस जाएँ",
+  aboutHeading: "परिचय",
+  screenshotsHeading: "स्क्रीनशॉट",
+  detailsHeading: "विवरण",
+  categoryLabel: "श्रेणी",
+  tagsLabel: "टैग",
+  chainLabel: "चेन",
+  statusLabel: "स्थिति",
+  addedLabel: "सूचीबद्ध",
+  authorLabel: "निर्माता",
+  licenseLabel: "लाइसेंस",
+  appVersionLabel: "ऐप संस्करण",
+  linksHeading: "लिंक",
+  linkWebsite: "वेबसाइट",
+  linkDocs: "दस्तावेज़",
+  linkDiscord: "Discord",
+  linkX: "X",
+  linkYouTube: "YouTube",
+  linkBlog: "ब्लॉग",
+  placeholderNote:
+    "इस पेज की कुछ कलाकृतियाँ ब्रांडेड प्लेसहोल्डर हैं — टीम की अंतिम कला का इंतज़ार है।",
+
+  notFoundHeading: "यह ऐप शेल्फ़ पर नहीं है",
+  notFoundBody:
+    "आप जो सूची खोज रहे हैं वह मौजूद नहीं है (या हटा दी गई है)। स्टोर में जो कुछ लाइव है उसे देखें।",
+  notFoundCta: "सभी ऐप्स देखें",
+
+  iconAlt: "{name} आइकन",
+  heroAlt: "{name} बैनर",
+  screenshotDesktopAlt: "{name} — डेस्कटॉप स्क्रीनशॉट {n}",
+  screenshotMobileAlt: "{name} — मोबाइल स्क्रीनशॉट {n}",
+
+  footerTagline: "DIG Network का हिस्सा — Chia पर विकेंद्रीकृत सामग्री और ऐप परत।",
+  footerSubmitLead: "Chia पर कुछ बना रहे हैं?",
+  footerSubmitLink: "सबमिशन स्पेसिफ़िकेशन पढ़ें और अपना dApp सूचीबद्ध करें",
+  footerCatalog: "मशीन कैटलॉग (JSON)",
+  footerDignet: "dig.net",
+  footerDocs: "दस्तावेज़",
+  footerGitHub: "GitHub",
+  footerDiscord: "Discord",
+  versionLabel: "v{version}",
+};

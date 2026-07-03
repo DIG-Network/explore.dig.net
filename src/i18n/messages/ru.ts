@@ -1,0 +1,91 @@
+// Russian catalog. Brand literals stay verbatim.
+import type { PartialMessages } from "./index";
+
+export const ru: PartialMessages = {
+  appName: "explore.dig.net",
+  skipToContent: "Перейти к содержимому",
+  headerTagline: "Магазин dApp сети DIG Network",
+  submitCta: "Добавить свой dApp",
+  themeToLight: "Переключить на светлую тему",
+  themeToDark: "Переключить на тёмную тему",
+  languageLabel: "Язык",
+
+  heroKicker: "Отобрано · открытый код · он-чейн",
+  heroTitleLead: "Приложения, живущие",
+  heroTitleAccent: "в блокчейне.",
+  heroIntro:
+    "Отобранная полка децентрализованных приложений на DIG Network и Chia. Каждое приложение — " +
+    "с открытым кодом, рассчитывается он-чейн и проходит проверку перед публикацией.",
+
+  featuredHeading: "Рекомендуемые",
+  allAppsHeading: "Все приложения",
+  appsCount: "{count, plural, one {# приложение} few {# приложения} many {# приложений} other {# приложения}}",
+
+  searchLabel: "Поиск приложений",
+  searchPlaceholder: "Поиск по названию, тегу или функции…",
+  categoryFilterLabel: "Фильтр по категории",
+  categoryAll: "Все",
+  categoryPayments: "Платежи",
+  categoryDefi: "DeFi",
+  categoryNft: "NFT",
+  categoryGaming: "Игры",
+  categorySocial: "Соцсети",
+  categoryStorage: "Хранение",
+  categoryIdentity: "Идентичность",
+  categoryInfrastructure: "Инфраструктура",
+  categoryTools: "Инструменты",
+  categoryOther: "Прочее",
+  clearFilters: "Сбросить фильтры",
+
+  emptyHeading: "Ничего не найдено",
+  emptyBody: "Попробуйте другой запрос или сбросьте фильтры, чтобы увидеть всю полку.",
+
+  statusLive: "Работает",
+  statusBeta: "Бета",
+  statusDraft: "Черновик",
+  featuredBadge: "Рекомендуем",
+
+  openApp: "Открыть dApp",
+  viewSource: "Исходный код",
+  backToStore: "Назад в магазин",
+  aboutHeading: "О приложении",
+  screenshotsHeading: "Скриншоты",
+  detailsHeading: "Сведения",
+  categoryLabel: "Категория",
+  tagsLabel: "Теги",
+  chainLabel: "Блокчейн",
+  statusLabel: "Статус",
+  addedLabel: "Добавлено",
+  authorLabel: "Автор",
+  licenseLabel: "Лицензия",
+  appVersionLabel: "Версия приложения",
+  linksHeading: "Ссылки",
+  linkWebsite: "Сайт",
+  linkDocs: "Документация",
+  linkDiscord: "Discord",
+  linkX: "X",
+  linkYouTube: "YouTube",
+  linkBlog: "Блог",
+  placeholderNote:
+    "Часть оформления этой страницы — фирменные заглушки в ожидании финальных материалов от команды.",
+
+  notFoundHeading: "Такого приложения нет на полке",
+  notFoundBody:
+    "Приложение, которое вы ищете, не существует (или было удалено). Загляните в магазин — там всё, что доступно.",
+  notFoundCta: "Смотреть все приложения",
+
+  iconAlt: "Значок {name}",
+  heroAlt: "Баннер {name}",
+  screenshotDesktopAlt: "{name} — скриншот для компьютера {n}",
+  screenshotMobileAlt: "{name} — мобильный скриншот {n}",
+
+  footerTagline: "Часть DIG Network — децентрализованного слоя контента и приложений на Chia.",
+  footerSubmitLead: "Разрабатываете на Chia?",
+  footerSubmitLink: "Прочитайте требования и добавьте свой dApp",
+  footerCatalog: "Машинный каталог (JSON)",
+  footerDignet: "dig.net",
+  footerDocs: "Документация",
+  footerGitHub: "GitHub",
+  footerDiscord: "Discord",
+  versionLabel: "v{version}",
+};
