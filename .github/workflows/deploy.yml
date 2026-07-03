@@ -1,0 +1,123 @@
+name: deploy
+
+# Provision infra (Terraform) + build the static site + replace the S3 site bucket contents +
+# invalidate CloudFront. GATED so it stays green before infra vars are configured: without the
+# repo vars the build is verified and the apply/sync are skipped (a clean no-op).
+#
+# TERRAFORM STATE PERSISTS ACROSS RUNS via the shared remote S3 backend (bucket `dighub-tfstate`,
+# key `explore.dig.net/prod/terraform.tfstate`, DynamoDB lock `dighub-tflock`) — every run does
+# `terraform init -backend-config=…` against that SAME S3 key, so state is read/written in S3,
+# never on the ephemeral runner disk. See runbooks/deploy.md.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Serialize deploys so two runs never race on the terraform state lock or `s3 sync --delete`.
+concurrency:
+  group: explore-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write # OIDC (assume the deploy role; no stored keys)
+
+env:
+  AWS_REGION: us-east-1
+  TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET || 'dighub-tfstate' }}
+  TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE || 'dighub-tflock' }}
+  TF_STATE_KEY: explore.dig.net/prod/terraform.tfstate
+
+jobs:
+  terraform:
+    name: terraform apply (remote state)
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: check infra gate
+        id: gate
+        env:
+          ROLE: ${{ vars.CI_DEPLOY_ROLE_ARN }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ROLE:-}" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=explore.dig.net terraform::CI_DEPLOY_ROLE_ARN not set — skipping terraform (infra provisioned manually per runbooks/deploy.md)."
+          fi
+
+      - name: configure aws (oidc)
+        if: steps.gate.outputs.ready == 'true'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.CI_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: setup terraform
+        if: steps.gate.outputs.ready == 'true'
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: "1.9.8"
+
+      - name: terraform init + apply (persistent remote state)
+        if: steps.gate.outputs.ready == 'true'
+        working-directory: terraform
+        run: |
+          set -euo pipefail
+          terraform init -input=false -reconfigure \
+            -backend-config="bucket=${TF_STATE_BUCKET}" \
+            -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
+            -backend-config="region=${AWS_REGION}" \
+            -backend-config="key=${TF_STATE_KEY}"
+          terraform apply -input=false -auto-approve
+
+  deploy:
+    name: build + sync + invalidate
+    needs: terraform
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: build (catalog + SPA + prerender + dist sanity gate)
+        run: npm run build
+
+      - name: check deploy gates
+        id: gate
+        env:
+          BUCKET: ${{ vars.EXPLORE_S3_BUCKET }}
+          DIST_ID: ${{ vars.EXPLORE_CLOUDFRONT_DISTRIBUTION_ID }}
+          ROLE: ${{ vars.CI_DEPLOY_ROLE_ARN }}
+        run: |
+          set -euo pipefail
+          if [ -n "${BUCKET:-}" ] && [ -n "${DIST_ID:-}" ] && [ -n "${ROLE:-}" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=explore.dig.net deploy::Infra vars not set (EXPLORE_S3_BUCKET / EXPLORE_CLOUDFRONT_DISTRIBUTION_ID / CI_DEPLOY_ROLE_ARN) — built + verified, sync skipped."
+          fi
+
+      - name: configure aws (oidc)
+        if: steps.gate.outputs.ready == 'true'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.CI_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: sync to S3 + invalidate CloudFront
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          BUCKET: ${{ vars.EXPLORE_S3_BUCKET }}
+          DIST_ID: ${{ vars.EXPLORE_CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          set -euo pipefail
+          aws s3 sync dist "s3://${BUCKET}" --delete
+          aws cloudfront create-invalidation --distribution-id "${DIST_ID}" --paths '/*'
