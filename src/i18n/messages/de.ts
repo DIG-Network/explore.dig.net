@@ -1,0 +1,91 @@
+// German catalog. Brand literals stay verbatim.
+import type { PartialMessages } from "./index";
+
+export const de: PartialMessages = {
+  appName: "explore.dig.net",
+  skipToContent: "Zum Inhalt springen",
+  headerTagline: "Der dApp-Store des DIG Network",
+  submitCta: "Deine dApp listen",
+  themeToLight: "Zum hellen Design wechseln",
+  themeToDark: "Zum dunklen Design wechseln",
+  languageLabel: "Sprache",
+
+  heroKicker: "Kuratiert · Open Source · On-Chain",
+  heroTitleLead: "Apps, die",
+  heroTitleAccent: "on-chain leben.",
+  heroIntro:
+    "Ein kuratiertes Regal dezentraler Apps auf DIG Network und Chia. Jeder Eintrag ist Open " +
+    "Source, wird on-chain abgewickelt und vor der Aufnahme geprüft.",
+
+  featuredHeading: "Empfohlen",
+  allAppsHeading: "Alle Apps",
+  appsCount: "{count, plural, one {# App} other {# Apps}}",
+
+  searchLabel: "Apps durchsuchen",
+  searchPlaceholder: "Nach Name, Tag oder Funktion suchen…",
+  categoryFilterLabel: "Nach Kategorie filtern",
+  categoryAll: "Alle",
+  categoryPayments: "Zahlungen",
+  categoryDefi: "DeFi",
+  categoryNft: "NFTs",
+  categoryGaming: "Gaming",
+  categorySocial: "Soziales",
+  categoryStorage: "Speicher",
+  categoryIdentity: "Identität",
+  categoryInfrastructure: "Infrastruktur",
+  categoryTools: "Werkzeuge",
+  categoryOther: "Sonstiges",
+  clearFilters: "Filter zurücksetzen",
+
+  emptyHeading: "Keine passenden Apps",
+  emptyBody: "Versuche eine andere Suche oder setze die Filter zurück, um das ganze Regal zu sehen.",
+
+  statusLive: "Live",
+  statusBeta: "Beta",
+  statusDraft: "Entwurf",
+  featuredBadge: "Empfohlen",
+
+  openApp: "dApp öffnen",
+  viewSource: "Quellcode ansehen",
+  backToStore: "Zurück zum Store",
+  aboutHeading: "Über",
+  screenshotsHeading: "Screenshots",
+  detailsHeading: "Details",
+  categoryLabel: "Kategorie",
+  tagsLabel: "Tags",
+  chainLabel: "Chain",
+  statusLabel: "Status",
+  addedLabel: "Gelistet",
+  authorLabel: "Von",
+  licenseLabel: "Lizenz",
+  appVersionLabel: "App-Version",
+  linksHeading: "Links",
+  linkWebsite: "Website",
+  linkDocs: "Doku",
+  linkDiscord: "Discord",
+  linkX: "X",
+  linkYouTube: "YouTube",
+  linkBlog: "Blog",
+  placeholderNote:
+    "Ein Teil der Grafiken dieses Eintrags ist ein Marken-Platzhalter, bis das Team die finalen Grafiken liefert.",
+
+  notFoundHeading: "Diese App steht nicht im Regal",
+  notFoundBody:
+    "Der gesuchte Eintrag existiert nicht (oder wurde entfernt). Stöbere im Store, um alles Verfügbare zu sehen.",
+  notFoundCta: "Alle Apps ansehen",
+
+  iconAlt: "{name}-Icon",
+  heroAlt: "{name}-Banner",
+  screenshotDesktopAlt: "{name} — Desktop-Screenshot {n}",
+  screenshotMobileAlt: "{name} — Mobil-Screenshot {n}",
+
+  footerTagline: "Teil des DIG Network — einer dezentralen Inhalts- und App-Schicht auf Chia.",
+  footerSubmitLead: "Du baust auf Chia?",
+  footerSubmitLink: "Lies die Einreichungs-Spezifikation und liste deine dApp",
+  footerCatalog: "Maschinenlesbarer Katalog (JSON)",
+  footerDignet: "dig.net",
+  footerDocs: "Doku",
+  footerGitHub: "GitHub",
+  footerDiscord: "Discord",
+  versionLabel: "v{version}",
+};

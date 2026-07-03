@@ -1,0 +1,248 @@
+// Tests for the build pipeline's pure functions + the SPEC listing gate (scripts/*.mjs). These are
+// the store's CI content contract: if a listing or the catalog build regresses, this suite is the
+// first red light. The REAL apps/ tree is validated here too, so `vitest` alone catches a
+// non-conforming listing without waiting for the build.
+
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterAll, describe, expect, it } from "vitest";
+import { readPngSize, validateApps, ASSET_RULES, SCREENSHOT_RULES } from "../../scripts/validate-apps.mjs";
+import { buildCatalog, renderLlmsTxt, renderSitemap } from "../../scripts/build-catalog.mjs";
+import { appSeoBlock, homeItemListLd, swapSeoBlock } from "../../scripts/prerender-apps.mjs";
+import { resolveAppVersion } from "../../scripts/resolve-app-version.mjs";
+
+// ---------------------------------------------------------------- readPngSize
+
+function pngHeader(width: number, height: number): Buffer {
+  const buf = Buffer.alloc(24);
+  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(buf, 0);
+  buf.write("IHDR", 12, "ascii");
+  buf.writeUInt32BE(width, 16);
+  buf.writeUInt32BE(height, 20);
+  return buf;
+}
+
+describe("readPngSize", () => {
+  it("reads IHDR dimensions from a PNG header", () => {
+    expect(readPngSize(pngHeader(512, 512))).toEqual({ width: 512, height: 512 });
+  });
+  it("returns null for non-PNG data", () => {
+    expect(readPngSize(Buffer.from("not a png at all, sorry"))).toBeNull();
+    expect(readPngSize(Buffer.alloc(4))).toBeNull();
+  });
+});
+
+// ------------------------------------------------------------ the SPEC gate
+
+describe("validateApps on the real apps/ tree", () => {
+  it("every committed listing conforms to SPEC.md (schema + assets)", () => {
+    const { apps, errors } = validateApps();
+    expect(errors).toEqual([]);
+    expect(apps.length).toBeGreaterThanOrEqual(3);
+    expect(apps.map((a) => a.meta.slug).sort()).toEqual(
+      expect.arrayContaining(["cxch", "xchannuity", "xchtip"]),
+    );
+  });
+
+  it("the normative asset rules match SPEC.md §4 exactly", () => {
+    expect(ASSET_RULES["icon-512.png"]).toMatchObject({ width: 512, height: 512, requiredToList: true });
+    expect(ASSET_RULES["og.png"]).toMatchObject({ width: 1200, height: 630, requiredToList: true });
+    expect(ASSET_RULES["hero.png"]).toMatchObject({ width: 1600, height: 900, requiredToFeature: true });
+    expect(ASSET_RULES["tile.png"]).toMatchObject({ width: 800, height: 450 });
+    expect(ASSET_RULES["icon-1024.png"]).toMatchObject({ width: 1024, height: 1024 });
+    expect(SCREENSHOT_RULES.desktop).toMatchObject({ width: 1280, height: 800, minToFeature: 2 });
+    expect(SCREENSHOT_RULES.mobile).toMatchObject({ width: 1080, height: 1920 });
+  });
+});
+
+describe("validateApps on fixture violations", () => {
+  const fixtures = mkdtempSync(join(tmpdir(), "explore-fixtures-"));
+  afterAll(() => rmSync(fixtures, { recursive: true, force: true }));
+
+  function writeApp(folder: string, meta: Record<string, unknown>) {
+    const dir = join(fixtures, folder);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "metadata.json"), JSON.stringify(meta));
+    return dir;
+  }
+
+  const validMeta = {
+    slug: "fixture-app",
+    name: "Fixture",
+    tagline: "A fixture listing used by the unit tests.",
+    description: "x".repeat(100),
+    category: "tools",
+    tags: ["fixture"],
+    url: "https://fixture.example/",
+    repo: "https://github.com/DIG-Network/fixture",
+    author: { name: "DIG Network" },
+    chain: "chia",
+    status: "draft",
+    featured: false,
+    accentColor: "#123456",
+    addedDate: "2026-07-01",
+  };
+
+  it("flags a folder whose name differs from the metadata slug", () => {
+    writeApp("wrong-folder", validMeta);
+    const { errors } = validateApps(fixtures);
+    expect(errors.some((e) => e.includes('folder name must equal metadata slug'))).toBe(true);
+    rmSync(join(fixtures, "wrong-folder"), { recursive: true, force: true });
+  });
+
+  it("flags a missing assets/ directory and schema violations", () => {
+    writeApp("fixture-app", { ...validMeta, category: "not-a-category" });
+    const { errors } = validateApps(fixtures);
+    expect(errors.some((e) => e.includes("missing assets/ directory"))).toBe(true);
+    expect(errors.some((e) => e.includes("category"))).toBe(true);
+    rmSync(join(fixtures, "fixture-app"), { recursive: true, force: true });
+  });
+
+  it("flags a featured listing that is draft or missing the featured asset set", () => {
+    const dir = writeApp("fixture-app", { ...validMeta, featured: true, status: "draft" });
+    mkdirSync(join(dir, "assets"), { recursive: true });
+    writeFileSync(join(dir, "assets", "icon-512.png"), pngHeader(512, 512));
+    writeFileSync(join(dir, "assets", "og.png"), pngHeader(1200, 630));
+    const { errors } = validateApps(fixtures);
+    expect(errors.some((e) => e.includes('must not be status "draft"'))).toBe(true);
+    expect(errors.some((e) => e.includes("hero.png: REQUIRED to feature"))).toBe(true);
+    expect(errors.some((e) => e.includes("featured apps need ≥2 desktop screenshots"))).toBe(true);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("flags wrong pixel dimensions and bad screenshot numbering", () => {
+    const dir = writeApp("fixture-app", validMeta);
+    mkdirSync(join(dir, "assets", "screenshots"), { recursive: true });
+    writeFileSync(join(dir, "assets", "icon-512.png"), pngHeader(500, 500)); // wrong size
+    writeFileSync(join(dir, "assets", "og.png"), pngHeader(1200, 630));
+    writeFileSync(join(dir, "assets", "screenshots", "desktop-02.png"), pngHeader(1280, 800)); // gap
+    const { errors } = validateApps(fixtures);
+    expect(errors.some((e) => e.includes("must be exactly 512×512"))).toBe(true);
+    expect(errors.some((e) => e.includes("expected desktop-01.png"))).toBe(true);
+    rmSync(dir, { recursive: true, force: true });
+  });
+});
+
+// ------------------------------------------------------------- buildCatalog
+
+function fakeValidated(slug: string, extra: Record<string, unknown> = {}) {
+  return {
+    dir: `/x/${slug}`,
+    meta: {
+      slug,
+      name: slug,
+      tagline: `The ${slug} app.`,
+      url: `https://${slug}.example/`,
+      featured: false,
+      addedDate: "2026-07-01",
+      ...extra,
+    },
+    assets: { files: ["icon-512.png", "og.png"], screenshots: { desktop: [], mobile: [] } },
+  };
+}
+
+describe("buildCatalog", () => {
+  const opts = { generatedAt: "2026-07-03T00:00:00.000Z", storeVersion: "0.1.0" };
+
+  it("resolves asset URLs under /catalog/<slug>/ and the site detail URL", () => {
+    const catalog = buildCatalog([fakeValidated("demo")], opts);
+    const app = catalog.apps[0];
+    expect(app.assets).toMatchObject({ icon: "/catalog/demo/icon-512.png", og: "/catalog/demo/og.png" });
+    expect(app.detailUrl).toBe("https://explore.dig.net/app/demo");
+    expect(catalog.count).toBe(1);
+  });
+
+  it("sorts featured first, then newest, then by name", () => {
+    const catalog = buildCatalog(
+      [
+        fakeValidated("older", { addedDate: "2026-01-01" }),
+        fakeValidated("bfeat", { featured: true }),
+        fakeValidated("newer", { addedDate: "2026-06-01" }),
+        fakeValidated("afeat", { featured: true }),
+      ],
+      opts,
+    );
+    expect(catalog.apps.map((a) => a.slug)).toEqual(["afeat", "bfeat", "newer", "older"]);
+  });
+
+  it("includes optional assets only when the files exist", () => {
+    const withHero = fakeValidated("h");
+    withHero.assets.files.push("hero.png", "tile.png", "icon-1024.png");
+    const catalog = buildCatalog([withHero, fakeValidated("plain")], opts);
+    const h = catalog.apps.find((a) => a.slug === "h")!;
+    const plain = catalog.apps.find((a) => a.slug === "plain")!;
+    expect(h.assets).toMatchObject({ hero: "/catalog/h/hero.png", tile: "/catalog/h/tile.png", icon1024: "/catalog/h/icon-1024.png" });
+    expect(plain.assets).not.toHaveProperty("hero");
+  });
+});
+
+describe("renderSitemap / renderLlmsTxt", () => {
+  const catalog = buildCatalog([fakeValidated("demo")], {
+    generatedAt: "2026-07-03T12:00:00.000Z",
+    storeVersion: "0.1.0",
+  });
+
+  it("sitemap lists home + every detail page with the build date", () => {
+    const xml = renderSitemap(catalog);
+    expect(xml).toContain("<loc>https://explore.dig.net/</loc>");
+    expect(xml).toContain("<loc>https://explore.dig.net/app/demo</loc>");
+    expect(xml).toContain("<lastmod>2026-07-03</lastmod>");
+  });
+
+  it("llms.txt maps the store for agents: catalog.json, SPEC, every app", () => {
+    const txt = renderLlmsTxt(catalog);
+    expect(txt).toContain("https://explore.dig.net/catalog.json");
+    expect(txt).toContain("SPEC.md");
+    expect(txt).toContain("[demo](https://explore.dig.net/app/demo)");
+    expect(txt).toContain("Open the dApp: https://demo.example/");
+  });
+});
+
+// ----------------------------------------------------------- prerender-apps
+
+describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
+  const app = {
+    slug: "demo",
+    name: "Demo & Co",
+    tagline: 'The "demo" dApp.',
+    url: "https://demo.example/",
+    author: { name: "DIG Network", url: "https://dig.net" },
+    assets: { og: "/catalog/demo/og.png" },
+  };
+
+  it("emits per-app title, canonical, OG image, and SoftwareApplication JSON-LD, escaped", () => {
+    const block = appSeoBlock(app);
+    expect(block).toContain("<title>Demo &amp; Co —");
+    expect(block).toContain('<link rel="canonical" href="https://explore.dig.net/app/demo" />');
+    expect(block).toContain('content="https://explore.dig.net/catalog/demo/og.png"');
+    expect(block).toContain('"@type":"SoftwareApplication"');
+    expect(block).toContain("&quot;demo&quot;");
+  });
+
+  it("home ItemList JSON-LD enumerates the catalog in order", () => {
+    const ld = homeItemListLd({ count: 2, apps: [
+      { detailUrl: "https://explore.dig.net/app/a", name: "A" },
+      { detailUrl: "https://explore.dig.net/app/b", name: "B" },
+    ]});
+    expect(ld["@type"]).toBe("ItemList");
+    expect(ld.numberOfItems).toBe(2);
+    expect(ld.itemListElement[1]).toMatchObject({ position: 2, url: "https://explore.dig.net/app/b" });
+  });
+
+  it("swapSeoBlock replaces exactly the marked block and throws without markers", () => {
+    const html = "<head><!-- SEO:BEGIN -->OLD<!-- SEO:END --></head>";
+    const out = swapSeoBlock(html, "NEW");
+    expect(out).toContain("NEW");
+    expect(out).not.toContain("OLD");
+    expect(() => swapSeoBlock("<head></head>", "NEW")).toThrow(/SEO markers/);
+  });
+});
+
+// ------------------------------------------------------- resolve-app-version
+
+describe("resolveAppVersion", () => {
+  it("returns the package.json semver, optionally +git-short-sha", () => {
+    expect(resolveAppVersion()).toMatch(/^\d+\.\d+\.\d+(\+[0-9a-f]+)?$/);
+  });
+});

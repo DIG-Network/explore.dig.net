@@ -1,0 +1,33 @@
+{
+  "$schema": "../app.schema.json",
+  "slug": "xchannuity",
+  "name": "XCH Annuity",
+  "tagline": "Transferable, tradable streamed annuities on Chia — vesting by the second.",
+  "description": "An Xchannuity is an **on-chain annuity coin** that releases a fixed principal to its owner linearly over a time window. The owner can claim whatever has vested at any moment, transfer the unvested remainder to someone else, or sell it via a standard Chia offer.\n\nThe annuity is presented in **XCH** — under the hood the coin is a 1:1 wrapped-XCH CAT (cMOJO), wrapped on deposit and melted back to native XCH on withdrawal, so users only ever see and hold XCH.\n\n## How it works\n\nThe annuity coin is a `CAT<StreamLayer>`: a Chia CAT whose inner puzzle enforces the vesting math and ownership.\n\n- **Claim** *(owner-authorized)* — pay out everything vested up to now; the unvested remainder continues as a fresh annuity coin.\n- **Transfer** *(owner-authorized, plain or via offer)* — hand the remainder to a new owner. Value can never become liquid early; the vesting window is preserved across every continuation.\n- **Clawback** *(issuer, optional)* — an annuity created with a clawback address can be reclaimed by its issuer; one created without is permanent.\n\nCreate, claim, and trade from the app with a Sage wallet over WalletConnect — one atomic signature to wrap, mint, and fund.",
+  "category": "defi",
+  "tags": [
+    "annuity",
+    "streaming",
+    "vesting",
+    "cat",
+    "offers"
+  ],
+  "url": "https://xchannuity.app/",
+  "repo": "https://github.com/DIG-Network/xchannuity.app",
+  "author": {
+    "name": "DIG Network",
+    "url": "https://dig.net"
+  },
+  "chain": "chia",
+  "status": "beta",
+  "featured": false,
+  "accentColor": "#cbd2de",
+  "addedDate": "2026-07-03",
+  "license": "MIT",
+  "placeholderAssets": [
+    "icon-512.png",
+    "og.png",
+    "hero.png",
+    "tile.png"
+  ]
+}

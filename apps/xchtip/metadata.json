@@ -1,0 +1,24 @@
+{
+  "$schema": "../app.schema.json",
+  "slug": "xchtip",
+  "name": "xchtip.app",
+  "tagline": "Embeddable Chia tip buttons — XCH or any CAT, wallet to wallet.",
+  "description": "xchtip.app builds a **tip button you can embed on any website** with one line of HTML. Pick a recipient, an asset (XCH or any CAT — including **$DIG**), and a color scheme; copy the snippet; done. Visitors connect a Chia wallet over WalletConnect and tip on-chain, wallet to wallet — non-custodial, no account, no middleman.\n\n## What you get\n\n- **The builder** — a live workbench: configure the button on the left, watch it come to life on the stage, copy one line of HTML.\n- **A tip page** — no website needed: every recipient gets a shareable landing page at `xchtip.app/jar/<address>` with a working tip button. Deterministic and backend-free — the whole page lives in the URL.\n- **The embed** — a self-contained widget script. On click it opens its own WalletConnect session, the visitor picks an amount, and the widget builds, signs, and broadcasts the payment (XCH plain spend, or a CAT ring spend for any asset id).\n- **A machine API** — every snippet is also available as plain text (`/embed.txt?…`) and every builder state is a shareable query-param URL, so tools and agents can generate embeds without the UI.\n\nSchemes: green (XCH), purple ($DIG), orange (HOA), or any custom hex accent. Custom logos supported for any brand or CAT.",
+  "category": "payments",
+  "tags": ["tips", "payments", "cat", "walletconnect", "embed", "widget"],
+  "url": "https://xchtip.app/",
+  "repo": "https://github.com/DIG-Network/xchtip.app",
+  "author": {
+    "name": "DIG Network",
+    "url": "https://dig.net"
+  },
+  "chain": "chia",
+  "status": "live",
+  "featured": true,
+  "accentColor": "#f5b642",
+  "addedDate": "2026-07-03",
+  "links": {
+    "discord": "https://discord.gg/dignetwork"
+  },
+  "placeholderAssets": ["hero.png", "tile.png"]
+}

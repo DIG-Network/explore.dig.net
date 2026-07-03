@@ -1,0 +1,10 @@
+{
+  "name": "explore.dig.net",
+  "short_name": "explore.dig.net",
+  "description": "The curated dApp store for the DIG Network / Chia ecosystem.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A20",
+  "theme_color": "#0A0A20",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
