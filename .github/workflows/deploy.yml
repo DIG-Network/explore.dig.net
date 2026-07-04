@@ -10,7 +10,7 @@ name: deploy
 # never on the ephemeral runner disk. See runbooks/deploy.md.
 on:
   push:
-    branches: [main]
+    tags: ['v*']
   workflow_dispatch: {}
 
 # Serialize deploys so two runs never race on the terraform state lock or `s3 sync --delete`.
