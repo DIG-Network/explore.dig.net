@@ -658,7 +658,9 @@ a {
   color: var(--fg1);
   background: transparent;
   border: 0;
-  outline: none;
+  /* No outline override here (WCAG 2.4.7 Focus Visible, AA) — the global :focus-visible rule
+     (pink-glow outline) must reach this input; the :focus-within border shift alone is not a
+     sufficient standalone indicator. */
   padding: 12px 0;
   width: 100%;
 }
