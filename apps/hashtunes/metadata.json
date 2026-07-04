@@ -1,0 +1,20 @@
+{
+  "$schema": "../app.schema.json",
+  "slug": "hashtunes",
+  "name": "HashTunes",
+  "tagline": "A Hash Tune player and explorer that turns Chia blockchain blocks into playable music.",
+  "description": "HashTunes turns the Chia blockchain into music. Each block's header hash drives a sequence of notes, so pressing play on a block lets you literally *listen* to the chain.\n\n## How it works\n\n- **Explore** — browse the chain and inspect a block record: header hash, farmer puzzle hash, weight, and fees.\n- **Play** — press play to turn the current block's header hash into a Hash Tune, with full transport controls (play, rewind, fast-forward, stop, loop).\n- **Live chain data** — block records are read live from [coinset.org](https://coinset.org), so every Hash Tune reflects a real block on the Chia chain.\n\nHashTunes is published on the DIG Network — this listing points at the on-chain-anchored copy served at `hashtunes.on.dig.net`.",
+  "category": "tools",
+  "tags": ["chia", "blockchain", "music", "sonification", "block-explorer", "generative"],
+  "url": "https://hashtunes.on.dig.net/",
+  "author": {
+    "name": "HashTunes",
+    "url": "https://hashtunes.xyz"
+  },
+  "chain": "chia",
+  "status": "live",
+  "featured": false,
+  "accentColor": "#fb81ed",
+  "addedDate": "2026-07-04",
+  "placeholderAssets": ["og.png", "hero.png", "tile.png"]
+}
