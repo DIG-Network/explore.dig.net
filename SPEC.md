@@ -24,6 +24,29 @@ Key words MUST, MUST NOT, SHOULD, MAY are to be interpreted as in RFC 2119.
   bundles, and proxies no wallet traffic. The "Open dApp" CTA is a plain link to the listing's
   `url`.
 
+### 1.1 Submission paths
+
+A listing is added by a pull request that creates the listing's `apps/<slug>/` folder (§2). Such a
+pull request MAY originate two ways, and **both are governed identically** by this specification —
+the same `app.schema.json` + CI validation gate (§3–§5) decides whether the pull request can merge,
+and a maintainer still reviews it:
+
+1. **Manual** — an author forks the repository and opens the pull request by hand (§7).
+2. **Authorized automated path** — an external, authorized service opens the pull request on a
+   submitter's behalf. In the DIG Network ecosystem this is the dApp-submission flow on
+   **hub.dig.net**: a developer submits their dApp there (metadata + assets) with their Chia wallet
+   as identity; a store maintainer approves the submission; on approval the hub authenticates to
+   GitHub with a scoped, server-held token and opens a pull request that adds
+   `apps/<slug>/metadata.json` plus the uploaded `assets/` exactly per §2–§4. The token is never
+   embodied in this repository and grants only the access needed to open that pull request.
+
+An automated pull request is **NOT** privileged: it carries no special merge rights, `featured`
+MUST be `false` on it (curation stays a maintainer decision, §4.3), and it MUST pass the same
+build-blocking validation (§3–§5) as any manual submission — a non-conforming automated pull
+request fails CI and cannot merge, identically to a manual one. The store therefore has no
+self-service publishing pipeline regardless of how a pull request is opened: nothing ships without
+green CI and maintainer review.
+
 ## 2. Repository layout (per listing)
 
 ```
@@ -206,6 +229,10 @@ be renamed or repurposed.
   filter state mirrors to the URL as `?category=<cat>&q=<text>`.
 
 ## 7. Submission checklist (author-facing)
+
+This is the **manual** path (§1.1). To submit without forking, use the hub.dig.net dApp-submission
+flow — the **authorized automated path** of §1.1 opens an equivalent pull request for you, subject
+to the identical validation gate below.
 
 1. Fork the repo; create `apps/<slug>/` (slug: lowercase letters/digits/hyphens, 3–40 chars).
 2. Write `metadata.json` with every §3.1 required field (`"$schema": "../app.schema.json"`
