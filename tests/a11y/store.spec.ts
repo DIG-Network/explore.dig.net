@@ -68,6 +68,21 @@ test.describe("home", () => {
     await page.keyboard.press("Tab");
     await expect(page.locator(".skip-link")).toBeFocused();
   });
+
+  // WCAG 2.4.7 Focus Visible (AA): every keyboard-focusable control must show a visible
+  // indicator on focus. axe's static DOM scan can't catch a focus-only CSS regression (it never
+  // drives focus), so this asserts the computed outline directly once the search input is
+  // actually focused via the keyboard.
+  test("search input shows a visible focus outline", async ({ page }) => {
+    await page.goto("/");
+    await page.getByTestId("search-input").focus();
+    const outline = await page.getByTestId("search-input").evaluate((el) => {
+      const style = getComputedStyle(el);
+      return { style: style.outlineStyle, width: style.outlineWidth };
+    });
+    expect(outline.style).not.toBe("none");
+    expect(outline.width).not.toBe("0px");
+  });
 });
 
 test.describe("featured carousel", () => {
