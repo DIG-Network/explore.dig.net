@@ -223,22 +223,37 @@ be renamed or repurposed.
   ja, ru, es, pt-BR, fr, de, tr, vi, id, hi); browser-locale detection with a persisted explicit
   choice (`localStorage["explore.locale"]`). Listing content (name/tagline/description) is
   author-provided and not machine-translated.
-- **Accessibility:** WCAG 2.2 AA; CI runs axe over home/detail/not-found at desktop + mobile
-  widths and fails on any violation.
+- **Accessibility:** WCAG 2.2 AA; CI runs axe over home/detail/not-found AND the Apps launcher at
+  desktop + mobile widths (dark + light) and fails on any violation. The launcher's ambient
+  wallpaper and home-indicator are decorative (`aria-hidden`); labels keep AA contrast against the
+  solid launcher base in both themes.
 - **Version exposure (§6.7 ecosystem rule):** the build's semver is visible in the footer, in
   `<meta name="app-version">`, and at `window.__APP_VERSION__`.
 - **Bug reporting:** the shared `@dignetwork/components` `<BugReportButton repo="explore.dig.net">`
   is mounted at the shell; its API host `api.bugreport.dig.net` is allowed in the CSP.
-- **Routing:** `/` (home), `/apps` (the Apps home-screen tab), `/app/<slug>` (detail), anything else
+- **Routing:** `/` (home), `/apps` (the Apps launcher), `/app/<slug>` (detail), anything else
   renders the not-found state. The filter state mirrors to the URL as `?category=<cat>&q=<text>`
-  (home only — the Apps tab below has no filter/search).
-- **Apps home-screen tab (`/apps`):** every listed dApp renders as a phone-home-screen icon — the
-  listing's `assets.icon` plus its `name` label beneath, in a responsive grid (rows of rounded icons
-  on mobile; the same grid scales up on desktop). Tapping a tile's icon+label opens the dApp's `url`
-  directly in a new tab (the same action as the Store tab's "Open dApp" CTA); a small, separate "i"
-  affordance on each tile links to that listing's `/app/<slug>` detail page. A `<nav>` labelled view
-  switcher ("Store" / "Apps", `aria-current="page"` on the active one) appears on both the home and
-  Apps views so a visitor can move between the two presentations of the same catalog.
+  (home store only — the Apps launcher has no filter/search).
+- **Width-aware landing (`/`):** there is a CLEAR launcher breakpoint at **600px**. On the bare
+  landing `/`, a viewport **≤ 600px** (a phone) defaults to the Apps launcher — the "just like your
+  home screen" promise — while a viewport **> 600px** (desktop) defaults to the curated store. An
+  explicit `?view=` override on `/` always wins (`?view=store` / `?view=apps`), as does a filter
+  query (`?q=` / `?category=` is store intent), so both surfaces stay deep-linkable and the Store
+  pill remains reachable from the launcher on a phone. `/apps` is always the launcher; `/app/<slug>`
+  and not-found are width-independent. (The document body is client-rendered, so the correct surface
+  paints on first render — no store→launcher flash.)
+- **Apps launcher (`/apps`, and `/` on phones):** every listed dApp renders as a phone-home-screen
+  icon — the listing's `assets.icon` plus its `name` label beneath. **At or below the 600px
+  breakpoint** it is a genuine Android-style home screen: a full-bleed, fixed violet→magenta ambient
+  wallpaper (decorative, `aria-hidden`), four even full-width columns of big rounded (squircle) icons
+  floating with soft drop shadows, labels beneath, the grid flowing from the top, and a decorative
+  bottom home-indicator pill. **Above the breakpoint** it is the tidy centered desktop icon grid with
+  the heading + intro (no wallpaper/indicator) — the switch is crisp, not a gradual reflow. Tapping a
+  tile's icon+label opens the dApp's `url` directly in a new tab (the same action as the Store tab's
+  "Open dApp" CTA); a small, separate "i" affordance on each tile links to that listing's
+  `/app/<slug>` detail page. A `<nav>` labelled view switcher ("Store" / "Apps", `aria-current="page"`
+  on the active one) appears on both surfaces so a visitor can move between the two presentations of
+  the same catalog.
 
 ## 7. Submission checklist (author-facing)
 

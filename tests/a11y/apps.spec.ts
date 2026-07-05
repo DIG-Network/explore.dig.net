@@ -35,12 +35,53 @@ test.describe("Apps home-screen tab", () => {
   });
 
   test("the Store/Apps view tabs switch views and mark the current one", async ({ page }) => {
-    await page.goto("/");
+    // Viewport-agnostic: start from /apps (always the launcher) and toggle both ways. The Store pill
+    // carries an explicit override on phones (where / defaults to the launcher), so it is reachable
+    // on desktop AND mobile.
+    await page.goto("/apps");
+    await expect(page.getByTestId("view-tab-apps")).toHaveAttribute("aria-current", "page");
+    await expect(page.getByTestId("app-home-grid")).toBeVisible();
+
+    await page.getByTestId("view-tab-store").click();
     await expect(page.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
+    await expect(page.getByTestId("app-grid")).toBeVisible();
+
     await page.getByTestId("view-tab-apps").click();
     await expect(page).toHaveURL(/\/apps$/);
     await expect(page.getByTestId("view-tab-apps")).toHaveAttribute("aria-current", "page");
     await expect(page.getByTestId("app-home-grid")).toBeVisible();
+  });
+
+  // #51 follow-up: the landing (`/`) is width-aware — a phone visitor lands ON the launcher (the
+  // "just like your home screen" promise), a desktop visitor on the curated store. The breakpoint
+  // is 600px; the mobile project (Pixel 5) is 393px and the desktop project is ~1280px.
+  test("the landing at / defaults to the launcher on phones and the store on desktop", async ({
+    page,
+  }) => {
+    const width = page.viewportSize()?.width ?? 0;
+    await page.goto("/");
+    if (width <= 600) {
+      await expect(page.getByTestId("app-home-grid")).toBeVisible();
+      await expect(page.getByTestId("view-tab-apps")).toHaveAttribute("aria-current", "page");
+      await expect(page.getByTestId("view-tab-store")).toHaveAttribute("href", "/?view=store");
+      await expectAxeClean(page);
+    } else {
+      await expect(page.getByTestId("app-grid")).toBeVisible();
+      await expect(page.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
+    }
+  });
+
+  test("the ambient launcher wallpaper shows on phones and is absent on desktop", async ({
+    page,
+  }) => {
+    const width = page.viewportSize()?.width ?? 0;
+    await page.goto("/apps");
+    const wallpaper = page.getByTestId("launcher-wallpaper");
+    if (width <= 600) {
+      await expect(wallpaper).toBeVisible();
+    } else {
+      await expect(wallpaper).toBeHidden();
+    }
   });
 
   test("is keyboard operable: a tile link and its info affordance are both reachable by Tab", async ({
