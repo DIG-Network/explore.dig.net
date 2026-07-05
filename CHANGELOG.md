@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.4.0] - 2026-07-05
+
+### Features
+- **apps:** Render /apps as an Android home-screen launcher on phones (#6)
+
 ## [0.3.1] - 2026-07-05
 
 ### Bug Fixes
