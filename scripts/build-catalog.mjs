@@ -4,6 +4,9 @@
 // Outputs (all git-ignored, regenerated every build):
 //   • public/catalog/<slug>/…        — each app's assets, copied verbatim (served at /catalog/…)
 //   • public/catalog.json            — the machine-consumable store catalog (agents/clients)
+//   • public/store.json              — the lean launcher manifest (name+icon+link per app; the
+//                                      dig-chrome-extension fetches it cross-origin to build a
+//                                      native mobile home-screen launcher — SPEC.md §5.1)
 //   • src/catalog/catalog.gen.json   — the same catalog, imported statically by the SPA
 //   • public/sitemap.xml             — home + every /app/<slug> page
 //   • public/llms.txt                — the LLM/agent map of the store (kept current per build)
@@ -44,6 +47,35 @@ export function buildCatalog(apps, { generatedAt, storeVersion }) {
   return { generatedAt, storeVersion, siteUrl: SITE_URL, count: entries.length, apps: entries };
 }
 
+/**
+ * Render the lean launcher manifest (store.json) from the built catalog (pure). It is DERIVED from
+ * the same catalog object as catalog.json, so the two never drift — same apps, same order.
+ *
+ * The dig-chrome-extension fetches this cross-origin to build its own native mobile home-screen
+ * launcher (a grid of app icons). Every entry is deliberately minimal — just what a launcher tile
+ * needs — with ABSOLUTE URLs so a consumer that does not know the site origin can render the icon
+ * and open the link directly:
+ *   • `icon` — the site-origin-prefixed absolute URL of the app's 512px launcher icon.
+ *   • `link` — the dApp's own absolute URL (the tile's tap target).
+ * Full metadata, descriptions, and screenshots stay in catalog.json (the launcher does not need
+ * them). See SPEC.md §5.1 for the normative contract.
+ */
+export function renderStoreJson(catalog) {
+  const apps = catalog.apps.map((app) => {
+    const entry = {
+      slug: app.slug,
+      name: app.name,
+      icon: `${catalog.siteUrl}${app.assets.icon}`,
+      link: app.url,
+      category: app.category,
+      featured: app.featured,
+    };
+    if (app.accentColor) entry.accentColor = app.accentColor;
+    return entry;
+  });
+  return { generatedAt: catalog.generatedAt, version: catalog.storeVersion, apps };
+}
+
 /** Render sitemap.xml — home + the Apps home-screen tab + one entry per app detail page (pure). */
 export function renderSitemap(catalog) {
   const lastmod = catalog.generatedAt.slice(0, 10);
@@ -77,6 +109,7 @@ export function renderLlmsTxt(catalog) {
 - [Store home](${SITE_URL}/) — featured + all apps, category filter, search
 - [Apps](${SITE_URL}/apps) — every listing as a phone-home-screen icon grid (tap an icon to open the dApp) — the mobile-first browse/launch surface
 - [Machine catalog (JSON)](${SITE_URL}/catalog.json) — every listing's full metadata + asset URLs; consume this instead of scraping HTML
+- [Launcher manifest (JSON)](${SITE_URL}/store.json) — a lean name + absolute icon + absolute link per app, for building an app-launcher / home-screen grid (CORS-open, cross-origin consumable)
 - [Submission spec](https://github.com/DIG-Network/explore.dig.net/blob/main/SPEC.md) — the exact metadata schema + asset checklist to get listed
 - [Metadata JSON Schema](https://github.com/DIG-Network/explore.dig.net/blob/main/apps/app.schema.json)
 
@@ -114,11 +147,14 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   }
 
   writeFileSync(join(ROOT, "public", "catalog.json"), JSON.stringify(catalog, null, 2));
+  writeFileSync(join(ROOT, "public", "store.json"), JSON.stringify(renderStoreJson(catalog), null, 2));
   const genDir = join(ROOT, "src", "catalog");
   if (!existsSync(genDir)) mkdirSync(genDir, { recursive: true });
   writeFileSync(join(genDir, "catalog.gen.json"), JSON.stringify(catalog, null, 2));
   writeFileSync(join(ROOT, "public", "sitemap.xml"), renderSitemap(catalog));
   writeFileSync(join(ROOT, "public", "llms.txt"), renderLlmsTxt(catalog));
 
-  console.log(`[build-catalog] OK — ${catalog.count} app(s) → catalog.json, sitemap.xml, llms.txt.`);
+  console.log(
+    `[build-catalog] OK — ${catalog.count} app(s) → catalog.json, store.json, sitemap.xml, llms.txt.`,
+  );
 }
