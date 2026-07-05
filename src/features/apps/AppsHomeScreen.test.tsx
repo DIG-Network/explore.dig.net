@@ -38,4 +38,12 @@ describe("<AppsHomeScreen>", () => {
     expect(screen.getByTestId("apps-home-count")).toHaveTextContent("0 apps");
     expect(screen.getByTestId("app-home-grid")).toBeEmptyDOMElement();
   });
+
+  it("renders the launcher wallpaper as decorative chrome, hidden from assistive tech", () => {
+    renderWithIntl(<AppsHomeScreen apps={apps} />);
+    const wallpaper = screen.getByTestId("launcher-wallpaper");
+    expect(wallpaper).toHaveAttribute("aria-hidden", "true");
+    // Purely presentational: it carries no content and no interactive children.
+    expect(wallpaper).toBeEmptyDOMElement();
+  });
 });

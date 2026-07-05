@@ -66,6 +66,16 @@
     radial-gradient(1100px 520px at 12% -6%, rgba(88, 0, 214, 0.22), transparent 62%),
     radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.1), transparent 60%),
     #0a0a20;
+
+  /* Apps launcher wallpaper (#51) — a deep, saturated violet→magenta home-screen backdrop; icon
+     labels are white with a soft shadow so they stay legible over the ambient gradient. */
+  --launcher-base: #05041a;
+  --launcher-nebula-1: rgba(88, 0, 214, 0.6);
+  --launcher-nebula-2: rgba(255, 0, 222, 0.42);
+  --launcher-nebula-3: rgba(150, 80, 255, 0.34);
+  --launcher-label: #ffffff;
+  --launcher-label-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  --launcher-indicator: rgba(255, 255, 255, 0.55);
 }
 
 :root[data-theme="light"] {
@@ -101,6 +111,16 @@
     radial-gradient(1100px 520px at 12% -6%, rgba(88, 0, 214, 0.07), transparent 62%),
     radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.05), transparent 60%),
     #ffffff;
+
+  /* Apps launcher wallpaper (#51), light theme — a soft lavender home screen; labels are dark for
+     contrast (the solid `--launcher-base` is what axe measures against, so it stays AA in both). */
+  --launcher-base: #ece7fb;
+  --launcher-nebula-1: rgba(88, 0, 214, 0.2);
+  --launcher-nebula-2: rgba(255, 0, 222, 0.14);
+  --launcher-nebula-3: rgba(150, 80, 255, 0.16);
+  --launcher-label: #17123a;
+  --launcher-label-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+  --launcher-indicator: rgba(23, 18, 58, 0.4);
 }
 
 /* ---------- base ---------- */
@@ -918,6 +938,14 @@ a {
   border-color: var(--border-soft);
 }
 
+/* Launcher-only decorative chrome (the ambient wallpaper + the bottom home-indicator pill). Off by
+   default; the phone-launcher media block below turns them on. Never in the a11y tree (aria-hidden
+   in the markup) and never shown in the desktop grid view — the breakpoint switch stays crisp. */
+.launcher-wallpaper,
+.launcher-home-indicator {
+  display: none;
+}
+
 /* ---------- app grid + cards ---------- */
 
 .app-grid {
@@ -1436,51 +1464,131 @@ a {
   .view-tabs {
     margin-top: 20px;
   }
+}
 
-  /* Phone launcher: the icon grid is the hero, so the heading + intro recede to a compact,
-     status-bar-like header (kept for a11y/SEO, §6.6 — never deleted) and the grid dominates the
-     viewport like an iOS/Android home screen. */
+/* ============================================================================
+   Apps → Android-style phone launcher (#51). CLEAR breakpoint at 600px: at or
+   below this width `/apps` (and the phone landing `/`, see useLauncherViewport)
+   render as a genuine home screen — a full-bleed violet→magenta wallpaper, big
+   rounded app icons floating with soft shadows, labels beneath, the grid
+   vertically centered so the icons own the viewport, and a home-indicator pill.
+   Above 600px the tidy centered desktop icon grid stands unchanged — the switch
+   is crisp, not a gradual reflow.
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  /* The wallpaper: a fixed, viewport-filling ambient backdrop painted BEHIND the page content
+     (z-index:-1 over the body canvas), so the icons + chrome float on an edge-to-edge home screen.
+     Fixed + inset:0 sidesteps any 100vw/scrollbar breakout math — the body never scrolls sideways. */
+  .launcher-wallpaper {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 78% at 16% 4%, var(--launcher-nebula-1), transparent 60%),
+      radial-gradient(120% 90% at 88% 20%, var(--launcher-nebula-2), transparent 58%),
+      radial-gradient(150% 130% at 50% 112%, var(--launcher-nebula-3), transparent 62%),
+      var(--launcher-base);
+  }
+
+  /* The launcher panel fills the screen: a compact title, the icon grid flowing from the TOP like a
+     real home screen, then the home-indicator pinned to the bottom (margin-top:auto). The full-bleed
+     wallpaper fills the rest, so leftover space reads as intentional ambient home-screen space. */
   .apps-home {
-    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    /* Fill the viewport below the header + view-tabs so the icon panel + home indicator sit on the
+       first screen like a real home screen (the footer follows below the fold). ~210px accounts for
+       the site header + main top padding + the Store/Apps pills. */
+    min-height: 68vh;
+    min-height: calc(100svh - 240px);
+    padding-block: 14px 8px;
+  }
+
+  /* Compact launcher title, aligned with the icon grid's left edge (kept for heading structure /
+     SEO, §6.6); the long intro recedes so the icons are the hero (the /apps SEO description lives in
+     the prerendered <head>). */
+  .apps-home-head {
+    align-items: baseline;
+    gap: 10px;
+    flex: none;
+    margin-bottom: 6px;
   }
 
   .apps-home-heading {
-    font-size: 21px;
+    font-size: 20px;
+    color: var(--launcher-label);
+    text-shadow: var(--launcher-label-shadow);
+  }
+
+  .apps-count {
+    color: var(--launcher-label);
+    text-shadow: var(--launcher-label-shadow);
   }
 
   .apps-home-intro {
-    font-size: 13px;
-    margin-top: 6px;
+    display: none;
   }
 
   .app-home-grid {
-    /* Full-width, evenly-distributed launcher columns — 4-up on phones — instead of the desktop's
-       centered fixed-px cluster. 1fr tracks span the whole shell width with even gutters, so a
-       handful of icons read as a home screen, not a small centered web widget. */
+    /* Four even full-width columns — a real home screen, not a centered web widget — flowing from
+       the top. A little top margin separates it from the title. */
     grid-template-columns: repeat(4, 1fr);
     justify-content: normal;
     column-gap: 8px;
-    row-gap: 26px;
-    margin-top: 20px;
+    row-gap: 28px;
+    margin-top: 14px;
   }
 
   .app-tile {
-    /* Fill the 1fr cell so columns are even across the launcher (no fixed-px cap that re-clusters). */
+    /* Fill the 1fr cell so the columns stay even (no fixed-px cap that would re-cluster them). */
     max-width: none;
   }
 
-  /* Bigger home-screen squircles that scale with the 1fr cell (~56–72px). The 22% squircle radius +
-     soft drop shadow come from the base .app-tile-icon-frame rule; !important is required only to
-     beat AppIcon's inline width/height (the img attrs + the fallback span's inline style) — the
-     component's API is untouched (CLAUDE.md §2.0: AppIcon is reused/CRITICAL, re-skin via CSS only). */
+  .app-tile-link {
+    gap: 10px;
+  }
+
+  /* Big home-screen squircles that scale with the cell (~64–92px), floating with a soft drop shadow.
+     `!important` beats only AppIcon's inline width/height (the <img> attrs + the fallback's inline
+     style) — AppIcon's API is untouched (CLAUDE.md §2.0: it is reused/CRITICAL, re-skin via CSS). */
   .app-tile-icon-frame .app-icon,
   .app-tile-icon-frame .app-icon-fallback {
-    width: clamp(56px, 17vw, 72px) !important;
-    height: clamp(56px, 17vw, 72px) !important;
+    width: clamp(64px, 19vw, 92px) !important;
+    height: clamp(64px, 19vw, 92px) !important;
+    border-radius: 24%;
+    box-shadow:
+      0 12px 26px -10px rgba(0, 0, 0, 0.7),
+      0 2px 6px rgba(0, 0, 0, 0.32);
   }
 
   .app-tile-name {
-    font-size: 12px;
+    font-size: 12.5px;
+    color: var(--launcher-label);
+    text-shadow: var(--launcher-label-shadow);
+  }
+
+  /* The "i" detail affordance sits translucent over the wallpaper (still ≥24px, WCAG 2.5.8). */
+  .app-tile-info {
+    background: rgba(10, 10, 32, 0.4);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: var(--launcher-label);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Bottom home-indicator pill — the universally-recognized phone-screen gesture cue (decorative).
+     `margin-top: auto` pins it to the bottom of the launcher panel so the icons flow from the top. */
+  .launcher-home-indicator {
+    display: block;
+    flex: none;
+    width: 128px;
+    height: 5px;
+    margin: auto auto 4px;
+    border-radius: var(--r-pill);
+    background: var(--launcher-indicator);
   }
 }
 

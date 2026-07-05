@@ -2,7 +2,7 @@
 // bug-report widget mount. The widget itself is @dignetwork/components' concern — mocked here so
 // the shell test asserts only OUR contract with it (repo + appVersion props).
 
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import { renderWithIntl } from "@/test/renderWithIntl";
 import { APP_VERSION } from "@/lib/version";
@@ -13,6 +13,26 @@ vi.mock("@dignetwork/components", () => ({
     <div data-testid="bug-report-button" data-repo={repo} data-app-version={appVersion} />
   ),
 }));
+
+/** Force the launcher breakpoint match so `/` resolves to the phone launcher (#51 follow-up). */
+function mockViewport(isLauncher: boolean) {
+  window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+    matches: isLauncher,
+    media: q,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+}
+
+// Reset to the desktop default after every test so the many tests that don't set a viewport keep
+// getting the store landing (jsdom has no real matchMedia; setup.ts stubs matches:false).
+afterEach(() => {
+  mockViewport(false);
+});
 
 describe("<App>", () => {
   it("renders the store home at / with header, main landmark, and footer", () => {
@@ -53,6 +73,38 @@ describe("<App>", () => {
     renderWithIntl(<App pathname="/" search="" />);
     expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
     expect(screen.getByTestId("view-tab-apps")).not.toHaveAttribute("aria-current");
+  });
+
+  it("defaults the phone landing (/) to the Apps launcher, marking Apps active (#51 follow-up)", () => {
+    mockViewport(true); // phone-width viewport → launcher is the landing
+    renderWithIntl(<App pathname="/" search="" />);
+    expect(screen.getByTestId("app-home-grid")).toBeInTheDocument();
+    expect(screen.queryByTestId("app-card-xchtip")).not.toBeInTheDocument();
+    expect(screen.getByTestId("view-tab-apps")).toHaveAttribute("aria-current", "page");
+    // The Store stays reachable from the launcher via an explicit override.
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("href", "/?view=store");
+  });
+
+  it("keeps the desktop landing (/) on the store even as the phone default changes", () => {
+    mockViewport(false); // desktop-width viewport → store is the landing
+    renderWithIntl(<App pathname="/" search="" />);
+    expect(screen.getByTestId("app-card-xchtip")).toBeInTheDocument();
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("href", "/");
+  });
+
+  it("honors ?view=store on a phone so the store is deep-linkable below the breakpoint", () => {
+    mockViewport(true);
+    renderWithIntl(<App pathname="/" search="?view=store" />);
+    expect(screen.getByTestId("app-card-xchtip")).toBeInTheDocument();
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
+  });
+
+  it("treats a filter query (?q=) as store intent so a bookmarked search opens the store on a phone", () => {
+    mockViewport(true);
+    renderWithIntl(<App pathname="/" search="?q=annuity" />);
+    expect(screen.getByTestId("app-grid")).toBeInTheDocument();
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
   });
 
   it("shows the Store/Apps view tabs on the Apps view, marking Apps active", () => {

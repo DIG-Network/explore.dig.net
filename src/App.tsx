@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 import { BugReportButton } from "@dignetwork/components";
 import { loadCatalog } from "@/catalog/catalog";
 import { parseRoute } from "@/lib/route";
+import { useLauncherViewport } from "@/lib/useLauncherViewport";
 import { APP_VERSION } from "@/lib/version";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -33,8 +34,27 @@ export interface AppProps {
 export function App({ pathname, search }: AppProps) {
   const t = useT();
   const rawPath = pathname ?? (typeof window !== "undefined" ? window.location.pathname : "/");
+  const rawSearch = search ?? (typeof window !== "undefined" ? window.location.search : "");
   const route = useMemo(() => parseRoute(rawPath), [rawPath]);
   const catalog = useMemo(() => loadCatalog(), []);
+
+  // The landing surface is width-aware (#51 follow-up): a phone visitor lands ON the Apps launcher
+  // (the "just like your home screen" promise), a desktop visitor on the curated store. An explicit
+  // `?view=` override always wins — it keeps the Store/Apps pill toggle reachable on phones (where
+  // `/` defaults to the launcher) and both surfaces deep-linkable. `/apps` is always the launcher;
+  // `/app/<slug>` + not-found are unaffected.
+  const isLauncherViewport = useLauncherViewport();
+  const homeParams = useMemo(() => new URLSearchParams(rawSearch), [rawSearch]);
+  const viewParam = homeParams.get("view");
+  // A filter query (?q= / ?category=) is store intent — a shared/bookmarked search opens the store
+  // even on a phone, where the bare `/` otherwise defaults to the launcher.
+  const wantsStore = viewParam === "store" || homeParams.has("q") || homeParams.has("category");
+  const homeShowsLauncher =
+    route.kind === "home" && !wantsStore && (viewParam === "apps" || isLauncherViewport);
+  const showLauncher = route.kind === "apps" || homeShowsLauncher;
+  const showStore = route.kind === "home" && !homeShowsLauncher;
+  // From the launcher, the Store tab needs an explicit override to escape the phone default.
+  const storeHref = isLauncherViewport ? "/?view=store" : "/";
 
   // Keep the tab title honest on the client too (prerendered pages already ship the right title;
   // this covers dev mode and any client-side entry).
@@ -84,10 +104,10 @@ export function App({ pathname, search }: AppProps) {
 
       <main id="main" className="shell site-main">
         {(route.kind === "home" || route.kind === "apps") && (
-          <ViewTabs active={route.kind === "apps" ? "apps" : "store"} />
+          <ViewTabs active={showLauncher ? "apps" : "store"} storeHref={storeHref} />
         )}
-        {route.kind === "home" && <HomePage apps={catalog.apps} search={search} />}
-        {route.kind === "apps" && <AppsHomeScreen apps={catalog.apps} />}
+        {showStore && <HomePage apps={catalog.apps} search={search} />}
+        {showLauncher && <AppsHomeScreen apps={catalog.apps} />}
         {route.kind === "app" && <AppDetailPage apps={catalog.apps} slug={route.slug} />}
         {route.kind === "not-found" && <NotFound />}
       </main>

@@ -1,6 +1,10 @@
 // Accessibility (WCAG 2.2 AA via axe) + interaction smoke over the BUILT store — desktop and
 // mobile projects (see playwright.config.ts). Every public view is scanned: home, an app detail
 // page, the not-found state, and the filtered/empty states.
+//
+// Store-view tests use `/?view=store` (not bare `/`): below the 600px launcher breakpoint the bare
+// landing defaults to the Apps launcher (#51 follow-up), so the store view is reached with the
+// explicit override — exactly the real path the Store pill uses on a phone (App.tsx / ViewTabs).
 
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
@@ -14,7 +18,7 @@ async function expectAxeClean(page: Page) {
 
 test.describe("home", () => {
   test("renders the seeded catalog and is axe-clean", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await expect(page.getByTestId("app-card-xchtip")).toBeVisible();
     await expect(page.getByTestId("app-card-xchannuity")).toBeVisible();
     await expect(page.getByTestId("app-card-cxch")).toBeVisible();
@@ -26,12 +30,12 @@ test.describe("home", () => {
   });
 
   test("defaults to the dark theme", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
   test("theme toggle switches to light and persists", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.getByTestId("theme-toggle").click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await expectAxeClean(page); // the light theme must hold WCAG contrast too
@@ -40,7 +44,7 @@ test.describe("home", () => {
   });
 
   test("search + category filter drive the grid and the URL", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.getByTestId("search-input").fill("annuity");
     await expect(page.getByTestId("apps-count")).toHaveText("1 app");
     await expect(page).toHaveURL(/q=annuity/);
@@ -57,14 +61,14 @@ test.describe("home", () => {
   });
 
   test("language selector switches the store chrome", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.getByTestId("language-selector").selectOption("de");
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
     await expect(page.getByRole("heading", { name: "Alle Apps" })).toBeVisible();
   });
 
   test("skip link focuses main content", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.keyboard.press("Tab");
     await expect(page.locator(".skip-link")).toBeFocused();
   });
@@ -74,7 +78,7 @@ test.describe("home", () => {
   // drives focus), so this asserts the computed outline directly once the search input is
   // actually focused via the keyboard.
   test("search input shows a visible focus outline", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.getByTestId("search-input").focus();
     const outline = await page.getByTestId("search-input").evaluate((el) => {
       const style = getComputedStyle(el);
@@ -96,7 +100,7 @@ test.describe("featured carousel", () => {
   const activeSlug = (page: Page) => page.locator(".carousel-viewport .featured-card");
 
   test("auto-rotation stays paused under prefers-reduced-motion", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     const region = page.getByTestId("featured-carousel");
     await expect(region).toHaveAttribute("data-playing", "false");
     await expect(page.getByTestId("carousel-playpause")).toHaveAttribute(
@@ -106,7 +110,7 @@ test.describe("featured carousel", () => {
   });
 
   test("next / prev controls change the slide", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     const before = await activeSlug(page).getAttribute("data-testid");
     await page.getByTestId("carousel-next").click();
     const afterNext = await activeSlug(page).getAttribute("data-testid");
@@ -116,14 +120,14 @@ test.describe("featured carousel", () => {
   });
 
   test("dot controls jump to a slide and mark the current one", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     await page.getByTestId("carousel-dot-1").click();
     await expect(page.getByTestId("carousel-dot-1")).toHaveAttribute("aria-current", "true");
     await expect(page.getByTestId("carousel-dot-0")).toHaveAttribute("aria-current", "false");
   });
 
   test("is keyboard operable with the arrow keys", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     const before = await activeSlug(page).getAttribute("data-testid");
     await page.getByTestId("carousel-next").focus();
     await page.keyboard.press("ArrowRight");
@@ -134,7 +138,7 @@ test.describe("featured carousel", () => {
   });
 
   test("announces the current slide via a polite live region", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     const status = page.getByTestId("carousel-status");
     await expect(status).toHaveAttribute("aria-live", "polite"); // polite while paused
     await expect(status).not.toBeEmpty();
@@ -142,7 +146,7 @@ test.describe("featured carousel", () => {
   });
 
   test("every featured slide is reachable and opens the live dApp", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/?view=store");
     const dots = page.locator(".carousel-dot");
     const total = await dots.count();
     expect(total).toBeGreaterThanOrEqual(2);
