@@ -99,4 +99,12 @@ export const zhTW: PartialMessages = {
   openAppNamed: "開啟 {name}",
   viewDetails: "查看詳情",
   detailCtaHeading: "準備好開啟 {name} 了嗎？",
+
+  viewTabsLabel: "切換檢視",
+  storeTabLabel: "商店",
+  appsTabLabel: "應用",
+  appsPageHeading: "應用",
+  appsPageIntro: "DIG Network 的每個 dApp，一觸即達 — 就像手機主畫面一樣。",
+  appsGridLabel: "DIG Network 應用",
+  viewDetailsFor: "查看 {name} 的詳情",
 };

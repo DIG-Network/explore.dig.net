@@ -102,4 +102,12 @@ export const id: PartialMessages = {
   openAppNamed: "Buka {name}",
   viewDetails: "Lihat detail",
   detailCtaHeading: "Siap membuka {name}?",
+
+  viewTabsLabel: "Ganti tampilan",
+  storeTabLabel: "Toko",
+  appsTabLabel: "Aplikasi",
+  appsPageHeading: "Aplikasi",
+  appsPageIntro: "Setiap dApp DIG Network, hanya satu ketukan — seperti layar utama di ponsel Anda.",
+  appsGridLabel: "Aplikasi DIG Network",
+  viewDetailsFor: "Lihat detail {name}",
 };

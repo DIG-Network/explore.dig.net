@@ -102,4 +102,12 @@ export const de: PartialMessages = {
   openAppNamed: "{name} öffnen",
   viewDetails: "Details ansehen",
   detailCtaHeading: "Bereit, {name} zu öffnen?",
+
+  viewTabsLabel: "Ansicht wechseln",
+  storeTabLabel: "Store",
+  appsTabLabel: "Apps",
+  appsPageHeading: "Apps",
+  appsPageIntro: "Jede dApp im DIG Network, einen Fingertipp entfernt — wie der Startbildschirm auf deinem Handy.",
+  appsGridLabel: "DIG Network Apps",
+  viewDetailsFor: "Details zu {name} ansehen",
 };

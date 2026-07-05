@@ -9,8 +9,18 @@ import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { readPngSize, validateApps, ASSET_RULES, SCREENSHOT_RULES } from "../../scripts/validate-apps.mjs";
 import { buildCatalog, renderLlmsTxt, renderSitemap } from "../../scripts/build-catalog.mjs";
-import { appSeoBlock, homeItemListLd, swapSeoBlock } from "../../scripts/prerender-apps.mjs";
-import { auditAppHead, auditHomeHead, REQUIRED_DIST_FILES } from "../../scripts/check-dist.mjs";
+import {
+  appSeoBlock,
+  appsPageSeoBlock,
+  homeItemListLd,
+  swapSeoBlock,
+} from "../../scripts/prerender-apps.mjs";
+import {
+  auditAppHead,
+  auditAppsPageHead,
+  auditHomeHead,
+  REQUIRED_DIST_FILES,
+} from "../../scripts/check-dist.mjs";
 import { resolveAppVersion } from "../../scripts/resolve-app-version.mjs";
 
 // ---------------------------------------------------------------- readPngSize
@@ -196,17 +206,19 @@ describe("renderSitemap / renderLlmsTxt", () => {
     storeVersion: "0.1.0",
   });
 
-  it("sitemap lists home + every detail page with the build date", () => {
+  it("sitemap lists home + the Apps tab + every detail page with the build date", () => {
     const xml = renderSitemap(catalog);
     expect(xml).toContain("<loc>https://explore.dig.net/</loc>");
+    expect(xml).toContain("<loc>https://explore.dig.net/apps</loc>");
     expect(xml).toContain("<loc>https://explore.dig.net/app/demo</loc>");
     expect(xml).toContain("<lastmod>2026-07-03</lastmod>");
   });
 
-  it("llms.txt maps the store for agents: catalog.json, SPEC, every app", () => {
+  it("llms.txt maps the store for agents: catalog.json, SPEC, the Apps tab, every app", () => {
     const txt = renderLlmsTxt(catalog);
     expect(txt).toContain("https://explore.dig.net/catalog.json");
     expect(txt).toContain("SPEC.md");
+    expect(txt).toContain("[Apps](https://explore.dig.net/apps)");
     expect(txt).toContain("[demo](https://explore.dig.net/app/demo)");
     expect(txt).toContain("Open the dApp: https://demo.example/");
   });
@@ -233,6 +245,15 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
     expect(block).toContain("&quot;demo&quot;");
     // The card is described for assistive tech + validators (og:image:alt mirrors the card copy).
     expect(block).toContain('property="og:image:alt"');
+  });
+
+  it("appsPageSeoBlock emits its own title, canonical /apps, and OG/Twitter cards (#51)", () => {
+    const block = appsPageSeoBlock();
+    expect(block).toContain("<title>Apps — explore.dig.net</title>");
+    expect(block).toContain('<link rel="canonical" href="https://explore.dig.net/apps" />');
+    expect(block).toContain('property="og:url" content="https://explore.dig.net/apps"');
+    expect(block).toContain('property="og:image" content="https://explore.dig.net/og.png"');
+    expect(block).toContain('name="twitter:card" content="summary_large_image"');
   });
 
   it("home ItemList JSON-LD enumerates the catalog in order", () => {
@@ -319,6 +340,22 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
     ].join("\n");
     const missing = auditAppHead(html, app);
     expect(missing.some((m) => m.includes("og:image"))).toBe(true);
+    expect(missing.some((m) => m.includes("canonical"))).toBe(true);
+  });
+
+  it("passes a complete Apps-tab head with its own canonical + card (#51)", () => {
+    const html = [
+      "<title>Apps — explore.dig.net</title>",
+      '<meta name="description" content="Every DIG Network dApp, one tap away." />',
+      '<link rel="canonical" href="https://explore.dig.net/apps" />',
+      '<meta property="og:url" content="https://explore.dig.net/apps" />',
+      '<meta name="twitter:card" content="summary_large_image" />',
+    ].join("\n");
+    expect(auditAppsPageHead(html)).toEqual([]);
+  });
+
+  it("flags an Apps-tab page missing its own canonical", () => {
+    const missing = auditAppsPageHead("<title>Apps — explore.dig.net</title>");
     expect(missing.some((m) => m.includes("canonical"))).toBe(true);
   });
 

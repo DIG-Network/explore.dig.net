@@ -102,4 +102,12 @@ export const vi: PartialMessages = {
   openAppNamed: "Mở {name}",
   viewDetails: "Xem chi tiết",
   detailCtaHeading: "Sẵn sàng mở {name} chưa?",
+
+  viewTabsLabel: "Chuyển chế độ xem",
+  storeTabLabel: "Cửa hàng",
+  appsTabLabel: "Ứng dụng",
+  appsPageHeading: "Ứng dụng",
+  appsPageIntro: "Mọi dApp trên DIG Network, chỉ cách một chạm — như màn hình chính trên điện thoại của bạn.",
+  appsGridLabel: "Ứng dụng DIG Network",
+  viewDetailsFor: "Xem chi tiết {name}",
 };
