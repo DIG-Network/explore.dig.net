@@ -23,6 +23,9 @@ enforces the schema, exact asset dimensions, and the store's quality gates autom
 
 - `https://explore.dig.net/catalog.json` — every listing's full metadata + asset URLs; consume
   this instead of scraping HTML.
+- `https://explore.dig.net/store.json` — the lean **launcher manifest**: name + absolute icon +
+  absolute link per app, for building an app-launcher / home-screen grid (the dig-chrome-extension
+  fetches this to build its native mobile launcher). See [SPEC.md §5.1](SPEC.md).
 - `https://explore.dig.net/llms.txt` — the agent-facing map of the store.
 - Per-app pages at `/app/<slug>` ship `SoftwareApplication` JSON-LD; the home page ships
   `WebSite` + `ItemList`; `/apps` ships its own title/canonical/OG card.

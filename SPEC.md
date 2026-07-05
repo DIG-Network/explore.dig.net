@@ -183,6 +183,10 @@ Every build regenerates, and every deploy serves:
   Top-level: `generatedAt` (ISO 8601 build time), `storeVersion` (this package's semver),
   `siteUrl`, `count`, `apps[]` ordered featured-first, then newest `addedDate`, then name.
   **Agents MUST consume `catalog.json` rather than scraping HTML.**
+- `/store.json` — the lean **launcher manifest** (§5.1): just what an app launcher needs — `name`
+  + absolute `icon` + absolute `link` per listing. Derived from the same catalog build, so it never
+  drifts from `catalog.json`. Consumers building a launcher grid (e.g. the dig-chrome-extension)
+  MUST consume `store.json` rather than `catalog.json` or scraped HTML.
 - `/app/<slug>` — a prerendered HTML page per listing carrying its own title, meta description,
   canonical URL, OG/Twitter tags (including the app's OWN `og:image` — sharing a detail page
   unfurls that app's card, never the generic store card), and `SoftwareApplication` JSON-LD.
@@ -201,6 +205,62 @@ Every build regenerates, and every deploy serves:
 Stability: `slug`, the category enum, the §4 file names, and the `catalog.json` field names above
 are stable identifiers; new OPTIONAL metadata/catalog fields MAY be added, existing ones MUST NOT
 be renamed or repurposed.
+
+### 5.1 Launcher manifest (`/store.json`) — normative
+
+`/store.json` is a purpose-built, machine-consumable **launcher manifest**: the minimal data a
+client needs to render a grid of app icons (an app launcher / phone home screen) that opens each
+dApp. It is a stable, cross-repo contract — the **dig-chrome-extension** fetches it to build its
+native mobile-phone launcher. It is DERIVED from the same build as `catalog.json` (§5), so the two
+never drift.
+
+**Serving.** Served as a real static JSON object at the site root `https://explore.dig.net/store.json`
+(a 200 response, never the SPA `index.html` fallback), with `Content-Type: application/json` and
+`Access-Control-Allow-Origin: *` so a cross-origin consumer may fetch it directly. It is regenerated
+on every build and served under the short revalidating cache (a deploy propagates within minutes).
+
+**Shape.**
+
+```json
+{
+  "generatedAt": "2026-07-05T14:48:00.915Z",
+  "version": "0.4.0",
+  "apps": [
+    {
+      "slug": "chia-offer",
+      "name": "Chia-Offer",
+      "icon": "https://explore.dig.net/catalog/chia-offer/icon-512.png",
+      "link": "https://chia-offer.on.dig.net/",
+      "category": "tools",
+      "featured": true,
+      "accentColor": "#3aaa35"
+    }
+  ]
+}
+```
+
+| Field | Type | Presence | Meaning |
+|---|---|---|---|
+| `generatedAt` | string | always | ISO 8601 build time (same value as `catalog.json`) |
+| `version` | string | always | the store's semver (`catalog.json`'s `storeVersion`) |
+| `apps` | array | always | one entry per listing, in the same order as `catalog.json` (featured first, then newest, then name) |
+| `apps[].slug` | string | always | the listing's stable id (§3.1) |
+| `apps[].name` | string | always | display name for the tile label |
+| `apps[].icon` | string | always | **ABSOLUTE** `https://` URL of the 512×512 launcher icon |
+| `apps[].link` | string | always | **ABSOLUTE** `https://` URL of the dApp — the tile's tap target (the listing's `url`) |
+| `apps[].category` | string | always | the listing's category enum (§3.1) — for grouping/filtering the launcher |
+| `apps[].featured` | boolean | always | the curated flag (§4.3) — a launcher MAY surface featured apps first |
+| `apps[].accentColor` | string | optional | `#RRGGBB` brand accent for the icon backdrop, when the listing sets one |
+
+`icon` and `link` are ABSOLUTE by contract: a consumer that does not know the site origin renders
+the icon and opens the link without any base-URL knowledge. `store.json` intentionally omits the
+long description, screenshots, tags, author, and status carried by `catalog.json` — a client needing
+those consumes `catalog.json` instead. The field names above are stable identifiers; new OPTIONAL
+fields MAY be added, existing ones MUST NOT be renamed or repurposed.
+
+The build gate (`scripts/check-dist.mjs`) fails a deploy unless `store.json` is present, valid, has
+the same app count as `catalog.json`, and every entry carries a `name` plus an absolute `icon` and
+`link`.
 
 ## 6. Store frontend contract
 

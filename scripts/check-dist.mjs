@@ -6,7 +6,9 @@
 //      Twitter/apple-touch-icon/manifest) — auditHomeHead;
 //   3. EVERY prerendered app page's head carries that app's OWN card (its canonical + its own
 //      og.png, never the generic store card) — auditAppHead;
-//   4. every OG image in the output (store + per-app) is exactly 1200×630.
+//   4. every OG image in the output (store + per-app) is exactly 1200×630;
+//   5. the launcher manifest (store.json) is valid, in sync with the catalog, and every entry has
+//      an absolute icon + link — the cross-origin contract the dig-chrome-extension builds to.
 //
 // The audit helpers are pure (string in → missing[] out) and exported for the unit suite.
 
@@ -26,6 +28,7 @@ export const REQUIRED_DIST_FILES = Object.freeze([
   "robots.txt",
   "sitemap.xml",
   "catalog.json",
+  "store.json",
   "favicon.svg",
   "og.png",
   "apple-touch-icon.png",
@@ -88,6 +91,30 @@ export function auditAppHead(html, app) {
     ["twitter:image = the app's own og.png", html.includes(`name="twitter:image" content="${ogUrl}"`)],
   ];
   return checks.filter(([, ok]) => !ok).map(([label]) => `app/${app.slug}: missing ${label}`);
+}
+
+/**
+ * Audit the launcher manifest (store.json) against the catalog: the app count MUST match (the two
+ * are one source of truth, SPEC.md §5.1) and every entry MUST carry a `name` plus ABSOLUTE `icon`
+ * and `link` URLs — the cross-origin extension consumer renders/opens them without knowing the site
+ * origin. Pure (parsed manifest + catalog in → missing[] out). Returns [] when the manifest is valid.
+ */
+export function auditStoreJson(store, catalog) {
+  const apps = Array.isArray(store?.apps) ? store.apps : null;
+  if (!apps) return ["store.json: apps[] missing or not an array"];
+  const missing = [];
+  const catalogCount = Array.isArray(catalog?.apps) ? catalog.apps.length : -1;
+  if (apps.length !== catalogCount) {
+    missing.push(`store.json: app count ${apps.length} does not match catalog.json count ${catalogCount}`);
+  }
+  const isAbsolute = (u) => typeof u === "string" && /^https?:\/\//.test(u);
+  for (const app of apps) {
+    const id = app?.slug ?? "(no slug)";
+    if (!app?.name) missing.push(`store.json/${id}: missing name`);
+    if (!isAbsolute(app?.icon)) missing.push(`store.json/${id}: icon must be an absolute URL`);
+    if (!isAbsolute(app?.link)) missing.push(`store.json/${id}: link must be an absolute URL`);
+  }
+  return missing;
 }
 
 function checkOgDimensions(relPath, missing) {
@@ -153,6 +180,13 @@ function main() {
     } catch {
       /* page already reported missing above */
     }
+  }
+
+  // The launcher manifest (store.json): valid JSON, in sync with the catalog, absolute icon+link.
+  try {
+    missing.push(...auditStoreJson(JSON.parse(readFileSync(join(DIST, "store.json"), "utf-8")), catalog));
+  } catch {
+    missing.push("store.json (unreadable)");
   }
 
   if (missing.length) {

@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { readPngSize, validateApps, ASSET_RULES, SCREENSHOT_RULES } from "../../scripts/validate-apps.mjs";
-import { buildCatalog, renderLlmsTxt, renderSitemap } from "../../scripts/build-catalog.mjs";
+import { buildCatalog, renderLlmsTxt, renderSitemap, renderStoreJson } from "../../scripts/build-catalog.mjs";
 import {
   appSeoBlock,
   appsPageSeoBlock,
@@ -19,6 +19,7 @@ import {
   auditAppHead,
   auditAppsPageHead,
   auditHomeHead,
+  auditStoreJson,
   REQUIRED_DIST_FILES,
 } from "../../scripts/check-dist.mjs";
 import { resolveAppVersion } from "../../scripts/resolve-app-version.mjs";
@@ -214,13 +215,72 @@ describe("renderSitemap / renderLlmsTxt", () => {
     expect(xml).toContain("<lastmod>2026-07-03</lastmod>");
   });
 
-  it("llms.txt maps the store for agents: catalog.json, SPEC, the Apps tab, every app", () => {
+  it("llms.txt maps the store for agents: catalog.json, store.json, SPEC, the Apps tab, every app", () => {
     const txt = renderLlmsTxt(catalog);
     expect(txt).toContain("https://explore.dig.net/catalog.json");
+    expect(txt).toContain("https://explore.dig.net/store.json");
     expect(txt).toContain("SPEC.md");
     expect(txt).toContain("[Apps](https://explore.dig.net/apps)");
     expect(txt).toContain("[demo](https://explore.dig.net/app/demo)");
     expect(txt).toContain("Open the dApp: https://demo.example/");
+  });
+});
+
+// ------------------------------------------------------------ renderStoreJson
+
+describe("renderStoreJson (the launcher manifest)", () => {
+  const catalog = buildCatalog(
+    [
+      fakeValidated("chia-offer", {
+        name: "Chia-Offer",
+        category: "tools",
+        featured: true,
+        accentColor: "#3aaa35",
+        url: "https://chia-offer.on.dig.net/",
+      }),
+      fakeValidated("plain", { name: "Plain" }),
+    ],
+    { generatedAt: "2026-07-05T00:00:00.000Z", storeVersion: "0.5.0" },
+  );
+
+  it("carries generatedAt + version and one lean entry per catalog app (count matches)", () => {
+    const store = renderStoreJson(catalog);
+    expect(store.generatedAt).toBe("2026-07-05T00:00:00.000Z");
+    expect(store.version).toBe("0.5.0");
+    expect(store.apps).toHaveLength(catalog.apps.length);
+  });
+
+  it("every app carries a name + ABSOLUTE icon url + ABSOLUTE link", () => {
+    const store = renderStoreJson(catalog);
+    for (const a of store.apps) {
+      expect(a.name).toBeTruthy();
+      expect(a.icon).toMatch(/^https:\/\/explore\.dig\.net\/catalog\/[a-z0-9-]+\/icon-512\.png$/);
+      expect(a.link).toMatch(/^https?:\/\//);
+    }
+  });
+
+  it("carries category + featured, and accentColor only when present", () => {
+    const store = renderStoreJson(catalog);
+    const co = store.apps.find((a) => a.slug === "chia-offer")!;
+    expect(co).toMatchObject({
+      category: "tools",
+      featured: true,
+      accentColor: "#3aaa35",
+      link: "https://chia-offer.on.dig.net/",
+      icon: "https://explore.dig.net/catalog/chia-offer/icon-512.png",
+    });
+    const plain = store.apps.find((a) => a.slug === "plain")!;
+    expect(plain).not.toHaveProperty("accentColor");
+  });
+
+  it("serializes to valid JSON", () => {
+    const json = JSON.stringify(renderStoreJson(catalog));
+    expect(() => JSON.parse(json)).not.toThrow();
+  });
+
+  it("stays in sync with catalog.json (same slugs, same order)", () => {
+    const store = renderStoreJson(catalog);
+    expect(store.apps.map((a) => a.slug)).toEqual(catalog.apps.map((a) => a.slug));
   });
 });
 
@@ -359,10 +419,47 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
     expect(missing.some((m) => m.includes("canonical"))).toBe(true);
   });
 
-  it("the dist gate requires the full icon set + agent files", () => {
-    for (const f of ["og.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "llms.txt", "sitemap.xml", "site.webmanifest"]) {
+  it("the dist gate requires the full icon set + agent files (incl. store.json)", () => {
+    for (const f of ["og.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "llms.txt", "sitemap.xml", "site.webmanifest", "catalog.json", "store.json"]) {
       expect(REQUIRED_DIST_FILES).toContain(f);
     }
+  });
+});
+
+describe("auditStoreJson (the launcher-manifest build gate)", () => {
+  const catalog = { apps: [{ slug: "a" }, { slug: "b" }] };
+
+  it("passes a manifest with matching count + a name + absolute icon/link per app", () => {
+    const store = {
+      apps: [
+        { slug: "a", name: "A", icon: "https://explore.dig.net/catalog/a/icon-512.png", link: "https://a.example/" },
+        { slug: "b", name: "B", icon: "https://explore.dig.net/catalog/b/icon-512.png", link: "https://b.example/" },
+      ],
+    };
+    expect(auditStoreJson(store, catalog)).toEqual([]);
+  });
+
+  it("flags a relative icon, a missing name, and a count mismatch", () => {
+    const store = { apps: [{ slug: "a", icon: "/catalog/a/icon-512.png", link: "https://a.example/" }] };
+    const missing = auditStoreJson(store, catalog);
+    expect(missing.some((m) => m.includes("count"))).toBe(true);
+    expect(missing.some((m) => m.includes("icon must be an absolute URL"))).toBe(true);
+    expect(missing.some((m) => m.includes("missing name"))).toBe(true);
+  });
+
+  it("flags a relative link", () => {
+    const store = {
+      apps: [
+        { slug: "a", name: "A", icon: "https://explore.dig.net/catalog/a/icon-512.png", link: "/open/a" },
+        { slug: "b", name: "B", icon: "https://explore.dig.net/catalog/b/icon-512.png", link: "https://b.example/" },
+      ],
+    };
+    const missing = auditStoreJson(store, catalog);
+    expect(missing.some((m) => m.includes("link must be an absolute URL"))).toBe(true);
+  });
+
+  it("flags a manifest with no apps[] array", () => {
+    expect(auditStoreJson({}, catalog).some((m) => m.includes("apps[]"))).toBe(true);
   });
 });
 

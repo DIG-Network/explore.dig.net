@@ -6,6 +6,7 @@ dist/
 src/catalog/catalog.gen.json
 public/catalog/
 public/catalog.json
+public/store.json
 public/sitemap.xml
 public/llms.txt
 

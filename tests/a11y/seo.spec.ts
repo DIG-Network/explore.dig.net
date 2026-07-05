@@ -69,6 +69,7 @@ test.describe("agent files", () => {
     const txt = await res.text();
     expect(txt).toContain("# explore.dig.net");
     expect(txt).toContain("/catalog.json");
+    expect(txt).toContain("/store.json");
     expect(txt).toContain("/app/xchtip");
     expect(txt).toContain("/app/xchannuity");
     expect(txt).toContain("/app/cxch");
@@ -83,6 +84,28 @@ test.describe("agent files", () => {
     for (const app of catalog.apps) {
       const icon = await request.get(app.assets.icon);
       expect(icon.ok(), `${app.slug} icon missing`).toBe(true);
+    }
+  });
+
+  test("store.json is the lean launcher manifest (real JSON, absolute icon+link)", async ({ request }) => {
+    // Served as a real static file, not the SPA index.html fallback.
+    const res = await request.get("/store.json");
+    expect(res.ok()).toBe(true);
+    expect(res.headers()["content-type"]).toContain("application/json");
+    const store = (await res.json()) as {
+      version: string;
+      apps: Array<{ name: string; icon: string; link: string }>;
+    };
+    // Count matches the catalog — one source of truth.
+    const catalog = (await (await request.get("/catalog.json")).json()) as { count: number };
+    expect(store.apps.length).toBe(catalog.count);
+    for (const app of store.apps) {
+      expect(app.name, "app name").toBeTruthy();
+      expect(app.icon, "absolute icon url").toMatch(/^https:\/\/explore\.dig\.net\/catalog\//);
+      expect(app.link, "absolute link").toMatch(/^https?:\/\//);
+      // The absolute icon URL resolves to a real asset (path served by the preview origin).
+      const icon = await request.get(new URL(app.icon).pathname);
+      expect(icon.ok(), `${app.name} launcher icon missing`).toBe(true);
     }
   });
 

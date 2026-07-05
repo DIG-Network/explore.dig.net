@@ -35,12 +35,26 @@ declare module "*build-catalog.mjs" {
     count: number;
     apps: Array<Record<string, unknown> & { slug: string; name: string; tagline: string; url: string; detailUrl: string; assets: Record<string, unknown> }>;
   }
+  export interface StoreManifestLike {
+    generatedAt: string;
+    version: string;
+    apps: Array<{
+      slug: string;
+      name: string;
+      icon: string;
+      link: string;
+      category?: string;
+      featured?: boolean;
+      accentColor?: string;
+    }>;
+  }
   export function buildCatalog(
     apps: ValidatedApp[],
     opts: { generatedAt: string; storeVersion: string },
   ): CatalogLike;
   export function renderSitemap(catalog: CatalogLike): string;
   export function renderLlmsTxt(catalog: CatalogLike): string;
+  export function renderStoreJson(catalog: CatalogLike): StoreManifestLike;
 }
 
 declare module "*prerender-apps.mjs" {
@@ -61,6 +75,10 @@ declare module "*check-dist.mjs" {
   export function auditAppHead(
     html: string,
     app: { slug: string; name?: string; assets: { og: string }; detailUrl: string },
+  ): string[];
+  export function auditStoreJson(
+    store: unknown,
+    catalog: { apps?: Array<unknown> },
   ): string[];
 }
 
