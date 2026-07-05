@@ -60,4 +60,29 @@ test.describe("Apps home-screen tab", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await expectAxeClean(page);
   });
+
+  // Regression for #51 follow-up: on phones the grid must read as a home-screen launcher — a
+  // full-width, evenly-distributed 4-up column layout — NOT the old centered fixed-72px cluster
+  // (`repeat(auto-fit, 72px)` + `justify-content: center`, which rendered a handful of icons as a
+  // small centered widget). Asserted against real CSS at the exact target phone widths.
+  for (const width of [360, 390, 414]) {
+    test(`renders a full-width 4-up launcher grid at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 780 });
+      await page.goto("/apps");
+      const grid = page.getByTestId("app-home-grid");
+      await expect(grid).toBeVisible();
+      const tracks = await grid.evaluate(
+        (el) =>
+          getComputedStyle(el)
+            .gridTemplateColumns.split(" ")
+            .map((v) => parseFloat(v)),
+      );
+      // Exactly four equal columns (the cluster layout produced one track per app / collapsed
+      // 72px tracks, never four evenly-sized ones).
+      expect(tracks).toHaveLength(4);
+      // Each 1fr track is far wider than the old fixed 72px cluster track — proof the grid spans
+      // the full shell width instead of centering a small icon cluster.
+      for (const track of tracks) expect(track).toBeGreaterThan(74);
+    });
+  }
 });

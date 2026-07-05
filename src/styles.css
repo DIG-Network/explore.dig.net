@@ -1437,18 +1437,50 @@ a {
     margin-top: 20px;
   }
 
+  /* Phone launcher: the icon grid is the hero, so the heading + intro recede to a compact,
+     status-bar-like header (kept for a11y/SEO, §6.6 — never deleted) and the grid dominates the
+     viewport like an iOS/Android home screen. */
   .apps-home {
-    padding-top: 20px;
+    padding-top: 16px;
+  }
+
+  .apps-home-heading {
+    font-size: 21px;
+  }
+
+  .apps-home-intro {
+    font-size: 13px;
+    margin-top: 6px;
   }
 
   .app-home-grid {
-    grid-template-columns: repeat(auto-fit, 72px);
-    gap: 24px 16px;
-    margin-top: 28px;
+    /* Full-width, evenly-distributed launcher columns — 4-up on phones — instead of the desktop's
+       centered fixed-px cluster. 1fr tracks span the whole shell width with even gutters, so a
+       handful of icons read as a home screen, not a small centered web widget. */
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: normal;
+    column-gap: 8px;
+    row-gap: 26px;
+    margin-top: 20px;
   }
 
   .app-tile {
-    max-width: 80px;
+    /* Fill the 1fr cell so columns are even across the launcher (no fixed-px cap that re-clusters). */
+    max-width: none;
+  }
+
+  /* Bigger home-screen squircles that scale with the 1fr cell (~56–72px). The 22% squircle radius +
+     soft drop shadow come from the base .app-tile-icon-frame rule; !important is required only to
+     beat AppIcon's inline width/height (the img attrs + the fallback span's inline style) — the
+     component's API is untouched (CLAUDE.md §2.0: AppIcon is reused/CRITICAL, re-skin via CSS only). */
+  .app-tile-icon-frame .app-icon,
+  .app-tile-icon-frame .app-icon-fallback {
+    width: clamp(56px, 17vw, 72px) !important;
+    height: clamp(56px, 17vw, 72px) !important;
+  }
+
+  .app-tile-name {
+    font-size: 12px;
   }
 }
 
