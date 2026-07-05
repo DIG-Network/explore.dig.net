@@ -102,4 +102,12 @@ export const hi: PartialMessages = {
   openAppNamed: "{name} खोलें",
   viewDetails: "विवरण देखें",
   detailCtaHeading: "{name} खोलने के लिए तैयार हैं?",
+
+  viewTabsLabel: "व्यू बदलें",
+  storeTabLabel: "स्टोर",
+  appsTabLabel: "ऐप्स",
+  appsPageHeading: "ऐप्स",
+  appsPageIntro: "DIG Network का हर dApp, बस एक टैप दूर — आपके फ़ोन की होम स्क्रीन की तरह।",
+  appsGridLabel: "DIG Network ऐप्स",
+  viewDetailsFor: "{name} का विवरण देखें",
 };

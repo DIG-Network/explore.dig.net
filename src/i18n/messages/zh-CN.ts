@@ -100,4 +100,12 @@ export const zhCN: PartialMessages = {
   openAppNamed: "打开 {name}",
   viewDetails: "查看详情",
   detailCtaHeading: "准备好打开 {name} 了吗？",
+
+  viewTabsLabel: "切换视图",
+  storeTabLabel: "商店",
+  appsTabLabel: "应用",
+  appsPageHeading: "应用",
+  appsPageIntro: "DIG Network 的每个 dApp，一触即达 — 就像手机主屏幕一样。",
+  appsGridLabel: "DIG Network 应用",
+  viewDetailsFor: "查看 {name} 的详情",
 };

@@ -186,7 +186,11 @@ Every build regenerates, and every deploy serves:
 - `/app/<slug>` — a prerendered HTML page per listing carrying its own title, meta description,
   canonical URL, OG/Twitter tags (including the app's OWN `og:image` — sharing a detail page
   unfurls that app's card, never the generic store card), and `SoftwareApplication` JSON-LD.
-- `/sitemap.xml`, `/robots.txt`, `/llms.txt` — kept in sync with the catalog on every build.
+- `/apps` — a prerendered HTML page for the Apps home-screen tab (§6), carrying its own title,
+  meta description, canonical URL, and OG/Twitter tags (the store's own `og.png`, since the tab has
+  no per-listing art of its own).
+- `/sitemap.xml`, `/robots.txt`, `/llms.txt` — kept in sync with the catalog on every build; the
+  sitemap and `llms.txt` both list `/apps` alongside home and every `/app/<slug>` page.
 - The store's own icon set: `/favicon.svg`, `/apple-touch-icon.png` (180×180), `/icon-192.png`,
   `/icon-512.png`, `/site.webmanifest`, and the store's social card `/og.png` (1200×630).
 - **Build gate** (`scripts/check-dist.mjs`): a build fails unless every file above exists, the
@@ -225,8 +229,16 @@ be renamed or repurposed.
   `<meta name="app-version">`, and at `window.__APP_VERSION__`.
 - **Bug reporting:** the shared `@dignetwork/components` `<BugReportButton repo="explore.dig.net">`
   is mounted at the shell; its API host `api.bugreport.dig.net` is allowed in the CSP.
-- **Routing:** `/` (home), `/app/<slug>` (detail), anything else renders the not-found state. The
-  filter state mirrors to the URL as `?category=<cat>&q=<text>`.
+- **Routing:** `/` (home), `/apps` (the Apps home-screen tab), `/app/<slug>` (detail), anything else
+  renders the not-found state. The filter state mirrors to the URL as `?category=<cat>&q=<text>`
+  (home only — the Apps tab below has no filter/search).
+- **Apps home-screen tab (`/apps`):** every listed dApp renders as a phone-home-screen icon — the
+  listing's `assets.icon` plus its `name` label beneath, in a responsive grid (rows of rounded icons
+  on mobile; the same grid scales up on desktop). Tapping a tile's icon+label opens the dApp's `url`
+  directly in a new tab (the same action as the Store tab's "Open dApp" CTA); a small, separate "i"
+  affordance on each tile links to that listing's `/app/<slug>` detail page. A `<nav>` labelled view
+  switcher ("Store" / "Apps", `aria-current="page"` on the active one) appears on both the home and
+  Apps views so a visitor can move between the two presentations of the same catalog.
 
 ## 7. Submission checklist (author-facing)
 

@@ -44,11 +44,12 @@ export function buildCatalog(apps, { generatedAt, storeVersion }) {
   return { generatedAt, storeVersion, siteUrl: SITE_URL, count: entries.length, apps: entries };
 }
 
-/** Render sitemap.xml — home + one entry per app detail page (pure). */
+/** Render sitemap.xml — home + the Apps home-screen tab + one entry per app detail page (pure). */
 export function renderSitemap(catalog) {
   const lastmod = catalog.generatedAt.slice(0, 10);
   const urls = [
     { loc: `${SITE_URL}/`, priority: "1.0" },
+    { loc: `${SITE_URL}/apps`, priority: "0.9" },
     ...catalog.apps.map((a) => ({ loc: a.detailUrl, priority: "0.8" })),
   ];
   const body = urls
@@ -74,6 +75,7 @@ export function renderLlmsTxt(catalog) {
 ## Key pages
 
 - [Store home](${SITE_URL}/) — featured + all apps, category filter, search
+- [Apps](${SITE_URL}/apps) — every listing as a phone-home-screen icon grid (tap an icon to open the dApp) — the mobile-first browse/launch surface
 - [Machine catalog (JSON)](${SITE_URL}/catalog.json) — every listing's full metadata + asset URLs; consume this instead of scraping HTML
 - [Submission spec](https://github.com/DIG-Network/explore.dig.net/blob/main/SPEC.md) — the exact metadata schema + asset checklist to get listed
 - [Metadata JSON Schema](https://github.com/DIG-Network/explore.dig.net/blob/main/apps/app.schema.json)

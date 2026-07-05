@@ -60,6 +60,20 @@ export function auditHomeHead(html) {
   return HOME_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(([label]) => `home: missing ${label}`);
 }
 
+/** The Apps home-screen tab's (#51) mandatory head tags — its own canonical + card, not home's. */
+const APPS_PAGE_HEAD_TAGS = [
+  ["<title>", /<title>[^<]{5,}<\/title>/],
+  ["meta description", /<meta\s+name="description"\s+content="[^"]{20,}"/],
+  ["canonical = /apps", new RegExp(`<link rel="canonical" href="${SITE_URL}/apps"`)],
+  ["og:url = /apps", new RegExp(`property="og:url" content="${SITE_URL}/apps"`)],
+  ["twitter:card summary_large_image", /name="twitter:card" content="summary_large_image"/],
+];
+
+/** Audit the built Apps tab's head (#51). Returns the missing tags' labels ([] when complete). */
+export function auditAppsPageHead(html) {
+  return APPS_PAGE_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(([label]) => `apps: missing ${label}`);
+}
+
 /**
  * Audit one prerendered app page's head: it must carry the app's OWN social card — its canonical
  * detail URL and its own og image — plus a large-image Twitter card. Returns missing[] labels.
@@ -106,6 +120,15 @@ function main() {
     missing.push(...auditHomeHead(readFileSync(join(DIST, "index.html"), "utf-8")));
   } catch {
     /* index.html already reported missing above */
+  }
+
+  // The Apps home-screen tab (#51): its own prerendered page + head carrying its own card.
+  try {
+    const s = statSync(join(DIST, "apps", "index.html"));
+    if (!s.isFile() || s.size === 0) missing.push("apps/index.html (empty)");
+    else missing.push(...auditAppsPageHead(readFileSync(join(DIST, "apps", "index.html"), "utf-8")));
+  } catch {
+    missing.push("apps/index.html (missing)");
   }
 
   // Every cataloged app: prerendered page with its OWN card + copied assets + a true-size og.

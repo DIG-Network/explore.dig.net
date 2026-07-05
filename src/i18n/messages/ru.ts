@@ -102,4 +102,12 @@ export const ru: PartialMessages = {
   openAppNamed: "Открыть {name}",
   viewDetails: "Подробнее",
   detailCtaHeading: "Готовы открыть {name}?",
+
+  viewTabsLabel: "Переключить вид",
+  storeTabLabel: "Магазин",
+  appsTabLabel: "Приложения",
+  appsPageHeading: "Приложения",
+  appsPageIntro: "Каждое приложение DIG Network — в одно касание, как на главном экране телефона.",
+  appsGridLabel: "Приложения DIG Network",
+  viewDetailsFor: "Подробнее о {name}",
 };

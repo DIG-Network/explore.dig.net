@@ -99,4 +99,12 @@ export const ko: PartialMessages = {
   openAppNamed: "{name} 열기",
   viewDetails: "자세히 보기",
   detailCtaHeading: "{name}을(를) 열어볼까요?",
+
+  viewTabsLabel: "보기 전환",
+  storeTabLabel: "스토어",
+  appsTabLabel: "앱",
+  appsPageHeading: "앱",
+  appsPageIntro: "DIG Network의 모든 dApp을 탭 한 번으로 — 스마트폰 홈 화면처럼.",
+  appsGridLabel: "DIG Network 앱",
+  viewDetailsFor: "{name} 상세 정보 보기",
 };
