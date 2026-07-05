@@ -8,6 +8,12 @@ describe("parseRoute", () => {
     expect(parseRoute("/index.html")).toEqual({ kind: "home" });
   });
 
+  it("classifies the Apps home-screen tab, with and without the trailing slash / index.html", () => {
+    expect(parseRoute("/apps")).toEqual({ kind: "apps" });
+    expect(parseRoute("/apps/")).toEqual({ kind: "apps" });
+    expect(parseRoute("/apps/index.html")).toEqual({ kind: "apps" });
+  });
+
   it("classifies app detail pages, with and without the trailing slash / index.html", () => {
     expect(parseRoute("/app/xchtip")).toEqual({ kind: "app", slug: "xchtip" });
     expect(parseRoute("/app/xchtip/")).toEqual({ kind: "app", slug: "xchtip" });
@@ -23,6 +29,7 @@ describe("parseRoute", () => {
 
   it("classifies anything else as not-found", () => {
     expect(parseRoute("/nope")).toEqual({ kind: "not-found" });
+    expect(parseRoute("/appsxyz")).toEqual({ kind: "not-found" });
     expect(parseRoute("/apps/xchtip")).toEqual({ kind: "not-found" });
   });
 });

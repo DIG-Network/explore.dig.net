@@ -42,6 +42,31 @@ describe("<App>", () => {
     expect(screen.getByTestId("not-found")).toBeInTheDocument();
   });
 
+  it("renders the Apps home-screen tab at /apps with every listing as a tile", () => {
+    renderWithIntl(<App pathname="/apps" search="" />);
+    expect(screen.getByTestId("app-home-grid")).toBeInTheDocument();
+    expect(screen.getByTestId("app-tile-xchtip")).toBeInTheDocument();
+    expect(document.title).toBe("Apps — explore.dig.net");
+  });
+
+  it("shows the Store/Apps view tabs on the home view, marking Store active", () => {
+    renderWithIntl(<App pathname="/" search="" />);
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
+    expect(screen.getByTestId("view-tab-apps")).not.toHaveAttribute("aria-current");
+  });
+
+  it("shows the Store/Apps view tabs on the Apps view, marking Apps active", () => {
+    renderWithIntl(<App pathname="/apps" search="" />);
+    expect(screen.getByTestId("view-tab-apps")).toHaveAttribute("aria-current", "page");
+    expect(screen.getByTestId("view-tab-store")).not.toHaveAttribute("aria-current");
+  });
+
+  it("does not show the view tabs on a detail page or the not-found state", () => {
+    renderWithIntl(<App pathname="/app/xchtip" search="" />);
+    expect(screen.queryByTestId("view-tab-store")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("view-tab-apps")).not.toBeInTheDocument();
+  });
+
   it("shows the build version in the footer (§6.7 human-readable form)", () => {
     renderWithIntl(<App pathname="/" search="" />);
     expect(screen.getByTestId("app-version")).toHaveTextContent(`v${APP_VERSION}`);

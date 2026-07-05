@@ -45,6 +45,7 @@ declare module "*build-catalog.mjs" {
 
 declare module "*prerender-apps.mjs" {
   export function appSeoBlock(app: Record<string, unknown>): string;
+  export function appsPageSeoBlock(): string;
   export function homeItemListLd(catalog: { count: number; apps: Array<{ detailUrl: string; name: string }> }): {
     "@type": string;
     numberOfItems: number;
@@ -56,6 +57,7 @@ declare module "*prerender-apps.mjs" {
 declare module "*check-dist.mjs" {
   export const REQUIRED_DIST_FILES: readonly string[];
   export function auditHomeHead(html: string): string[];
+  export function auditAppsPageHead(html: string): string[];
   export function auditAppHead(
     html: string,
     app: { slug: string; name?: string; assets: { og: string }; detailUrl: string },

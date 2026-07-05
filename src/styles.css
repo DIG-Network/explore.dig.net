@@ -758,6 +758,166 @@ a {
   background: var(--status-draft-bg);
 }
 
+/* ---------- view tabs (Store / Apps, #51) ---------- */
+
+.view-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 28px 0 0;
+}
+
+.view-tab {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  background: var(--bg-well);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-pill);
+  padding: 9px 20px;
+  text-decoration: none;
+  transition:
+    color 0.15s var(--ease-lift),
+    border-color 0.15s var(--ease-lift),
+    background 0.15s var(--ease-lift);
+}
+
+.view-tab:hover {
+  color: var(--fg1);
+  border-color: var(--border-soft);
+}
+
+.view-tab[aria-current="page"] {
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* ---------- Apps tab: phone-home-screen icon grid (#51) ---------- */
+
+.apps-home {
+  padding-block: 28px 0;
+}
+
+.apps-home-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.apps-home-heading {
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.apps-home-intro {
+  color: var(--fg2);
+  font-size: 16.5px;
+  max-width: 620px;
+  margin: 10px 0 0;
+}
+
+.app-home-grid {
+  /* auto-fit + fixed-size tracks: EMPTY trailing tracks collapse to 0 width (unlike auto-fill,
+     which keeps them and stretches 1fr columns into the gap), so a handful of icons cluster
+     tightly instead of spreading across the full shell width with a dead gap on the right. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 88px);
+  justify-content: center;
+  justify-items: center;
+  gap: 28px 16px;
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-tile {
+  position: relative;
+  width: 100%;
+  max-width: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-tile-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px;
+  border-radius: var(--r-lg);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.18s var(--ease-lift);
+}
+
+.app-tile-link:hover,
+.app-tile-link:focus-visible {
+  transform: translateY(-3px);
+}
+
+.app-tile-icon-frame {
+  display: inline-flex;
+}
+
+/* Rounder than the store card's medallion — reads as a phone home-screen icon (a squircle-ish
+   rounding proportional to the icon's own size, so it holds up at any tile size). */
+.app-tile-icon-frame .app-icon,
+.app-tile-icon-frame .app-icon-fallback {
+  border-radius: 22%;
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.65);
+}
+
+.app-tile-name {
+  font-size: 13px;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--fg1);
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.app-tile-info {
+  /* WCAG 2.5.8 Target Size (Minimum), AA: 24x24 CSS px min — sized a touch above the floor. */
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-well);
+  border: 1px solid var(--border-subtle);
+  color: var(--fg3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  text-decoration: none;
+  transition:
+    color 0.15s var(--ease-lift),
+    border-color 0.15s var(--ease-lift);
+}
+
+.app-tile-info:hover,
+.app-tile-info:focus-visible {
+  color: var(--fg1);
+  border-color: var(--border-soft);
+}
+
 /* ---------- app grid + cards ---------- */
 
 .app-grid {
@@ -1271,6 +1431,24 @@ a {
 
   .carousel-controls {
     justify-content: space-between;
+  }
+
+  .view-tabs {
+    margin-top: 20px;
+  }
+
+  .apps-home {
+    padding-top: 20px;
+  }
+
+  .app-home-grid {
+    grid-template-columns: repeat(auto-fit, 72px);
+    gap: 24px 16px;
+    margin-top: 28px;
+  }
+
+  .app-tile {
+    max-width: 80px;
   }
 }
 

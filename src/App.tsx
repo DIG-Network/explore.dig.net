@@ -9,7 +9,9 @@ import { parseRoute } from "@/lib/route";
 import { APP_VERSION } from "@/lib/version";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { ViewTabs } from "@/components/ViewTabs";
 import { HomePage } from "@/features/store/HomePage";
+import { AppsHomeScreen } from "@/features/apps/AppsHomeScreen";
 import { AppDetailPage, NotFound } from "@/features/detail/AppDetailPage";
 import { useT } from "@/i18n/useT";
 
@@ -41,6 +43,8 @@ export function App({ pathname, search }: AppProps) {
     if (route.kind === "app") {
       const app = catalog.apps.find((a) => a.slug === route.slug);
       if (app) document.title = `${app.name} — ${app.tagline} · explore.dig.net`;
+    } else if (route.kind === "apps") {
+      document.title = "Apps — explore.dig.net";
     }
   }, [route, catalog]);
 
@@ -79,7 +83,11 @@ export function App({ pathname, search }: AppProps) {
       </header>
 
       <main id="main" className="shell site-main">
+        {(route.kind === "home" || route.kind === "apps") && (
+          <ViewTabs active={route.kind === "apps" ? "apps" : "store"} />
+        )}
         {route.kind === "home" && <HomePage apps={catalog.apps} search={search} />}
+        {route.kind === "apps" && <AppsHomeScreen apps={catalog.apps} />}
         {route.kind === "app" && <AppDetailPage apps={catalog.apps} slug={route.slug} />}
         {route.kind === "not-found" && <NotFound />}
       </main>

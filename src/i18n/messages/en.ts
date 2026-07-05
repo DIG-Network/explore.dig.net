@@ -26,6 +26,17 @@ export const en = {
   allAppsHeading: "All apps",
   appsCount: "{count, plural, one {# app} other {# apps}}",
 
+  // View tabs — switches between the curated Store shelf and the Apps home-screen grid (#51).
+  viewTabsLabel: "Browse view",
+  storeTabLabel: "Store",
+  appsTabLabel: "Apps",
+
+  // The "Apps" tab: every listing rendered as a phone-home-screen icon (icon + name), tap opens it.
+  appsPageHeading: "Apps",
+  appsPageIntro: "Every DIG Network dApp, one tap away — just like the home screen on your phone.",
+  appsGridLabel: "DIG Network apps",
+  viewDetailsFor: "View details for {name}",
+
   // Featured carousel (ARIA + controls). "carousel" / "slide" are aria-roledescriptions.
   carouselLabel: "Featured apps",
   carouselRoleDescription: "carousel",

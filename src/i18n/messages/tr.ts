@@ -102,4 +102,12 @@ export const tr: PartialMessages = {
   openAppNamed: "{name} uygulamasını aç",
   viewDetails: "Ayrıntıları gör",
   detailCtaHeading: "{name} uygulamasını açmaya hazır mısınız?",
+
+  viewTabsLabel: "Görünümü değiştir",
+  storeTabLabel: "Mağaza",
+  appsTabLabel: "Uygulamalar",
+  appsPageHeading: "Uygulamalar",
+  appsPageIntro: "DIG Network'teki her dApp, bir dokunuş uzağınızda — telefonunuzun ana ekranı gibi.",
+  appsGridLabel: "DIG Network uygulamaları",
+  viewDetailsFor: "{name} ayrıntılarını gör",
 };

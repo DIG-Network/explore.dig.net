@@ -102,4 +102,12 @@ export const ptBR: PartialMessages = {
   openAppNamed: "Abrir {name}",
   viewDetails: "Ver detalhes",
   detailCtaHeading: "Pronto para abrir o {name}?",
+
+  viewTabsLabel: "Alternar visualização",
+  storeTabLabel: "Loja",
+  appsTabLabel: "Apps",
+  appsPageHeading: "Apps",
+  appsPageIntro: "Cada dApp da DIG Network, a um toque de distância — como a tela inicial do seu celular.",
+  appsGridLabel: "Apps da DIG Network",
+  viewDetailsFor: "Ver detalhes de {name}",
 };

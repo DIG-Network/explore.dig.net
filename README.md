@@ -12,13 +12,20 @@ static React SPA with per-app prerendered pages, built with Vite and served from
 Read **[SPEC.md](SPEC.md)** (§7 has the checklist), add `apps/<your-slug>/`, and open a PR. CI
 enforces the schema, exact asset dimensions, and the store's quality gates automatically.
 
+## Browsing the store
+
+- `/` — the featured shelf + filterable/searchable grid.
+- `/apps` — the **Apps** tab: every listing as a phone-home-screen icon grid (tap an icon to open
+  the dApp). This is the mobile-first browse/launch surface, and what the dig-chrome-extension's
+  "Explore DIG Network" action surfaces.
+
 ## Machine consumption
 
 - `https://explore.dig.net/catalog.json` — every listing's full metadata + asset URLs; consume
   this instead of scraping HTML.
 - `https://explore.dig.net/llms.txt` — the agent-facing map of the store.
 - Per-app pages at `/app/<slug>` ship `SoftwareApplication` JSON-LD; the home page ships
-  `WebSite` + `ItemList`.
+  `WebSite` + `ItemList`; `/apps` ships its own title/canonical/OG card.
 
 ## Development
 

@@ -99,4 +99,12 @@ export const ja: PartialMessages = {
   openAppNamed: "{name} を開く",
   viewDetails: "詳細を見る",
   detailCtaHeading: "{name} を開いてみませんか？",
+
+  viewTabsLabel: "表示を切り替え",
+  storeTabLabel: "ストア",
+  appsTabLabel: "アプリ",
+  appsPageHeading: "アプリ",
+  appsPageIntro: "DIG Network のすべての dApp に、ワンタップで — スマホのホーム画面のように。",
+  appsGridLabel: "DIG Network のアプリ",
+  viewDetailsFor: "{name} の詳細を見る",
 };
