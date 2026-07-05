@@ -14,6 +14,14 @@ describe("<ViewTabs>", () => {
     expect(screen.getByTestId("view-tab-apps")).toHaveAttribute("href", "/apps");
   });
 
+  it("honors a custom storeHref so the store stays reachable from the phone launcher", () => {
+    // On phones `/` defaults to the launcher, so the Store tab must carry an explicit override
+    // (?view=store) to remain reachable — App passes it through at launcher widths (#51 follow-up).
+    renderWithIntl(<ViewTabs active="apps" storeHref="/?view=store" />);
+    expect(screen.getByTestId("view-tab-store")).toHaveAttribute("href", "/?view=store");
+    expect(screen.getByTestId("view-tab-apps")).toHaveAttribute("href", "/apps");
+  });
+
   it("marks the Store tab current when active=store", () => {
     renderWithIntl(<ViewTabs active="store" />);
     expect(screen.getByTestId("view-tab-store")).toHaveAttribute("aria-current", "page");
