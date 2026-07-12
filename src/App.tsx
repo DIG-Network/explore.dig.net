@@ -22,7 +22,7 @@ const BUG_REPORT_REPO = "explore.dig.net";
 
 const SPEC_URL = "https://github.com/DIG-Network/explore.dig.net/blob/main/SPEC.md";
 const REPO_URL = "https://github.com/DIG-Network/explore.dig.net";
-const DISCORD_URL = "https://discord.gg/dignetwork";
+const DISCORD_URL = "https://discord.gg/v78aygUZt";
 
 export interface AppProps {
   /** The URL pathname (defaults to the live location; injectable for tests). */
