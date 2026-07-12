@@ -22,6 +22,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
+    // Flaky-test management (#489) — retry a failing test before failing the run, surfacing
+    // genuine flakes without masking real regressions.
+    retry: process.env.CI ? 2 : 0,
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],

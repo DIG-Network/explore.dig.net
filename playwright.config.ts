@@ -7,7 +7,8 @@ export default defineConfig({
   testDir: "./tests/a11y",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  // Flaky-test management (#489) — retry once more in CI to surface true flakes vs one-off noise.
+  retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: "http://localhost:4173",

@@ -4,6 +4,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -32,6 +33,19 @@ export default tseslint.config(
     files: ["scripts/**/*.mjs", "*.config.{js,ts}", "tests/**/*.ts"],
     languageOptions: {
       globals: globals.node,
+    },
+  },
+  {
+    // Flaky-test management (#489) — testing-library lint rules on RTL specs: prefer findBy for
+    // async appearance (avoids arbitrary act()/waitFor wrapping) and forbid awaiting sync queries.
+    files: ["src/**/*.test.{ts,tsx}"],
+    plugins: {
+      "testing-library": testingLibrary,
+    },
+    rules: {
+      "testing-library/prefer-find-by": "error",
+      "testing-library/await-async-queries": "error",
+      "testing-library/no-await-sync-queries": "error",
     },
   },
   {

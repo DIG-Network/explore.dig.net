@@ -1,6 +1,6 @@
 {
   "name": "explore-dig-net",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "type": "module",
   "description": "explore.dig.net — the curated dApp store for the DIG Network / Chia ecosystem",
@@ -39,6 +39,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "eslint-plugin-testing-library": "^7.1.1",
     "globals": "^15.14.0",
     "jsdom": "^25.0.1",
     "typescript": "~5.7.2",
