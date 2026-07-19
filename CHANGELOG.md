@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.5.3] - 2026-07-19
+
+### Bug Fixes
+- **a11y:** Add twitter:image:alt to all social cards (§6.6) (#10)
+
 ## [0.5.2] - 2026-07-12
 
 ### CI
