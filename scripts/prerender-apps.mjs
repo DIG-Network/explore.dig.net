@@ -57,6 +57,7 @@ export function appSeoBlock(app) {
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(app.tagline)}" />`,
     `<meta name="twitter:image" content="${ogImage}" />`,
+    `<meta name="twitter:image:alt" content="${esc(title)}" />`,
     `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
   ].join("\n    ");
 }
@@ -90,6 +91,7 @@ export function appsPageSeoBlock() {
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(description)}" />`,
     `<meta name="twitter:image" content="${ogImage}" />`,
+    `<meta name="twitter:image:alt" content="${esc(title)}" />`,
   ].join("\n    ");
 }
 

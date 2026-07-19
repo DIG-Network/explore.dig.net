@@ -303,8 +303,10 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
     expect(block).toContain('content="https://explore.dig.net/catalog/demo/og.png"');
     expect(block).toContain('"@type":"SoftwareApplication"');
     expect(block).toContain("&quot;demo&quot;");
-    // The card is described for assistive tech + validators (og:image:alt mirrors the card copy).
+    // The card is described for assistive tech + validators — BOTH og:image:alt and twitter:image:alt
+    // mirror the card copy, so screen-reader users on either surface get a description (§6.6).
     expect(block).toContain('property="og:image:alt"');
+    expect(block).toContain('name="twitter:image:alt"');
   });
 
   it("appsPageSeoBlock emits its own title, canonical /apps, and OG/Twitter cards (#51)", () => {
@@ -314,6 +316,7 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
     expect(block).toContain('property="og:url" content="https://explore.dig.net/apps"');
     expect(block).toContain('property="og:image" content="https://explore.dig.net/og.png"');
     expect(block).toContain('name="twitter:card" content="summary_large_image"');
+    expect(block).toContain('name="twitter:image:alt"');
   });
 
   it("home ItemList JSON-LD enumerates the catalog in order", () => {
@@ -352,6 +355,7 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
     '<meta name="twitter:title" content="explore.dig.net" />',
     '<meta name="twitter:description" content="Discover." />',
     '<meta name="twitter:image" content="https://explore.dig.net/og.png" />',
+    '<meta name="twitter:image:alt" content="explore.dig.net card" />',
     '<link rel="apple-touch-icon" href="/apple-touch-icon.png" />',
     '<link rel="manifest" href="/site.webmanifest" />',
   ].join("\n");
@@ -387,6 +391,7 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
       '<meta property="og:url" content="https://explore.dig.net/app/demo" />',
       '<meta name="twitter:card" content="summary_large_image" />',
       '<meta name="twitter:image" content="https://explore.dig.net/catalog/demo/og.png" />',
+      '<meta name="twitter:image:alt" content="Demo — the demo dApp" />',
     ].join("\n");
     expect(auditAppHead(html, app)).toEqual([]);
   });
@@ -410,6 +415,7 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
       '<link rel="canonical" href="https://explore.dig.net/apps" />',
       '<meta property="og:url" content="https://explore.dig.net/apps" />',
       '<meta name="twitter:card" content="summary_large_image" />',
+      '<meta name="twitter:image:alt" content="Apps — explore.dig.net" />',
     ].join("\n");
     expect(auditAppsPageHead(html)).toEqual([]);
   });
