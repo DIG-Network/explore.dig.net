@@ -53,7 +53,8 @@ const HOME_HEAD_TAGS = [
   ["twitter:card summary_large_image", /name="twitter:card" content="summary_large_image"/],
   ["twitter:title", /name="twitter:title"/],
   ["twitter:description", /name="twitter:description"/],
-  ["twitter:image", /name="twitter:image"/],
+  ["twitter:image", /name="twitter:image" content=/],
+  ["twitter:image:alt", /name="twitter:image:alt"/],
   ["apple-touch-icon link", /rel="apple-touch-icon"/],
   ["manifest link", /rel="manifest"/],
 ];
@@ -70,6 +71,7 @@ const APPS_PAGE_HEAD_TAGS = [
   ["canonical = /apps", new RegExp(`<link rel="canonical" href="${SITE_URL}/apps"`)],
   ["og:url = /apps", new RegExp(`property="og:url" content="${SITE_URL}/apps"`)],
   ["twitter:card summary_large_image", /name="twitter:card" content="summary_large_image"/],
+  ["twitter:image:alt", /name="twitter:image:alt"/],
 ];
 
 /** Audit the built Apps tab's head (#51). Returns the missing tags' labels ([] when complete). */
@@ -89,6 +91,7 @@ export function auditAppHead(html, app) {
     ["og:url = detailUrl", html.includes(`property="og:url" content="${app.detailUrl}"`)],
     ["twitter:card summary_large_image", /name="twitter:card" content="summary_large_image"/.test(html)],
     ["twitter:image = the app's own og.png", html.includes(`name="twitter:image" content="${ogUrl}"`)],
+    ["twitter:image:alt", /name="twitter:image:alt"/.test(html)],
   ];
   return checks.filter(([, ok]) => !ok).map(([label]) => `app/${app.slug}: missing ${label}`);
 }
