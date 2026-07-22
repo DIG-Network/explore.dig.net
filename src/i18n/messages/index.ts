@@ -17,7 +17,6 @@ import { tr } from "./tr";
 import { vi } from "./vi";
 import { id } from "./id";
 import { hi } from "./hi";
-import { DEFAULT_LOCALE } from "../locales";
 
 /** A partial catalog: any subset of the message keys (missing keys fall back to English). */
 export type PartialMessages = Partial<Messages>;
@@ -51,5 +50,4 @@ export function messagesFor(locale: string): Messages {
   return { ...en, ...override };
 }
 
-export { DEFAULT_LOCALE };
 export type { Messages, MessageKey };
