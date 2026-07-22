@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.5.4] - 2026-07-22
+
+### Chores
+- **deadcode:** Remove unreferenced DEFAULT_LOCALE barrel re-export (#11)
+
 ## [0.5.3] - 2026-07-19
 
 ### Bug Fixes
