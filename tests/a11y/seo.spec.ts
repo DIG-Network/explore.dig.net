@@ -87,6 +87,31 @@ test.describe("agent files", () => {
     }
   });
 
+  // The served catalog is where an agent (or a newcomer's client) obtains a trustless address, so
+  // the store-address fields are asserted on the real artifact — present and well-formed for a
+  // DIG-hosted listing, and ABSENT rather than null/empty for one on ordinary web hosting.
+  test("catalog.json carries the store address for DIG-hosted listings only", async ({ request }) => {
+    const catalog = (await (await request.get("/catalog.json")).json()) as {
+      apps: Array<{ slug: string; storeId?: string; digAddress?: string; urn?: string }>;
+    };
+    const hosted = catalog.apps.filter((a) => "storeId" in a);
+    expect(hosted.length).toBeGreaterThanOrEqual(1);
+    for (const app of hosted) {
+      expect(app.storeId, `${app.slug} storeId`).toMatch(/^[0-9a-f]{64}$/);
+      expect(app.digAddress).toBe(`chia://${app.storeId}/`);
+      expect(app.urn).toBe(`urn:dig:chia:${app.storeId}`);
+    }
+    for (const app of catalog.apps.filter((a) => !("storeId" in a))) {
+      expect(Object.keys(app), `${app.slug} must not carry address fields`).not.toContain("digAddress");
+      expect(Object.keys(app), `${app.slug} must not carry address fields`).not.toContain("urn");
+    }
+  });
+
+  test("llms.txt gives an agent the first-fetch command for a DIG-hosted listing", async ({ request }) => {
+    const txt = await (await request.get("/llms.txt")).text();
+    expect(txt).toMatch(/dign open chia:\/\/[0-9a-f]{64}\//);
+  });
+
   test("store.json is the lean launcher manifest (real JSON, absolute icon+link)", async ({ request }) => {
     // Served as a real static file, not the SPA index.html fallback.
     const res = await request.get("/store.json");

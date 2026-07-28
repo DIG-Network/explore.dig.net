@@ -114,11 +114,30 @@ everything else (including raw HTML) renders as inert plain text:
 
 | Field | Type | Constraint | Meaning |
 |---|---|---|---|
+| `storeId` | string | `^[0-9a-f]{64}$` | §3.5 — the DIG store id the dApp is published under. Present ONLY for a DIG-hosted listing; omit for a dApp on ordinary web hosting |
 | `repo` | string | `https://github.com/<org>/<repo>` | Public source repository. Listings SHOULD be open source; omit when the source is not public — the detail page then shows no source link |
 | `version` | string | semver `X.Y.Z(-/+suffix)` | The dApp's own released version |
 | `license` | string | 2–40 chars | SPDX identifier of the dApp's source license |
 | `links` | object | keys fixed: `docs` `discord` `x` `youtube` `blog`; values https URIs | Extra links; add only what exists |
 | `placeholderAssets` | string[] | unique; each one of `icon-512.png` `icon-1024.png` `og.png` `hero.png` `tile.png` | §4.4 — declares which art is branded placeholder |
+
+### 3.5 Store address — `storeId`
+
+A listing whose dApp is published on the DIG Network SHOULD record its 64-hex `storeId`. It is the
+trustless address a DIG client reads the dApp from, independent of any web host.
+
+- The value MUST be the dApp's real store id, obtained from the `X-Dig-Store` response header its
+  `*.on.dig.net` origin serves (a normative `on.dig.net` contract, alongside `X-Dig-URN` and — when
+  the domain is root-locked — `X-Dig-Root`). It MUST NOT be guessed or derived: a wrong store id
+  sends a reader to content that does not exist.
+- A listing served from ordinary web hosting MUST omit `storeId` entirely rather than carry an empty
+  or placeholder value.
+- The build derives two addressable forms into `catalog.json` (§5) — `digAddress`
+  (`chia://<storeId>/`) and `urn` (`urn:dig:chia:<storeId>`) — so no consumer parses the URN grammar
+  itself. Both are deliberately ROOTLESS: a listing tracks the store's latest root, never a frozen
+  snapshot.
+- The store frontend MUST surface the address on the listing's detail page as selectable, copyable
+  text (§6), so a reader can obtain it without inspecting HTTP headers.
 
 ## 4. Assets — exact requirements
 
@@ -183,6 +202,10 @@ Every build regenerates, and every deploy serves:
   Top-level: `generatedAt` (ISO 8601 build time), `storeVersion` (this package's semver),
   `siteUrl`, `count`, `apps[]` ordered featured-first, then newest `addedDate`, then name.
   **Agents MUST consume `catalog.json` rather than scraping HTML.**
+  A DIG-hosted listing additionally carries `storeId` (§3.5) plus the build-derived `digAddress`
+  (`chia://<storeId>/`) and `urn` (`urn:dig:chia:<storeId>`); all three are ABSENT — never null — for
+  a listing served from ordinary web hosting. A client reading a listing from the network itself
+  consumes `digAddress`.
 - `/store.json` — the lean **launcher manifest** (§5.1): just what an app launcher needs — `name`
   + absolute `icon` + absolute `link` per listing. Derived from the same catalog build, so it never
   drifts from `catalog.json`. Consumers building a launcher grid (e.g. the dig-chrome-extension)
@@ -287,6 +310,12 @@ the same app count as `catalog.json`, and every entry carries a `name` plus an a
   desktop + mobile widths (dark + light) and fails on any violation. The launcher's ambient
   wallpaper and home-indicator are decorative (`aria-hidden`); labels keep AA contrast against the
   solid launcher base in both themes.
+- **Store address panel (detail page):** a listing carrying a `storeId` (§3.5) MUST show a "Read it
+  from the DIG Network" panel presenting its `digAddress` (`chia://<storeId>/`), the first-fetch
+  command (`dign open <digAddress>`), and its `urn` — each as monospace, user-selectable text with a
+  one-click copy control and a polite live-region confirmation. A copy that is denied or unavailable
+  MUST leave the value on screen and say so, never blank the panel. A listing WITHOUT a `storeId`
+  renders no panel (never an empty address).
 - **Version exposure (§6.7 ecosystem rule):** the build's semver is visible in the footer, in
   `<meta name="app-version">`, and at `window.__APP_VERSION__`.
 - **Bug reporting:** the shared `@dignetwork/components` `<BugReportButton repo="explore.dig.net">`
@@ -324,12 +353,14 @@ to the identical validation gate below.
 1. Fork the repo; create `apps/<slug>/` (slug: lowercase letters/digits/hyphens, 3–40 chars).
 2. Write `metadata.json` with every §3.1 required field (`"$schema": "../app.schema.json"`
    recommended for editor validation). Propose `featured: false`.
-3. Add `assets/icon-512.png` (512×512) and `assets/og.png` (1200×630) — real brand art, or
+3. If the dApp is published on the DIG Network, add its `storeId` (§3.5) — read it from your own
+   origin with `curl -sI https://<sub>.on.dig.net/ | grep -i x-dig-store`. Omit the field otherwise.
+4. Add `assets/icon-512.png` (512×512) and `assets/og.png` (1200×630) — real brand art, or
    generated placeholders declared in `placeholderAssets`.
-4. Capture real screenshots of the running dApp: at least one `desktop-01.png` (1280×800) is
+5. Capture real screenshots of the running dApp: at least one `desktop-01.png` (1280×800) is
    strongly recommended; mobile (1080×1920) welcome. Number sequentially from 01.
-5. Run `npm ci && npm run validate:apps` — it must print `OK`.
-6. Run `npm run build && npm test` — all green.
-7. Open a PR titled `apps: add <slug>`; state what the dApp does and how you verified the listing.
+6. Run `npm ci && npm run validate:apps` — it must print `OK`.
+7. Run `npm run build && npm test` — all green.
+8. Open a PR titled `apps: add <slug>`; state what the dApp does and how you verified the listing.
    CI must be green; a maintainer reviews for curation fit (on-chain settlement, a working
    product, and source availability — open source with a `repo` link is strongly preferred).

@@ -89,6 +89,18 @@ export const en = {
   authorLabel: "By",
   licenseLabel: "License",
   appVersionLabel: "App version",
+  storeAddressHeading: "Read it from the DIG Network",
+  storeAddressIntro:
+    "{name} is published as a DIG store, so you can read it straight from the network instead of " +
+    "over the web. With a DIG node installed, run the command below.",
+  storeAddressLabel: "Store address",
+  storeCommandLabel: "Command",
+  storeUrnLabel: "URN",
+  copyAction: "Copy",
+  copyValueLabel: "Copy {label}",
+  copiedStatus: "Copied",
+  copyFailedStatus: "Copy failed — select the text to copy it manually.",
+
   linksHeading: "Links",
   linkWebsite: "Website",
   linkDocs: "Docs",

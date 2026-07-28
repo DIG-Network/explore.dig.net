@@ -77,6 +77,11 @@
       "format": "uri",
       "pattern": "^https://"
     },
+    "storeId": {
+      "type": "string",
+      "description": "Optional: the 64-hex DIG store id the dApp is published under, when the dApp is served from the DIG Network. Present ONLY for DIG-hosted listings — omit it for a dApp served from ordinary web hosting. This is the trustless address a DIG client points at (the build derives `chia://<storeId>/` and `urn:dig:chia:<storeId>` into the catalog). Obtain it from the `X-Dig-Store` response header of the dApp's `*.on.dig.net` origin, and NEVER guess: a wrong store id sends a reader to content that does not exist.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "repo": {
       "type": "string",
       "description": "Optional: public source repository (https://github.com/<org>/<repo>). Listings SHOULD be open source; omit when the dApp's source is not public — the detail page then shows no source link.",

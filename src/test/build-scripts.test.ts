@@ -57,6 +57,15 @@ describe("validateApps on the real apps/ tree", () => {
     );
   });
 
+  // The store address is the newcomer's ONLY discoverable entry point into DIG content (#1727), so
+  // at least one live listing MUST carry a real storeId and every recorded one MUST be well-formed.
+  it("at least one committed listing publishes a well-formed DIG storeId", () => {
+    const { apps } = validateApps();
+    const withStore = apps.filter((a) => a.meta.storeId);
+    expect(withStore.length).toBeGreaterThanOrEqual(1);
+    for (const { meta } of withStore) expect(meta.storeId).toMatch(/^[0-9a-f]{64}$/);
+  });
+
   it("the normative asset rules match SPEC.md §4 exactly", () => {
     expect(ASSET_RULES["icon-512.png"]).toMatchObject({ width: 512, height: 512, requiredToList: true });
     expect(ASSET_RULES["og.png"]).toMatchObject({ width: 1200, height: 630, requiredToList: true });
@@ -199,6 +208,27 @@ describe("buildCatalog", () => {
     expect(h.assets).toMatchObject({ hero: "/catalog/h/hero.png", tile: "/catalog/h/tile.png", icon1024: "/catalog/h/icon-1024.png" });
     expect(plain.assets).not.toHaveProperty("hero");
   });
+
+  // A storeId alone is not copy-pasteable; the catalog derives the two addressable forms so an
+  // agent never has to know the URN/scheme grammar. The non-DIG app is the truthful control: a
+  // build that derived addresses unconditionally would emit `chia://undefined/` for it.
+  it("derives the chia:// address and the URN for a listing that has a storeId", () => {
+    const sid = "6ed1e80d44840735bf3c94a38f93e9a7c2e1077872681edf7c5985a14d17513f";
+    const catalog = buildCatalog(
+      [fakeValidated("dig-hosted", { storeId: sid }), fakeValidated("s3-hosted")],
+      opts,
+    );
+    const hosted = catalog.apps.find((a) => a.slug === "dig-hosted")!;
+    const plain = catalog.apps.find((a) => a.slug === "s3-hosted")!;
+
+    expect(hosted.storeId).toBe(sid);
+    expect(hosted.digAddress).toBe(`chia://${sid}/`);
+    expect(hosted.urn).toBe(`urn:dig:chia:${sid}`);
+
+    expect(plain).not.toHaveProperty("storeId");
+    expect(plain).not.toHaveProperty("digAddress");
+    expect(plain).not.toHaveProperty("urn");
+  });
 });
 
 describe("renderSitemap / renderLlmsTxt", () => {
@@ -223,6 +253,20 @@ describe("renderSitemap / renderLlmsTxt", () => {
     expect(txt).toContain("[Apps](https://explore.dig.net/apps)");
     expect(txt).toContain("[demo](https://explore.dig.net/app/demo)");
     expect(txt).toContain("Open the dApp: https://demo.example/");
+  });
+
+  // An agent reading llms.txt gets the trustless address too, and ONLY for the apps that have one.
+  it("llms.txt publishes the chia:// address for DIG-hosted apps and omits it otherwise", () => {
+    const sid = "c940d371787caf3562d6047489e43131878ea1b7fd3975f42b3ff2e2e9b41486";
+    const mixed = buildCatalog(
+      [fakeValidated("dig-hosted", { storeId: sid }), fakeValidated("s3-hosted")],
+      { generatedAt: "2026-07-03T12:00:00.000Z", storeVersion: "0.1.0" },
+    );
+    const lines = renderLlmsTxt(mixed).split("\n");
+    const hostedLine = lines.find((l) => l.startsWith("- [dig-hosted]"))!;
+    const plainLine = lines.find((l) => l.startsWith("- [s3-hosted]"))!;
+    expect(hostedLine).toContain(`chia://${sid}/`);
+    expect(plainLine).not.toContain("chia://");
   });
 });
 
