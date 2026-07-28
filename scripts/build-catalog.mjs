@@ -19,6 +19,18 @@ import { validateApps } from "./validate-apps.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = "https://explore.dig.net";
 
+/**
+ * The two addressable forms of a DIG store id, derived once at build time so no consumer has to
+ * know the URN/scheme grammar: `chia://<storeId>/` (what a DIG client or `dign open` takes) and
+ * `urn:dig:chia:<storeId>` (the canonical rootless URN, SYSTEM.md → "Digstore URN scheme"). Both
+ * track the store's LATEST root — deliberately rootless, so a listing never pins a stale snapshot.
+ * Returns an empty object for a listing that is not DIG-hosted (no storeId to address).
+ */
+function storeAddresses(storeId) {
+  if (!storeId) return {};
+  return { digAddress: `chia://${storeId}/`, urn: `urn:dig:chia:${storeId}` };
+}
+
 /** Build the catalog object from validated apps (pure — unit-testable). */
 export function buildCatalog(apps, { generatedAt, storeVersion }) {
   const entries = apps.map(({ meta, assets }) => {
@@ -34,7 +46,12 @@ export function buildCatalog(apps, { generatedAt, storeVersion }) {
     if (assets.files.includes("icon-1024.png")) a.icon1024 = `${base}/icon-1024.png`;
     if (assets.files.includes("hero.png")) a.hero = `${base}/hero.png`;
     if (assets.files.includes("tile.png")) a.tile = `${base}/tile.png`;
-    return { ...meta, assets: a, detailUrl: `${SITE_URL}/app/${meta.slug}` };
+    return {
+      ...meta,
+      ...storeAddresses(meta.storeId),
+      assets: a,
+      detailUrl: `${SITE_URL}/app/${meta.slug}`,
+    };
   });
 
   // Store order: featured first, then newest, then name — the curated shelf reads left→right.
@@ -96,7 +113,12 @@ export function renderSitemap(catalog) {
 /** Render llms.txt — the agent-facing map of the store (pure). */
 export function renderLlmsTxt(catalog) {
   const apps = catalog.apps
-    .map((a) => `- [${a.name}](${a.detailUrl}) — ${a.tagline} Open the dApp: ${a.url}`)
+    .map((a) => {
+      // A DIG-hosted app also advertises its trustless store address — the one thing an agent (or a
+      // newcomer with a fresh node) can actually point a DIG client at (#1727).
+      const store = a.digAddress ? ` Trustless DIG address: ${a.digAddress} (\`dign open ${a.digAddress}\`).` : "";
+      return `- [${a.name}](${a.detailUrl}) — ${a.tagline} Open the dApp: ${a.url}${store}`;
+    })
     .join("\n");
   return `# explore.dig.net
 
@@ -116,6 +138,17 @@ export function renderLlmsTxt(catalog) {
 ## Listed apps (${catalog.count})
 
 ${apps}
+
+## Reading a listing from the DIG Network directly
+
+Listings marked with a "Trustless DIG address" are published as DIG stores, so they can be read from
+the network itself instead of over ordinary HTTPS. With a local DIG node installed, open one with:
+
+    dign open chia://<storeId>/
+
+Every listing's \`storeId\`, \`digAddress\` (\`chia://<storeId>/\`) and \`urn\`
+(\`urn:dig:chia:<storeId>\`) are machine-readable fields in [catalog.json](${SITE_URL}/catalog.json);
+they are absent for listings served from ordinary web hosting.
 
 ## Notes for agents
 

@@ -56,6 +56,15 @@ export interface CatalogApp {
   category: Category;
   tags: string[];
   url: string;
+  /**
+   * The 64-hex DIG store id the dApp is published under. Present ONLY for DIG-hosted listings;
+   * absent for a dApp served from ordinary web hosting (SPEC.md §3.5).
+   */
+  storeId?: string;
+  /** Build-derived `chia://<storeId>/` — what a DIG client / `dign open` takes. With `storeId`. */
+  digAddress?: string;
+  /** Build-derived canonical rootless URN `urn:dig:chia:<storeId>`. With `storeId`. */
+  urn?: string;
   /** Public source repository. Absent when the dApp's source is not public (SPEC.md §3.4). */
   repo?: string;
   author: AppAuthor;

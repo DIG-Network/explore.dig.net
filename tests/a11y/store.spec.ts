@@ -168,6 +168,36 @@ test.describe("app detail", () => {
     await expectAxeClean(page);
   });
 
+  // A DIG-hosted listing is the only place a reader can obtain a store address without inspecting
+  // HTTP headers, so the panel is exercised on a real DIG-hosted listing (chia-offer) with a
+  // non-DIG listing (xchtip) as the control — and axe runs over the panel itself.
+  test("a DIG-hosted listing publishes a copyable store address, axe-clean", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/app/chia-offer");
+
+    const panel = page.getByTestId("store-address");
+    await expect(panel).toBeVisible();
+    const address = (await page.getByTestId("store-address-value").textContent())!.trim();
+    expect(address).toMatch(/^chia:\/\/[0-9a-f]{64}\/$/);
+    await expect(page.getByTestId("store-command-value")).toHaveText(`dign open ${address}`);
+    await expect(page.getByTestId("store-urn-value")).toHaveText(
+      `urn:dig:chia:${address.slice("chia://".length, -1)}`,
+    );
+
+    // Keyboard-reachable, and the clipboard receives the full address — not the bare hex.
+    await page.getByTestId("copy-store-address").focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByTestId("copy-status")).toHaveText("Copied");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(address);
+
+    await expectAxeClean(page);
+  });
+
+  test("a listing served from ordinary web hosting shows no store address", async ({ page }) => {
+    await page.goto("/app/xchtip");
+    await expect(page.getByTestId("store-address")).toHaveCount(0);
+  });
+
   test("placeholder art is disclosed on listings that carry it", async ({ page }) => {
     await page.goto("/app/cxch");
     await expect(page.getByTestId("placeholder-note")).toBeVisible();

@@ -13,6 +13,7 @@ import { useT } from "@/i18n/useT";
 import { categoryKey } from "@/features/store/categoryKeys";
 import { ScreenshotGallery } from "./ScreenshotGallery";
 import { MetaPanel } from "./MetaPanel";
+import { StoreAddress } from "./StoreAddress";
 
 export function NotFound() {
   const t = useT();
@@ -88,6 +89,7 @@ export function AppDetailPage({ apps, slug }: AppDetailPageProps) {
             </h2>
             <Markdown source={app.description} />
           </section>
+          <StoreAddress app={app} />
           {hasPlaceholders && (
             <p className="placeholder-note" data-testid="placeholder-note">
               {t("placeholderNote")}
