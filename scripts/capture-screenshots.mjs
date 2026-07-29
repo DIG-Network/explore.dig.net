@@ -20,7 +20,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // SPEC.md §4.2 exact dimensions. Mobile renders a 360×640 CSS viewport at 3× DPR → 1080×1920 px.
 const DESKTOP = { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 };
-const MOBILE = { viewport: { width: 360, height: 640 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+const MOBILE = {
+  viewport: { width: 360, height: 640 },
+  deviceScaleFactor: 3,
+  isMobile: true,
+  hasTouch: true,
+};
 
 function argN(args, flag, dflt) {
   const i = args.indexOf(flag);

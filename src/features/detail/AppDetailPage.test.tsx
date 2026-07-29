@@ -6,11 +6,19 @@ import { AppDetailPage, NotFound } from "./AppDetailPage";
 
 describe("<AppDetailPage>", () => {
   it("renders the listing: name, tagline, CTAs, description, meta panel", () => {
-    const app = makeApp({ slug: "tip", name: "Tipper", url: "https://tip.example/", repo: "https://github.com/DIG-Network/tip" });
+    const app = makeApp({
+      slug: "tip",
+      name: "Tipper",
+      url: "https://tip.example/",
+      repo: "https://github.com/DIG-Network/tip",
+    });
     renderWithIntl(<AppDetailPage apps={[app]} slug="tip" />);
     expect(screen.getByRole("heading", { level: 1, name: "Tipper" })).toBeInTheDocument();
     expect(screen.getByTestId("open-dapp")).toHaveAttribute("href", "https://tip.example/");
-    expect(screen.getByRole("link", { name: "View source" })).toHaveAttribute("href", "https://github.com/DIG-Network/tip");
+    expect(screen.getByRole("link", { name: "View source" })).toHaveAttribute(
+      "href",
+      "https://github.com/DIG-Network/tip",
+    );
     expect(screen.getByRole("heading", { name: "About" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Details" })).toBeInTheDocument();
   });
@@ -26,7 +34,9 @@ describe("<AppDetailPage>", () => {
   });
 
   it("omits the source CTA when the listing has no public repo", () => {
-    renderWithIntl(<AppDetailPage apps={[makeApp({ slug: "closed", repo: undefined })]} slug="closed" />);
+    renderWithIntl(
+      <AppDetailPage apps={[makeApp({ slug: "closed", repo: undefined })]} slug="closed" />,
+    );
     expect(screen.queryByRole("link", { name: "View source" })).toBeNull();
     expect(screen.getByTestId("open-dapp")).toBeInTheDocument();
   });
@@ -42,7 +52,10 @@ describe("<AppDetailPage>", () => {
       },
     });
     renderWithIntl(<AppDetailPage apps={[app]} slug="h" />);
-    expect(document.querySelector(".detail-hero img")).toHaveAttribute("src", "/catalog/h/hero.png");
+    expect(document.querySelector(".detail-hero img")).toHaveAttribute(
+      "src",
+      "/catalog/h/hero.png",
+    );
   });
 
   it("discloses placeholder artwork when the listing marks any", () => {

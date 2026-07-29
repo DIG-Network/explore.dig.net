@@ -12,7 +12,9 @@ describe("<AppCard>", () => {
   });
 
   it("funnels straight into the dApp with a direct, named Open CTA", () => {
-    renderWithIntl(<AppCard app={makeApp({ slug: "tipper", name: "Tipper", url: "https://tipper.example/" })} />);
+    renderWithIntl(
+      <AppCard app={makeApp({ slug: "tipper", name: "Tipper", url: "https://tipper.example/" })} />,
+    );
     const open = screen.getByRole("link", { name: "Open Tipper" });
     expect(open).toHaveAttribute("href", "https://tipper.example/");
     expect(open).toHaveAttribute("target", "_blank");
@@ -20,7 +22,15 @@ describe("<AppCard>", () => {
   });
 
   it("shows tagline, category chip, and status badge", () => {
-    renderWithIntl(<AppCard app={makeApp({ tagline: "Does a thing on-chain nicely.", category: "defi", status: "beta" })} />);
+    renderWithIntl(
+      <AppCard
+        app={makeApp({
+          tagline: "Does a thing on-chain nicely.",
+          category: "defi",
+          status: "beta",
+        })}
+      />,
+    );
     expect(screen.getByText("Does a thing on-chain nicely.")).toBeInTheDocument();
     expect(screen.getByText("DeFi")).toBeInTheDocument();
     expect(screen.getByTestId("status-beta")).toBeInTheDocument();

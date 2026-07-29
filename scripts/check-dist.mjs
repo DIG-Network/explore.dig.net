@@ -61,7 +61,9 @@ const HOME_HEAD_TAGS = [
 
 /** Audit the built home page's head. Returns the missing tags' labels ([] when complete). */
 export function auditHomeHead(html) {
-  return HOME_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(([label]) => `home: missing ${label}`);
+  return HOME_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(
+    ([label]) => `home: missing ${label}`,
+  );
 }
 
 /** The Apps home-screen tab's (#51) mandatory head tags — its own canonical + card, not home's. */
@@ -76,7 +78,9 @@ const APPS_PAGE_HEAD_TAGS = [
 
 /** Audit the built Apps tab's head (#51). Returns the missing tags' labels ([] when complete). */
 export function auditAppsPageHead(html) {
-  return APPS_PAGE_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(([label]) => `apps: missing ${label}`);
+  return APPS_PAGE_HEAD_TAGS.filter(([, re]) => !re.test(html)).map(
+    ([label]) => `apps: missing ${label}`,
+  );
 }
 
 /**
@@ -89,8 +93,14 @@ export function auditAppHead(html, app) {
     ["canonical = detailUrl", html.includes(`<link rel="canonical" href="${app.detailUrl}"`)],
     ["og:image = the app's own og.png", html.includes(`property="og:image" content="${ogUrl}"`)],
     ["og:url = detailUrl", html.includes(`property="og:url" content="${app.detailUrl}"`)],
-    ["twitter:card summary_large_image", /name="twitter:card" content="summary_large_image"/.test(html)],
-    ["twitter:image = the app's own og.png", html.includes(`name="twitter:image" content="${ogUrl}"`)],
+    [
+      "twitter:card summary_large_image",
+      /name="twitter:card" content="summary_large_image"/.test(html),
+    ],
+    [
+      "twitter:image = the app's own og.png",
+      html.includes(`name="twitter:image" content="${ogUrl}"`),
+    ],
     ["twitter:image:alt", /name="twitter:image:alt"/.test(html)],
   ];
   return checks.filter(([, ok]) => !ok).map(([label]) => `app/${app.slug}: missing ${label}`);
@@ -108,7 +118,9 @@ export function auditStoreJson(store, catalog) {
   const missing = [];
   const catalogCount = Array.isArray(catalog?.apps) ? catalog.apps.length : -1;
   if (apps.length !== catalogCount) {
-    missing.push(`store.json: app count ${apps.length} does not match catalog.json count ${catalogCount}`);
+    missing.push(
+      `store.json: app count ${apps.length} does not match catalog.json count ${catalogCount}`,
+    );
   }
   const isAbsolute = (u) => typeof u === "string" && /^https?:\/\//.test(u);
   for (const app of apps) {
@@ -124,7 +136,9 @@ function checkOgDimensions(relPath, missing) {
   try {
     const size = readPngSize(readFileSync(join(DIST, relPath)));
     if (!size || size.width !== 1200 || size.height !== 630) {
-      missing.push(`${relPath} (must be 1200×630, got ${size ? `${size.width}×${size.height}` : "non-PNG"})`);
+      missing.push(
+        `${relPath} (must be 1200×630, got ${size ? `${size.width}×${size.height}` : "non-PNG"})`,
+      );
     }
   } catch {
     missing.push(`${relPath} (missing)`);
@@ -156,7 +170,8 @@ function main() {
   try {
     const s = statSync(join(DIST, "apps", "index.html"));
     if (!s.isFile() || s.size === 0) missing.push("apps/index.html (empty)");
-    else missing.push(...auditAppsPageHead(readFileSync(join(DIST, "apps", "index.html"), "utf-8")));
+    else
+      missing.push(...auditAppsPageHead(readFileSync(join(DIST, "apps", "index.html"), "utf-8")));
   } catch {
     missing.push("apps/index.html (missing)");
   }
@@ -169,7 +184,11 @@ function main() {
     missing.push("catalog.json (unreadable)");
   }
   for (const app of catalog.apps ?? []) {
-    for (const rel of [`app/${app.slug}/index.html`, `catalog/${app.slug}/icon-512.png`, `catalog/${app.slug}/og.png`]) {
+    for (const rel of [
+      `app/${app.slug}/index.html`,
+      `catalog/${app.slug}/icon-512.png`,
+      `catalog/${app.slug}/og.png`,
+    ]) {
       try {
         const s = statSync(join(DIST, rel));
         if (!s.isFile() || s.size === 0) missing.push(`${rel} (empty)`);
@@ -179,7 +198,9 @@ function main() {
     }
     checkOgDimensions(`catalog/${app.slug}/og.png`, missing);
     try {
-      missing.push(...auditAppHead(readFileSync(join(DIST, "app", app.slug, "index.html"), "utf-8"), app));
+      missing.push(
+        ...auditAppHead(readFileSync(join(DIST, "app", app.slug, "index.html"), "utf-8"), app),
+      );
     } catch {
       /* page already reported missing above */
     }
@@ -187,13 +208,17 @@ function main() {
 
   // The launcher manifest (store.json): valid JSON, in sync with the catalog, absolute icon+link.
   try {
-    missing.push(...auditStoreJson(JSON.parse(readFileSync(join(DIST, "store.json"), "utf-8")), catalog));
+    missing.push(
+      ...auditStoreJson(JSON.parse(readFileSync(join(DIST, "store.json"), "utf-8")), catalog),
+    );
   } catch {
     missing.push("store.json (unreadable)");
   }
 
   if (missing.length) {
-    console.error("[check-dist] build is missing required files/tags:\n  - " + missing.join("\n  - "));
+    console.error(
+      "[check-dist] build is missing required files/tags:\n  - " + missing.join("\n  - "),
+    );
     process.exit(1);
   }
   console.log(

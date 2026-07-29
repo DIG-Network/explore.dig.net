@@ -64,8 +64,7 @@
   /* page atmosphere: two faint nebulae over the void */
   --page-bg:
     radial-gradient(1100px 520px at 12% -6%, rgba(88, 0, 214, 0.22), transparent 62%),
-    radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.1), transparent 60%),
-    #0a0a20;
+    radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.1), transparent 60%), #0a0a20;
 
   /* Apps launcher wallpaper (#51) — a deep, saturated violet→magenta home-screen backdrop; icon
      labels are white with a soft shadow so they stay legible over the ambient gradient. */
@@ -109,8 +108,7 @@
 
   --page-bg:
     radial-gradient(1100px 520px at 12% -6%, rgba(88, 0, 214, 0.07), transparent 62%),
-    radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.05), transparent 60%),
-    #ffffff;
+    radial-gradient(900px 480px at 96% 12%, rgba(255, 0, 222, 0.05), transparent 60%), #ffffff;
 
   /* Apps launcher wallpaper (#51), light theme — a soft lavender home screen; labels are dark for
      contrast (the solid `--launcher-base` is what axe measures against, so it stays AA in both). */
@@ -490,8 +488,7 @@ a {
   gap: 44px;
   align-items: center;
   background:
-    radial-gradient(120% 140% at 100% 0%, var(--halo) 0%, transparent 55%),
-    var(--bg-card);
+    radial-gradient(120% 140% at 100% 0%, var(--halo) 0%, transparent 55%), var(--bg-card);
   border: 1px solid var(--halo-border);
   border-radius: var(--r-xl);
   padding: 44px;
@@ -1336,9 +1333,7 @@ a {
   flex-wrap: wrap;
   margin-top: 64px;
   padding: 36px 40px;
-  background:
-    radial-gradient(120% 160% at 0% 0%, var(--halo) 0%, transparent 55%),
-    var(--bg-card);
+  background: radial-gradient(120% 160% at 0% 0%, var(--halo) 0%, transparent 55%), var(--bg-card);
   border: 1px solid var(--halo-border);
   border-radius: var(--r-xl);
   box-shadow: 0 40px 130px -60px var(--halo);

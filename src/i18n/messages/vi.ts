@@ -60,7 +60,8 @@ export const vi: PartialMessages = {
   licenseLabel: "Giấy phép",
   appVersionLabel: "Phiên bản ứng dụng",
   storeAddressHeading: "Đọc trực tiếp từ DIG Network",
-  storeAddressIntro: "{name} được phát hành dưới dạng một kho DIG, nên bạn có thể đọc thẳng từ mạng thay vì qua web. Khi đã cài nút DIG, hãy chạy lệnh bên dưới.",
+  storeAddressIntro:
+    "{name} được phát hành dưới dạng một kho DIG, nên bạn có thể đọc thẳng từ mạng thay vì qua web. Khi đã cài nút DIG, hãy chạy lệnh bên dưới.",
   storeAddressLabel: "Địa chỉ kho",
   storeCommandLabel: "Lệnh",
   storeUrnLabel: "URN",
@@ -117,7 +118,8 @@ export const vi: PartialMessages = {
   storeTabLabel: "Cửa hàng",
   appsTabLabel: "Ứng dụng",
   appsPageHeading: "Ứng dụng",
-  appsPageIntro: "Mọi dApp trên DIG Network, chỉ cách một chạm — như màn hình chính trên điện thoại của bạn.",
+  appsPageIntro:
+    "Mọi dApp trên DIG Network, chỉ cách một chạm — như màn hình chính trên điện thoại của bạn.",
   appsGridLabel: "Ứng dụng DIG Network",
   viewDetailsFor: "Xem chi tiết {name}",
 };

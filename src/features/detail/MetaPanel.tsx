@@ -41,7 +41,13 @@ export function MetaPanel({ app }: { app: CatalogApp }) {
         <dd>
           {/* addedDate is a calendar date (YYYY-MM-DD); pin UTC so it never shifts a day with
               the viewer's timezone. */}
-          <FormattedDate value={app.addedDate} year="numeric" month="long" day="numeric" timeZone="UTC" />
+          <FormattedDate
+            value={app.addedDate}
+            year="numeric"
+            month="long"
+            day="numeric"
+            timeZone="UTC"
+          />
         </dd>
 
         <dt>{t("authorLabel")}</dt>

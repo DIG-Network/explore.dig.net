@@ -171,7 +171,10 @@ test.describe("app detail", () => {
   // A DIG-hosted listing is the only place a reader can obtain a store address without inspecting
   // HTTP headers, so the panel is exercised on a real DIG-hosted listing (chia-offer) with a
   // non-DIG listing (xchtip) as the control — and axe runs over the panel itself.
-  test("a DIG-hosted listing publishes a copyable store address, axe-clean", async ({ page, context }) => {
+  test("a DIG-hosted listing publishes a copyable store address, axe-clean", async ({
+    page,
+    context,
+  }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/app/chia-offer");
 

@@ -24,7 +24,9 @@ describe("parseBlocks", () => {
   });
 
   it("parses - and * bullet lists", () => {
-    expect(parseBlocks("- one\n- two\n* three")).toEqual([{ type: "ul", items: ["one", "two", "three"] }]);
+    expect(parseBlocks("- one\n- two\n* three")).toEqual([
+      { type: "ul", items: ["one", "two", "three"] },
+    ]);
   });
 
   it("separates a list from a following paragraph", () => {

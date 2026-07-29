@@ -17,7 +17,8 @@ export function isTheme(value: string | null | undefined): value is Theme {
 /** The persisted explicit choice (if valid), else the dark default. */
 export function initialTheme(): Theme {
   try {
-    const stored = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
+    const stored =
+      typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
     if (isTheme(stored)) return stored;
   } catch {
     /* localStorage blocked — fall through to the default */

@@ -5,17 +5,28 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("home page head", () => {
-  test("title, description, canonical, OG/Twitter, WebSite + ItemList JSON-LD", async ({ page }) => {
+  test("title, description, canonical, OG/Twitter, WebSite + ItemList JSON-LD", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/explore\.dig\.net/);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /.{40,}/);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://explore.dig.net/");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      "https://explore.dig.net/",
+    );
     await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /og\.png$/);
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveCount(1);
-    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      "content",
+      "summary_large_image",
+    );
     // The icon set: SVG favicon + apple-touch-icon + manifest (PNG icons for home screens).
-    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute("href", "/apple-touch-icon.png");
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute(
+      "href",
+      "/apple-touch-icon.png",
+    );
     await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/site.webmanifest");
     const ldBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
     const types = ldBlocks.map((s) => (JSON.parse(s) as { "@type": string })["@type"]);
@@ -53,12 +64,18 @@ test.describe("app detail head (prerendered)", () => {
       "content",
       "https://explore.dig.net/catalog/chia-offer/og.png",
     );
-    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", /Chia-Offer/);
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+      "content",
+      /Chia-Offer/,
+    );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
       "https://explore.dig.net/app/chia-offer",
     );
-    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      "content",
+      "summary_large_image",
+    );
   });
 });
 
@@ -79,7 +96,10 @@ test.describe("agent files", () => {
   test("catalog.json is the full machine catalog", async ({ request }) => {
     const res = await request.get("/catalog.json");
     expect(res.ok()).toBe(true);
-    const catalog = (await res.json()) as { count: number; apps: Array<{ slug: string; assets: { icon: string } }> };
+    const catalog = (await res.json()) as {
+      count: number;
+      apps: Array<{ slug: string; assets: { icon: string } }>;
+    };
     expect(catalog.count).toBeGreaterThanOrEqual(4);
     for (const app of catalog.apps) {
       const icon = await request.get(app.assets.icon);
@@ -90,7 +110,9 @@ test.describe("agent files", () => {
   // The served catalog is where an agent (or a newcomer's client) obtains a trustless address, so
   // the store-address fields are asserted on the real artifact — present and well-formed for a
   // DIG-hosted listing, and ABSENT rather than null/empty for one on ordinary web hosting.
-  test("catalog.json carries the store address for DIG-hosted listings only", async ({ request }) => {
+  test("catalog.json carries the store address for DIG-hosted listings only", async ({
+    request,
+  }) => {
     const catalog = (await (await request.get("/catalog.json")).json()) as {
       apps: Array<{ slug: string; storeId?: string; digAddress?: string; urn?: string }>;
     };
@@ -102,17 +124,23 @@ test.describe("agent files", () => {
       expect(app.urn).toBe(`urn:dig:chia:${app.storeId}`);
     }
     for (const app of catalog.apps.filter((a) => !("storeId" in a))) {
-      expect(Object.keys(app), `${app.slug} must not carry address fields`).not.toContain("digAddress");
+      expect(Object.keys(app), `${app.slug} must not carry address fields`).not.toContain(
+        "digAddress",
+      );
       expect(Object.keys(app), `${app.slug} must not carry address fields`).not.toContain("urn");
     }
   });
 
-  test("llms.txt gives an agent the first-fetch command for a DIG-hosted listing", async ({ request }) => {
+  test("llms.txt gives an agent the first-fetch command for a DIG-hosted listing", async ({
+    request,
+  }) => {
     const txt = await (await request.get("/llms.txt")).text();
     expect(txt).toMatch(/dign open chia:\/\/[0-9a-f]{64}\//);
   });
 
-  test("store.json is the lean launcher manifest (real JSON, absolute icon+link)", async ({ request }) => {
+  test("store.json is the lean launcher manifest (real JSON, absolute icon+link)", async ({
+    request,
+  }) => {
     // Served as a real static file, not the SPA index.html fallback.
     const res = await request.get("/store.json");
     expect(res.ok()).toBe(true);
@@ -145,7 +173,9 @@ test.describe("agent files", () => {
 });
 
 test.describe("version exposure (§6.7)", () => {
-  test("meta tag + window global + on-page display all carry the build semver", async ({ page }) => {
+  test("meta tag + window global + on-page display all carry the build semver", async ({
+    page,
+  }) => {
     await page.goto("/");
     const meta = page.locator('meta[name="app-version"]');
     await expect(meta).toHaveAttribute("content", /^\d+\.\d+\.\d+/);

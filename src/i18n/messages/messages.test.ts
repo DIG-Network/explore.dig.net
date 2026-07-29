@@ -23,7 +23,19 @@ import { id } from "./id";
 import { hi } from "./hi";
 
 const CATALOGS: Record<string, Partial<Record<MessageKey, string>>> = {
-  "zh-CN": zhCN, "zh-TW": zhTW, ko, ja, ru, es, "pt-BR": ptBR, fr, de, tr, vi, id, hi,
+  "zh-CN": zhCN,
+  "zh-TW": zhTW,
+  ko,
+  ja,
+  ru,
+  es,
+  "pt-BR": ptBR,
+  fr,
+  de,
+  tr,
+  vi,
+  id,
+  hi,
 };
 
 const EN_KEYS = new Set(Object.keys(en));
@@ -58,7 +70,10 @@ describe("locale catalogs", () => {
         if (value !== en[key]) translated++;
       }
       const ratio = translated / MESSAGE_KEYS.length;
-      expect(ratio, `${code}: only ${(ratio * 100).toFixed(0)}% of keys are translated`).toBeGreaterThan(0.7);
+      expect(
+        ratio,
+        `${code}: only ${(ratio * 100).toFixed(0)}% of keys are translated`,
+      ).toBeGreaterThan(0.7);
     }
   });
 

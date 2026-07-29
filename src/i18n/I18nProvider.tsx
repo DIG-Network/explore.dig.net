@@ -5,7 +5,15 @@
 // <html lang>, and feeds react-intl the resolved (English-fallback-merged) catalog.
 
 /* eslint-disable react-refresh/only-export-components -- provider co-locates its useLocale hook by design */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { IntlProvider } from "react-intl";
 import { DEFAULT_LOCALE, initialLocale, persistLocale } from "./locales";
 import { messagesFor } from "./messages";

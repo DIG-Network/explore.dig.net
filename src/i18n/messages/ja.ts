@@ -59,7 +59,8 @@ export const ja: PartialMessages = {
   licenseLabel: "ライセンス",
   appVersionLabel: "アプリのバージョン",
   storeAddressHeading: "DIG Network から直接読み込む",
-  storeAddressIntro: "{name} は DIG ストアとして公開されているため、ウェブを経由せずネットワークから直接読み込めます。DIG ノードをインストールしたら、以下のコマンドを実行してください。",
+  storeAddressIntro:
+    "{name} は DIG ストアとして公開されているため、ウェブを経由せずネットワークから直接読み込めます。DIG ノードをインストールしたら、以下のコマンドを実行してください。",
   storeAddressLabel: "ストアアドレス",
   storeCommandLabel: "コマンド",
   storeUrnLabel: "URN",
@@ -75,10 +76,12 @@ export const ja: PartialMessages = {
   linkX: "X",
   linkYouTube: "YouTube",
   linkBlog: "ブログ",
-  placeholderNote: "このページの一部のアートワークは、チームの最終アート待ちのブランドプレースホルダーです。",
+  placeholderNote:
+    "このページの一部のアートワークは、チームの最終アート待ちのブランドプレースホルダーです。",
 
   notFoundHeading: "そのアプリは棚にありません",
-  notFoundBody: "お探しのアプリは存在しない（または削除された）ようです。ストアで公開中のアプリをご覧ください。",
+  notFoundBody:
+    "お探しのアプリは存在しない（または削除された）ようです。ストアで公開中のアプリをご覧ください。",
   notFoundCta: "すべてのアプリを見る",
 
   iconAlt: "{name} のアイコン",

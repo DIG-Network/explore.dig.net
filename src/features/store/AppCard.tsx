@@ -21,7 +21,11 @@ export function AppCard({ app }: { app: CatalogApp }) {
 
   return (
     <article className="app-card" style={style} data-testid={`app-card-${app.slug}`}>
-      <a className="app-card-link" href={`/app/${app.slug}`} data-testid={`app-card-link-${app.slug}`}>
+      <a
+        className="app-card-link"
+        href={`/app/${app.slug}`}
+        data-testid={`app-card-link-${app.slug}`}
+      >
         <div className="app-card-head">
           <AppIcon app={app} size={56} />
           <div className="app-card-title">

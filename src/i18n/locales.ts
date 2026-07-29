@@ -133,7 +133,8 @@ export function detectBrowserLocale(): string {
 /** The persisted explicit choice (if valid), else the detected browser locale. */
 export function initialLocale(): string {
   try {
-    const stored = typeof localStorage !== "undefined" ? localStorage.getItem(LOCALE_STORAGE_KEY) : null;
+    const stored =
+      typeof localStorage !== "undefined" ? localStorage.getItem(LOCALE_STORAGE_KEY) : null;
     if (isSupportedLocale(stored)) return stored;
   } catch {
     /* localStorage blocked — fall through to detection */

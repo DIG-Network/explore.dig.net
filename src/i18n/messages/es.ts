@@ -60,7 +60,8 @@ export const es: PartialMessages = {
   licenseLabel: "Licencia",
   appVersionLabel: "Versión de la app",
   storeAddressHeading: "Léelo desde la DIG Network",
-  storeAddressIntro: "{name} se publica como un almacén DIG, así que puedes leerlo directamente desde la red en lugar de por la web. Con un nodo DIG instalado, ejecuta el comando de abajo.",
+  storeAddressIntro:
+    "{name} se publica como un almacén DIG, así que puedes leerlo directamente desde la red en lugar de por la web. Con un nodo DIG instalado, ejecuta el comando de abajo.",
   storeAddressLabel: "Dirección del almacén",
   storeCommandLabel: "Comando",
   storeUrnLabel: "URN",

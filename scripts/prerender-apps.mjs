@@ -20,7 +20,11 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = "https://explore.dig.net";
 
 const esc = (s) =>
-  s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  s
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 
 /** The per-app SEO head block (pure — unit-testable). */
 export function appSeoBlock(app) {
@@ -36,7 +40,11 @@ export function appSeoBlock(app) {
     operatingSystem: "Web",
     description: app.tagline,
     image: ogImage,
-    author: { "@type": "Organization", name: app.author.name, ...(app.author.url ? { url: app.author.url } : {}) },
+    author: {
+      "@type": "Organization",
+      name: app.author.name,
+      ...(app.author.url ? { url: app.author.url } : {}),
+    },
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
   return [
@@ -138,7 +146,12 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
 
   // Home: append the ItemList JSON-LD alongside the static WebSite block.
   const itemList = `<script type="application/ld+json">${JSON.stringify(homeItemListLd(catalog))}</script>`;
-  writeFileSync(join(ROOT, "dist", "index.html"), shell.replace("</head>", `    ${itemList}\n  </head>`));
+  writeFileSync(
+    join(ROOT, "dist", "index.html"),
+    shell.replace("</head>", `    ${itemList}\n  </head>`),
+  );
 
-  console.log(`[prerender-apps] OK — ${catalog.count} app page(s) + the Apps tab + home ItemList JSON-LD.`);
+  console.log(
+    `[prerender-apps] OK — ${catalog.count} app page(s) + the Apps tab + home ItemList JSON-LD.`,
+  );
 }

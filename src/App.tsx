@@ -93,7 +93,12 @@ export function App({ pathname, search }: AppProps) {
           </a>
           <span className="header-tag">{t("headerTagline")}</span>
           <div className="header-actions">
-            <a className="btn btn-ghost btn-small" href={SPEC_URL} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn btn-ghost btn-small"
+              href={SPEC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {t("submitCta")}
             </a>
             <LanguageSelector />

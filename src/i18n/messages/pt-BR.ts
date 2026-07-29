@@ -60,7 +60,8 @@ export const ptBR: PartialMessages = {
   licenseLabel: "Licença",
   appVersionLabel: "Versão do app",
   storeAddressHeading: "Leia direto da DIG Network",
-  storeAddressIntro: "{name} é publicado como um repositório DIG, então você pode lê-lo direto da rede em vez de pela web. Com um nó DIG instalado, rode o comando abaixo.",
+  storeAddressIntro:
+    "{name} é publicado como um repositório DIG, então você pode lê-lo direto da rede em vez de pela web. Com um nó DIG instalado, rode o comando abaixo.",
   storeAddressLabel: "Endereço do repositório",
   storeCommandLabel: "Comando",
   storeUrnLabel: "URN",
@@ -117,7 +118,8 @@ export const ptBR: PartialMessages = {
   storeTabLabel: "Loja",
   appsTabLabel: "Apps",
   appsPageHeading: "Apps",
-  appsPageIntro: "Cada dApp da DIG Network, a um toque de distância — como a tela inicial do seu celular.",
+  appsPageIntro:
+    "Cada dApp da DIG Network, a um toque de distância — como a tela inicial do seu celular.",
   appsGridLabel: "Apps da DIG Network",
   viewDetailsFor: "Ver detalhes de {name}",
 };

@@ -36,7 +36,8 @@ export function matchesQuery(app: CatalogApp, normalizedQuery: string): boolean 
 export function filterApps(apps: readonly CatalogApp[], filter: StoreFilter): CatalogApp[] {
   const q = normalizeQuery(filter.query);
   return apps.filter(
-    (app) => (filter.category === "all" || app.category === filter.category) && matchesQuery(app, q),
+    (app) =>
+      (filter.category === "all" || app.category === filter.category) && matchesQuery(app, q),
   );
 }
 

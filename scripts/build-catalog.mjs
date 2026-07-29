@@ -116,7 +116,9 @@ export function renderLlmsTxt(catalog) {
     .map((a) => {
       // A DIG-hosted app also advertises its trustless store address — the one thing an agent (or a
       // newcomer with a fresh node) can actually point a DIG client at (#1727).
-      const store = a.digAddress ? ` Trustless DIG address: ${a.digAddress} (\`dign open ${a.digAddress}\`).` : "";
+      const store = a.digAddress
+        ? ` Trustless DIG address: ${a.digAddress} (\`dign open ${a.digAddress}\`).`
+        : "";
       return `- [${a.name}](${a.detailUrl}) — ${a.tagline} Open the dApp: ${a.url}${store}`;
     })
     .join("\n");
@@ -180,7 +182,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   }
 
   writeFileSync(join(ROOT, "public", "catalog.json"), JSON.stringify(catalog, null, 2));
-  writeFileSync(join(ROOT, "public", "store.json"), JSON.stringify(renderStoreJson(catalog), null, 2));
+  writeFileSync(
+    join(ROOT, "public", "store.json"),
+    JSON.stringify(renderStoreJson(catalog), null, 2),
+  );
   const genDir = join(ROOT, "src", "catalog");
   if (!existsSync(genDir)) mkdirSync(genDir, { recursive: true });
   writeFileSync(join(genDir, "catalog.gen.json"), JSON.stringify(catalog, null, 2));

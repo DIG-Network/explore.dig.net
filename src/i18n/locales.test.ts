@@ -19,7 +19,20 @@ describe("SUPPORTED_LOCALES", () => {
     expect(SUPPORTED_LOCALES).toHaveLength(14);
     expect(SUPPORTED_LOCALES[0].code).toBe("en");
     expect(SUPPORTED_LOCALES.map((l) => l.code)).toEqual([
-      "en", "zh-CN", "zh-TW", "ko", "ja", "ru", "es", "pt-BR", "fr", "de", "tr", "vi", "id", "hi",
+      "en",
+      "zh-CN",
+      "zh-TW",
+      "ko",
+      "ja",
+      "ru",
+      "es",
+      "pt-BR",
+      "fr",
+      "de",
+      "tr",
+      "vi",
+      "id",
+      "hi",
     ]);
   });
 

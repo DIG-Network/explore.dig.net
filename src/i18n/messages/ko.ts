@@ -59,7 +59,8 @@ export const ko: PartialMessages = {
   licenseLabel: "라이선스",
   appVersionLabel: "앱 버전",
   storeAddressHeading: "DIG Network에서 직접 읽기",
-  storeAddressIntro: "{name}은(는) DIG 스토어로 게시되어 있어 웹을 거치지 않고 네트워크에서 바로 읽을 수 있습니다. DIG 노드를 설치한 뒤 아래 명령을 실행하세요.",
+  storeAddressIntro:
+    "{name}은(는) DIG 스토어로 게시되어 있어 웹을 거치지 않고 네트워크에서 바로 읽을 수 있습니다. DIG 노드를 설치한 뒤 아래 명령을 실행하세요.",
   storeAddressLabel: "스토어 주소",
   storeCommandLabel: "명령",
   storeUrnLabel: "URN",
@@ -75,7 +76,8 @@ export const ko: PartialMessages = {
   linkX: "X",
   linkYouTube: "YouTube",
   linkBlog: "블로그",
-  placeholderNote: "이 페이지의 일부 아트워크는 팀의 최종 아트를 기다리는 브랜드 플레이스홀더입니다.",
+  placeholderNote:
+    "이 페이지의 일부 아트워크는 팀의 최종 아트를 기다리는 브랜드 플레이스홀더입니다.",
 
   notFoundHeading: "선반에 없는 앱입니다",
   notFoundBody: "찾으시는 앱이 존재하지 않거나 내려갔습니다. 스토어에서 전체 앱을 둘러보세요.",

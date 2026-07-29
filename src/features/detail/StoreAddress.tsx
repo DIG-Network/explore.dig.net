@@ -76,10 +76,18 @@ export function StoreAddress({ app }: { app: CatalogApp }) {
   if (!app.digAddress || !app.urn) return null;
 
   const statusText =
-    copyState === "copied" ? t("copiedStatus") : copyState === "failed" ? t("copyFailedStatus") : "";
+    copyState === "copied"
+      ? t("copiedStatus")
+      : copyState === "failed"
+        ? t("copyFailedStatus")
+        : "";
 
   return (
-    <section className="store-address" data-testid="store-address" aria-labelledby="store-address-heading">
+    <section
+      className="store-address"
+      data-testid="store-address"
+      aria-labelledby="store-address-heading"
+    >
       <h2 id="store-address-heading" className="section-heading">
         {t("storeAddressHeading")}
       </h2>
@@ -97,9 +105,19 @@ export function StoreAddress({ app }: { app: CatalogApp }) {
           testId="store-command"
           onCopied={setCopyState}
         />
-        <CopyRow label={t("storeUrnLabel")} value={app.urn} testId="store-urn" onCopied={setCopyState} />
+        <CopyRow
+          label={t("storeUrnLabel")}
+          value={app.urn}
+          testId="store-urn"
+          onCopied={setCopyState}
+        />
       </dl>
-      <p className="store-address-status" role="status" aria-live="polite" data-testid="copy-status">
+      <p
+        className="store-address-status"
+        role="status"
+        aria-live="polite"
+        data-testid="copy-status"
+      >
         {statusText}
       </p>
     </section>

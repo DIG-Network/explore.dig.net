@@ -112,11 +112,10 @@ test.describe("Apps home-screen tab", () => {
       await page.goto("/apps");
       const grid = page.getByTestId("app-home-grid");
       await expect(grid).toBeVisible();
-      const tracks = await grid.evaluate(
-        (el) =>
-          getComputedStyle(el)
-            .gridTemplateColumns.split(" ")
-            .map((v) => parseFloat(v)),
+      const tracks = await grid.evaluate((el) =>
+        getComputedStyle(el)
+          .gridTemplateColumns.split(" ")
+          .map((v) => parseFloat(v)),
       );
       // Exactly four equal columns (the cluster layout produced one track per app / collapsed
       // 72px tracks, never four evenly-sized ones).
