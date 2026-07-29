@@ -8,11 +8,31 @@ import { renderWithIntl } from "@/test/renderWithIntl";
 import { APP_VERSION } from "@/lib/version";
 import { App } from "./App";
 
-vi.mock("@dignetwork/components", () => ({
-  BugReportButton: ({ repo, appVersion }: { repo: string; appVersion?: string }) => (
-    <div data-testid="bug-report-button" data-repo={repo} data-app-version={appVersion} />
-  ),
-}));
+// Mock only the widget component; keep the real DEFAULT_MESSAGES so the messages helper maps every
+// key faithfully. The mock records the resolved `messages` so we can assert our i18n contract.
+vi.mock("@dignetwork/components", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@dignetwork/components")>();
+  return {
+    ...actual,
+    BugReportButton: ({
+      repo,
+      appVersion,
+      messages,
+    }: {
+      repo: string;
+      appVersion?: string;
+      messages?: Record<string, string>;
+    }) => (
+      <div
+        data-testid="bug-report-button"
+        data-repo={repo}
+        data-app-version={appVersion}
+        data-launcher-label={messages?.launcherAriaLabel}
+        data-message-count={messages ? String(Object.keys(messages).length) : undefined}
+      />
+    ),
+  };
+});
 
 /** Force the launcher breakpoint match so `/` resolves to the phone launcher (#51 follow-up). */
 function mockViewport(isLauncher: boolean) {
@@ -129,6 +149,18 @@ describe("<App>", () => {
     const widget = screen.getByTestId("bug-report-button");
     expect(widget).toHaveAttribute("data-repo", "explore.dig.net");
     expect(widget).toHaveAttribute("data-app-version", APP_VERSION);
+  });
+
+  it("passes localized messages to the widget (English defaults preserved)", async () => {
+    const { DEFAULT_MESSAGES } = await import("@dignetwork/components");
+    renderWithIntl(<App pathname="/" search="" />);
+    const widget = screen.getByTestId("bug-report-button");
+    // Every widget key is mapped, and English resolves to the widget's own defaults unchanged.
+    expect(widget).toHaveAttribute(
+      "data-message-count",
+      String(Object.keys(DEFAULT_MESSAGES).length),
+    );
+    expect(widget).toHaveAttribute("data-launcher-label", DEFAULT_MESSAGES.launcherAriaLabel);
   });
 
   it("links to the submission spec from the header", () => {
