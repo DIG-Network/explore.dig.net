@@ -13,6 +13,7 @@
 // until their `bugReport.*` translations are added.
 
 import { DEFAULT_MESSAGES, type BugReportMessages } from "@dignetwork/components";
+import { bugReportCatalogs } from "./bugReportCatalogs";
 
 /** Every message key the widget exposes (the exact `BugReportMessages` shape). */
 export type BugReportMessageKey = keyof BugReportMessages;
@@ -33,3 +34,19 @@ export function bugReportMessageId(key: BugReportMessageKey): string {
 export const bugReportBaseMessages: Record<string, string> = Object.fromEntries(
   BUG_REPORT_MESSAGE_KEYS.map((key) => [bugReportMessageId(key), DEFAULT_MESSAGES[key]]),
 );
+
+/**
+ * bugReportMessagesFor — the resolved widget catalog for a locale, keyed by namespaced `bugReport.*`
+ * id: the locale's translations merged OVER the English base, so every widget id is present (English
+ * fallback for any untranslated key). Mirrors `messagesFor` for the app catalog; the two share one
+ * IntlProvider but never collide because the widget lives in its own `bugReport.*` id namespace.
+ */
+export function bugReportMessagesFor(locale: string): Record<string, string> {
+  const override = bugReportCatalogs[locale] ?? {};
+  const resolved: Record<string, string> = { ...bugReportBaseMessages };
+  for (const key of BUG_REPORT_MESSAGE_KEYS) {
+    const translated = override[key];
+    if (translated !== undefined) resolved[bugReportMessageId(key)] = translated;
+  }
+  return resolved;
+}
