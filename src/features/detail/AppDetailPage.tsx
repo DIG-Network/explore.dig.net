@@ -69,7 +69,13 @@ export function AppDetailPage({ apps, slug }: AppDetailPageProps) {
           </div>
         </div>
         <div className="detail-actions">
-          <a className="btn btn-primary" href={app.url} target="_blank" rel="noopener noreferrer" data-testid="open-dapp">
+          <a
+            className="btn btn-primary"
+            href={app.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="open-dapp"
+          >
             {t("openApp")}
           </a>
           {app.repo && (

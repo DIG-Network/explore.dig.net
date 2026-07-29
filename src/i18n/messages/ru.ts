@@ -19,7 +19,8 @@ export const ru: PartialMessages = {
 
   featuredHeading: "Рекомендуемые",
   allAppsHeading: "Все приложения",
-  appsCount: "{count, plural, one {# приложение} few {# приложения} many {# приложений} other {# приложения}}",
+  appsCount:
+    "{count, plural, one {# приложение} few {# приложения} many {# приложений} other {# приложения}}",
 
   searchLabel: "Поиск приложений",
   searchPlaceholder: "Поиск по названию, тегу или функции…",
@@ -60,7 +61,8 @@ export const ru: PartialMessages = {
   licenseLabel: "Лицензия",
   appVersionLabel: "Версия приложения",
   storeAddressHeading: "Читать напрямую из DIG Network",
-  storeAddressIntro: "{name} опубликовано как хранилище DIG, поэтому его можно читать прямо из сети, а не через веб. Установив узел DIG, выполните команду ниже.",
+  storeAddressIntro:
+    "{name} опубликовано как хранилище DIG, поэтому его можно читать прямо из сети, а не через веб. Установив узел DIG, выполните команду ниже.",
   storeAddressLabel: "Адрес хранилища",
   storeCommandLabel: "Команда",
   storeUrnLabel: "URN",

@@ -8,9 +8,11 @@ describe("APP_VERSION", () => {
 });
 
 describe("publishAppVersion", () => {
-  it("publishes window.__APP_VERSION__ and a <meta name=\"app-version\"> tag (§6.7)", () => {
+  it('publishes window.__APP_VERSION__ and a <meta name="app-version"> tag (§6.7)', () => {
     publishAppVersion("1.2.3+abc");
-    expect((window as typeof window & { __APP_VERSION__?: string }).__APP_VERSION__).toBe("1.2.3+abc");
+    expect((window as typeof window & { __APP_VERSION__?: string }).__APP_VERSION__).toBe(
+      "1.2.3+abc",
+    );
     const meta = document.head.querySelector('meta[name="app-version"]');
     expect(meta?.getAttribute("content")).toBe("1.2.3+abc");
   });

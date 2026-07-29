@@ -80,18 +80,20 @@ describe("filterApps", () => {
     expect(filterApps(apps, { category: "defi", query: "" }).map((a) => a.slug)).toEqual(["b"]);
   });
   it("combines category and query", () => {
-    expect(filterApps(apps, { category: "payments", query: "gamma" }).map((a) => a.slug)).toEqual(["c"]);
+    expect(filterApps(apps, { category: "payments", query: "gamma" }).map((a) => a.slug)).toEqual([
+      "c",
+    ]);
   });
   it("preserves input order", () => {
-    expect(filterApps(apps, { category: "payments", query: "" }).map((a) => a.slug)).toEqual(["a", "c"]);
+    expect(filterApps(apps, { category: "payments", query: "" }).map((a) => a.slug)).toEqual([
+      "a",
+      "c",
+    ]);
   });
 });
 
 describe("featuredApps / appBySlug", () => {
-  const apps = [
-    makeApp({ slug: "plain" }),
-    makeApp({ slug: "star", featured: true }),
-  ];
+  const apps = [makeApp({ slug: "plain" }), makeApp({ slug: "star", featured: true })];
 
   it("returns only featured apps", () => {
     expect(featuredApps(apps).map((a) => a.slug)).toEqual(["star"]);

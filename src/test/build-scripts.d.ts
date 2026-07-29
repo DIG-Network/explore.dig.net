@@ -21,7 +21,10 @@ declare module "*validate-apps.mjs" {
   }
   export const APPS_DIR: string;
   export const ASSET_RULES: Record<string, PngRule>;
-  export const SCREENSHOT_RULES: Record<string, { width: number; height: number; maxBytes: number; max: number; minToFeature: number }>;
+  export const SCREENSHOT_RULES: Record<
+    string,
+    { width: number; height: number; maxBytes: number; max: number; minToFeature: number }
+  >;
   export function readPngSize(buf: Uint8Array): { width: number; height: number } | null;
   export function validateApps(appsDir?: string): { apps: ValidatedApp[]; errors: string[] };
 }
@@ -33,7 +36,16 @@ declare module "*build-catalog.mjs" {
     storeVersion: string;
     siteUrl: string;
     count: number;
-    apps: Array<Record<string, unknown> & { slug: string; name: string; tagline: string; url: string; detailUrl: string; assets: Record<string, unknown> }>;
+    apps: Array<
+      Record<string, unknown> & {
+        slug: string;
+        name: string;
+        tagline: string;
+        url: string;
+        detailUrl: string;
+        assets: Record<string, unknown>;
+      }
+    >;
   }
   export interface StoreManifestLike {
     generatedAt: string;
@@ -60,7 +72,10 @@ declare module "*build-catalog.mjs" {
 declare module "*prerender-apps.mjs" {
   export function appSeoBlock(app: Record<string, unknown>): string;
   export function appsPageSeoBlock(): string;
-  export function homeItemListLd(catalog: { count: number; apps: Array<{ detailUrl: string; name: string }> }): {
+  export function homeItemListLd(catalog: {
+    count: number;
+    apps: Array<{ detailUrl: string; name: string }>;
+  }): {
     "@type": string;
     numberOfItems: number;
     itemListElement: Array<{ position: number; url: string; name: string }>;
@@ -76,10 +91,7 @@ declare module "*check-dist.mjs" {
     html: string,
     app: { slug: string; name?: string; assets: { og: string }; detailUrl: string },
   ): string[];
-  export function auditStoreJson(
-    store: unknown,
-    catalog: { apps?: Array<unknown> },
-  ): string[];
+  export function auditStoreJson(store: unknown, catalog: { apps?: Array<unknown> }): string[];
 }
 
 declare module "*resolve-app-version.mjs" {

@@ -38,7 +38,8 @@ export const de: PartialMessages = {
   clearFilters: "Filter zurücksetzen",
 
   emptyHeading: "Keine passenden Apps",
-  emptyBody: "Versuche eine andere Suche oder setze die Filter zurück, um das ganze Regal zu sehen.",
+  emptyBody:
+    "Versuche eine andere Suche oder setze die Filter zurück, um das ganze Regal zu sehen.",
 
   statusLive: "Live",
   statusBeta: "Beta",
@@ -60,7 +61,8 @@ export const de: PartialMessages = {
   licenseLabel: "Lizenz",
   appVersionLabel: "App-Version",
   storeAddressHeading: "Direkt aus dem DIG Network lesen",
-  storeAddressIntro: "{name} ist als DIG-Store veröffentlicht und lässt sich daher direkt aus dem Netzwerk lesen, nicht nur über das Web. Führe mit installiertem DIG-Node den folgenden Befehl aus.",
+  storeAddressIntro:
+    "{name} ist als DIG-Store veröffentlicht und lässt sich daher direkt aus dem Netzwerk lesen, nicht nur über das Web. Führe mit installiertem DIG-Node den folgenden Befehl aus.",
   storeAddressLabel: "Store-Adresse",
   storeCommandLabel: "Befehl",
   storeUrnLabel: "URN",
@@ -117,7 +119,8 @@ export const de: PartialMessages = {
   storeTabLabel: "Store",
   appsTabLabel: "Apps",
   appsPageHeading: "Apps",
-  appsPageIntro: "Jede dApp im DIG Network, einen Fingertipp entfernt — wie der Startbildschirm auf deinem Handy.",
+  appsPageIntro:
+    "Jede dApp im DIG Network, einen Fingertipp entfernt — wie der Startbildschirm auf deinem Handy.",
   appsGridLabel: "DIG Network Apps",
   viewDetailsFor: "Details zu {name} ansehen",
 };

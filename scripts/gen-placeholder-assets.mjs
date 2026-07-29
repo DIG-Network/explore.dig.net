@@ -47,7 +47,15 @@ function pageShell(body, extraCss = "") {
 }
 
 /** Banner art (og / hero / tile): name + tagline on the accent-lit navy gradient. */
-function bannerHtml({ name, tagline, accent, width, height, footerMark, kicker = "Chia dApp · DIG Network" }) {
+function bannerHtml({
+  name,
+  tagline,
+  accent,
+  width,
+  height,
+  footerMark,
+  kicker = "Chia dApp · DIG Network",
+}) {
   const scale = width / 1200; // design at 1200-wide, scale everything with the canvas
   return pageShell(
     `
@@ -91,7 +99,11 @@ function bannerHtml({ name, tagline, accent, width, height, footerMark, kicker =
 
 /** Icon art: accent gradient rounded tile + bold monogram. */
 function iconHtml({ name, accent, width }) {
-  const initial = name.replace(/[^A-Za-z0-9]/g, "").charAt(0).toUpperCase() || "?";
+  const initial =
+    name
+      .replace(/[^A-Za-z0-9]/g, "")
+      .charAt(0)
+      .toUpperCase() || "?";
   return pageShell(
     `
     <div class="tile">
@@ -173,13 +185,21 @@ async function main() {
         ["icon-192.png", 192],
         ["icon-512.png", 512],
       ]) {
-        await renderPng(browser, storeIconHtml(favicon, size), size, size, join(ROOT, "public", file));
+        await renderPng(
+          browser,
+          storeIconHtml(favicon, size),
+          size,
+          size,
+          join(ROOT, "public", file),
+        );
       }
       return;
     }
     const slug = args[0];
     if (!slug) {
-      console.error("usage: node scripts/gen-placeholder-assets.mjs <slug> [asset ...] | --store-og");
+      console.error(
+        "usage: node scripts/gen-placeholder-assets.mjs <slug> [asset ...] | --store-og",
+      );
       process.exit(2);
     }
     const meta = JSON.parse(readFileSync(join(ROOT, "apps", slug, "metadata.json"), "utf-8"));

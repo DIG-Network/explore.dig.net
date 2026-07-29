@@ -60,7 +60,8 @@ export const tr: PartialMessages = {
   licenseLabel: "Lisans",
   appVersionLabel: "Uygulama sürümü",
   storeAddressHeading: "DIG Network'ten doğrudan oku",
-  storeAddressIntro: "{name} bir DIG deposu olarak yayımlanıyor; bu yüzden web üzerinden değil, doğrudan ağdan okuyabilirsin. DIG düğümü kuruluysa aşağıdaki komutu çalıştır.",
+  storeAddressIntro:
+    "{name} bir DIG deposu olarak yayımlanıyor; bu yüzden web üzerinden değil, doğrudan ağdan okuyabilirsin. DIG düğümü kuruluysa aşağıdaki komutu çalıştır.",
   storeAddressLabel: "Depo adresi",
   storeCommandLabel: "Komut",
   storeUrnLabel: "URN",
@@ -89,7 +90,8 @@ export const tr: PartialMessages = {
   screenshotDesktopAlt: "{name} — masaüstü ekran görüntüsü {n}",
   screenshotMobileAlt: "{name} — mobil ekran görüntüsü {n}",
 
-  footerTagline: "DIG Network'ün bir parçası — Chia üzerinde merkeziyetsiz içerik ve uygulama katmanı.",
+  footerTagline:
+    "DIG Network'ün bir parçası — Chia üzerinde merkeziyetsiz içerik ve uygulama katmanı.",
   footerSubmitLead: "Chia üzerinde mi geliştiriyorsunuz?",
   footerSubmitLink: "Gönderim şartnamesini okuyun ve dApp'inizi listeleyin",
   footerCatalog: "Makine kataloğu (JSON)",
@@ -117,7 +119,8 @@ export const tr: PartialMessages = {
   storeTabLabel: "Mağaza",
   appsTabLabel: "Uygulamalar",
   appsPageHeading: "Uygulamalar",
-  appsPageIntro: "DIG Network'teki her dApp, bir dokunuş uzağınızda — telefonunuzun ana ekranı gibi.",
+  appsPageIntro:
+    "DIG Network'teki her dApp, bir dokunuş uzağınızda — telefonunuzun ana ekranı gibi.",
   appsGridLabel: "DIG Network uygulamaları",
   viewDetailsFor: "{name} ayrıntılarını gör",
 };

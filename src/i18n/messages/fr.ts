@@ -60,7 +60,8 @@ export const fr: PartialMessages = {
   licenseLabel: "Licence",
   appVersionLabel: "Version de l'app",
   storeAddressHeading: "Lisez-le depuis le DIG Network",
-  storeAddressIntro: "{name} est publié comme un magasin DIG : vous pouvez donc le lire directement depuis le réseau plutôt que par le web. Avec un nœud DIG installé, lancez la commande ci-dessous.",
+  storeAddressIntro:
+    "{name} est publié comme un magasin DIG : vous pouvez donc le lire directement depuis le réseau plutôt que par le web. Avec un nœud DIG installé, lancez la commande ci-dessous.",
   storeAddressLabel: "Adresse du magasin",
   storeCommandLabel: "Commande",
   storeUrnLabel: "URN",
@@ -89,7 +90,8 @@ export const fr: PartialMessages = {
   screenshotDesktopAlt: "{name} — capture bureau {n}",
   screenshotMobileAlt: "{name} — capture mobile {n}",
 
-  footerTagline: "Une partie du DIG Network — une couche décentralisée de contenu et d'apps sur Chia.",
+  footerTagline:
+    "Une partie du DIG Network — une couche décentralisée de contenu et d'apps sur Chia.",
   footerSubmitLead: "Vous développez sur Chia ?",
   footerSubmitLink: "Lisez la spécification de soumission et publiez votre dApp",
   footerCatalog: "Catalogue machine (JSON)",
@@ -117,7 +119,8 @@ export const fr: PartialMessages = {
   storeTabLabel: "Boutique",
   appsTabLabel: "Apps",
   appsPageHeading: "Apps",
-  appsPageIntro: "Chaque dApp du DIG Network, à portée d'un tap — comme l'écran d'accueil de votre téléphone.",
+  appsPageIntro:
+    "Chaque dApp du DIG Network, à portée d'un tap — comme l'écran d'accueil de votre téléphone.",
   appsGridLabel: "Apps du DIG Network",
   viewDetailsFor: "Voir les détails de {name}",
 };

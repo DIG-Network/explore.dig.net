@@ -9,7 +9,13 @@ const noop = () => {};
 describe("<FilterBar>", () => {
   it("renders a chip per present category plus All, with aria-pressed state", () => {
     renderWithIntl(
-      <FilterBar categories={["payments", "defi"]} category="defi" query="" onCategoryChange={noop} onQueryChange={noop} />,
+      <FilterBar
+        categories={["payments", "defi"]}
+        category="defi"
+        query=""
+        onCategoryChange={noop}
+        onQueryChange={noop}
+      />,
     );
     expect(screen.getByTestId("category-all")).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByTestId("category-defi")).toHaveAttribute("aria-pressed", "true");
@@ -21,7 +27,13 @@ describe("<FilterBar>", () => {
     const onCategoryChange = vi.fn();
     const onQueryChange = vi.fn();
     renderWithIntl(
-      <FilterBar categories={["payments"]} category="all" query="" onCategoryChange={onCategoryChange} onQueryChange={onQueryChange} />,
+      <FilterBar
+        categories={["payments"]}
+        category="all"
+        query=""
+        onCategoryChange={onCategoryChange}
+        onQueryChange={onQueryChange}
+      />,
     );
     await user.click(screen.getByTestId("category-payments"));
     expect(onCategoryChange).toHaveBeenCalledWith("payments");
@@ -34,13 +46,25 @@ describe("<FilterBar>", () => {
     const onCategoryChange = vi.fn();
     const onQueryChange = vi.fn();
     const { unmount } = renderWithIntl(
-      <FilterBar categories={["payments"]} category="all" query="" onCategoryChange={noop} onQueryChange={noop} />,
+      <FilterBar
+        categories={["payments"]}
+        category="all"
+        query=""
+        onCategoryChange={noop}
+        onQueryChange={noop}
+      />,
     );
     expect(screen.queryByTestId("clear-filters")).toBeNull();
     unmount();
 
     renderWithIntl(
-      <FilterBar categories={["payments"]} category="payments" query="x" onCategoryChange={onCategoryChange} onQueryChange={onQueryChange} />,
+      <FilterBar
+        categories={["payments"]}
+        category="payments"
+        query="x"
+        onCategoryChange={onCategoryChange}
+        onQueryChange={onQueryChange}
+      />,
     );
     await user.click(screen.getByTestId("clear-filters"));
     expect(onCategoryChange).toHaveBeenCalledWith("all");

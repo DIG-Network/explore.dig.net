@@ -71,7 +71,9 @@ describe("<StoreAddress>", () => {
   it("stays usable when the clipboard is unavailable — the text is still selectable on the page", async () => {
     // Never trap the user (professional-ui): a denied/absent clipboard must not blank the panel or
     // throw; the address remains readable and manually selectable.
-    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockRejectedValue(new Error("denied")) } });
+    Object.assign(navigator, {
+      clipboard: { writeText: vi.fn().mockRejectedValue(new Error("denied")) },
+    });
     renderWithIntl(<StoreAddress app={digHosted()} />);
     await userEvent.click(screen.getByTestId("copy-store-address"));
     expect(screen.getByTestId("store-address-value")).toHaveTextContent(`chia://${STORE_ID}/`);

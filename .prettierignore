@@ -1,0 +1,19 @@
+# Build output + reports + deps (not ours to format).
+node_modules
+dist
+coverage
+playwright-report
+test-results
+
+# Generated / vendored artifacts.
+package-lock.json
+public/catalog
+*.tsbuildinfo
+
+# Prose docs are hand-maintained (SPEC.md is a normative contract; CHANGELOG.md is git-cliff
+# generated) — Prettier must not reflow their tables/wrapping.
+*.md
+
+# The folder-per-dApp content + submission contract — metadata.json + app.schema.json are a
+# byte-level contract (SPEC.md); Prettier must never reflow them.
+apps

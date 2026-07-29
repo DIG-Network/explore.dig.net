@@ -7,8 +7,18 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { readPngSize, validateApps, ASSET_RULES, SCREENSHOT_RULES } from "../../scripts/validate-apps.mjs";
-import { buildCatalog, renderLlmsTxt, renderSitemap, renderStoreJson } from "../../scripts/build-catalog.mjs";
+import {
+  readPngSize,
+  validateApps,
+  ASSET_RULES,
+  SCREENSHOT_RULES,
+} from "../../scripts/validate-apps.mjs";
+import {
+  buildCatalog,
+  renderLlmsTxt,
+  renderSitemap,
+  renderStoreJson,
+} from "../../scripts/build-catalog.mjs";
 import {
   appSeoBlock,
   appsPageSeoBlock,
@@ -67,9 +77,17 @@ describe("validateApps on the real apps/ tree", () => {
   });
 
   it("the normative asset rules match SPEC.md §4 exactly", () => {
-    expect(ASSET_RULES["icon-512.png"]).toMatchObject({ width: 512, height: 512, requiredToList: true });
+    expect(ASSET_RULES["icon-512.png"]).toMatchObject({
+      width: 512,
+      height: 512,
+      requiredToList: true,
+    });
     expect(ASSET_RULES["og.png"]).toMatchObject({ width: 1200, height: 630, requiredToList: true });
-    expect(ASSET_RULES["hero.png"]).toMatchObject({ width: 1600, height: 900, requiredToFeature: true });
+    expect(ASSET_RULES["hero.png"]).toMatchObject({
+      width: 1600,
+      height: 900,
+      requiredToFeature: true,
+    });
     expect(ASSET_RULES["tile.png"]).toMatchObject({ width: 800, height: 450 });
     expect(ASSET_RULES["icon-1024.png"]).toMatchObject({ width: 1024, height: 1024 });
     expect(SCREENSHOT_RULES.desktop).toMatchObject({ width: 1280, height: 800, minToFeature: 2 });
@@ -108,7 +126,7 @@ describe("validateApps on fixture violations", () => {
   it("flags a folder whose name differs from the metadata slug", () => {
     writeApp("wrong-folder", validMeta);
     const { errors } = validateApps(fixtures);
-    expect(errors.some((e) => e.includes('folder name must equal metadata slug'))).toBe(true);
+    expect(errors.some((e) => e.includes("folder name must equal metadata slug"))).toBe(true);
     rmSync(join(fixtures, "wrong-folder"), { recursive: true, force: true });
   });
 
@@ -181,7 +199,10 @@ describe("buildCatalog", () => {
   it("resolves asset URLs under /catalog/<slug>/ and the site detail URL", () => {
     const catalog = buildCatalog([fakeValidated("demo")], opts);
     const app = catalog.apps[0];
-    expect(app.assets).toMatchObject({ icon: "/catalog/demo/icon-512.png", og: "/catalog/demo/og.png" });
+    expect(app.assets).toMatchObject({
+      icon: "/catalog/demo/icon-512.png",
+      og: "/catalog/demo/og.png",
+    });
     expect(app.detailUrl).toBe("https://explore.dig.net/app/demo");
     expect(catalog.count).toBe(1);
   });
@@ -205,7 +226,11 @@ describe("buildCatalog", () => {
     const catalog = buildCatalog([withHero, fakeValidated("plain")], opts);
     const h = catalog.apps.find((a) => a.slug === "h")!;
     const plain = catalog.apps.find((a) => a.slug === "plain")!;
-    expect(h.assets).toMatchObject({ hero: "/catalog/h/hero.png", tile: "/catalog/h/tile.png", icon1024: "/catalog/h/icon-1024.png" });
+    expect(h.assets).toMatchObject({
+      hero: "/catalog/h/hero.png",
+      tile: "/catalog/h/tile.png",
+      icon1024: "/catalog/h/icon-1024.png",
+    });
     expect(plain.assets).not.toHaveProperty("hero");
   });
 
@@ -364,13 +389,19 @@ describe("appSeoBlock / homeItemListLd / swapSeoBlock", () => {
   });
 
   it("home ItemList JSON-LD enumerates the catalog in order", () => {
-    const ld = homeItemListLd({ count: 2, apps: [
-      { detailUrl: "https://explore.dig.net/app/a", name: "A" },
-      { detailUrl: "https://explore.dig.net/app/b", name: "B" },
-    ]});
+    const ld = homeItemListLd({
+      count: 2,
+      apps: [
+        { detailUrl: "https://explore.dig.net/app/a", name: "A" },
+        { detailUrl: "https://explore.dig.net/app/b", name: "B" },
+      ],
+    });
     expect(ld["@type"]).toBe("ItemList");
     expect(ld.numberOfItems).toBe(2);
-    expect(ld.itemListElement[1]).toMatchObject({ position: 2, url: "https://explore.dig.net/app/b" });
+    expect(ld.itemListElement[1]).toMatchObject({
+      position: 2,
+      url: "https://explore.dig.net/app/b",
+    });
   });
 
   it("swapSeoBlock replaces exactly the marked block and throws without markers", () => {
@@ -411,7 +442,10 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
   it("reports every missing home tag by name", () => {
     const gutted = homeHtml
       .split("\n")
-      .filter((l) => !l.includes("og:image") && !l.includes("twitter:card") && !l.includes("apple-touch-icon"))
+      .filter(
+        (l) =>
+          !l.includes("og:image") && !l.includes("twitter:card") && !l.includes("apple-touch-icon"),
+      )
       .join("\n");
     const missing = auditHomeHead(gutted);
     expect(missing.some((m) => m.includes("og:image"))).toBe(true);
@@ -470,7 +504,17 @@ describe("auditHomeHead / auditAppHead (the social-card build gate)", () => {
   });
 
   it("the dist gate requires the full icon set + agent files (incl. store.json)", () => {
-    for (const f of ["og.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "llms.txt", "sitemap.xml", "site.webmanifest", "catalog.json", "store.json"]) {
+    for (const f of [
+      "og.png",
+      "apple-touch-icon.png",
+      "icon-192.png",
+      "icon-512.png",
+      "llms.txt",
+      "sitemap.xml",
+      "site.webmanifest",
+      "catalog.json",
+      "store.json",
+    ]) {
       expect(REQUIRED_DIST_FILES).toContain(f);
     }
   });
@@ -482,15 +526,27 @@ describe("auditStoreJson (the launcher-manifest build gate)", () => {
   it("passes a manifest with matching count + a name + absolute icon/link per app", () => {
     const store = {
       apps: [
-        { slug: "a", name: "A", icon: "https://explore.dig.net/catalog/a/icon-512.png", link: "https://a.example/" },
-        { slug: "b", name: "B", icon: "https://explore.dig.net/catalog/b/icon-512.png", link: "https://b.example/" },
+        {
+          slug: "a",
+          name: "A",
+          icon: "https://explore.dig.net/catalog/a/icon-512.png",
+          link: "https://a.example/",
+        },
+        {
+          slug: "b",
+          name: "B",
+          icon: "https://explore.dig.net/catalog/b/icon-512.png",
+          link: "https://b.example/",
+        },
       ],
     };
     expect(auditStoreJson(store, catalog)).toEqual([]);
   });
 
   it("flags a relative icon, a missing name, and a count mismatch", () => {
-    const store = { apps: [{ slug: "a", icon: "/catalog/a/icon-512.png", link: "https://a.example/" }] };
+    const store = {
+      apps: [{ slug: "a", icon: "/catalog/a/icon-512.png", link: "https://a.example/" }],
+    };
     const missing = auditStoreJson(store, catalog);
     expect(missing.some((m) => m.includes("count"))).toBe(true);
     expect(missing.some((m) => m.includes("icon must be an absolute URL"))).toBe(true);
@@ -500,8 +556,18 @@ describe("auditStoreJson (the launcher-manifest build gate)", () => {
   it("flags a relative link", () => {
     const store = {
       apps: [
-        { slug: "a", name: "A", icon: "https://explore.dig.net/catalog/a/icon-512.png", link: "/open/a" },
-        { slug: "b", name: "B", icon: "https://explore.dig.net/catalog/b/icon-512.png", link: "https://b.example/" },
+        {
+          slug: "a",
+          name: "A",
+          icon: "https://explore.dig.net/catalog/a/icon-512.png",
+          link: "/open/a",
+        },
+        {
+          slug: "b",
+          name: "B",
+          icon: "https://explore.dig.net/catalog/b/icon-512.png",
+          link: "https://b.example/",
+        },
       ],
     };
     const missing = auditStoreJson(store, catalog);

@@ -15,7 +15,13 @@ export interface FilterBarProps {
   onQueryChange: (query: string) => void;
 }
 
-export function FilterBar({ categories, category, query, onCategoryChange, onQueryChange }: FilterBarProps) {
+export function FilterBar({
+  categories,
+  category,
+  query,
+  onCategoryChange,
+  onQueryChange,
+}: FilterBarProps) {
   const t = useT();
   const active = category !== "all" || query.trim() !== "";
 

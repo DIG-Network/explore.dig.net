@@ -6,6 +6,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
@@ -56,4 +57,7 @@ export default tseslint.config(
       "react-refresh/only-export-components": "off",
     },
   },
+  // MUST stay LAST: turns off every ESLint rule that would conflict with Prettier, so formatting is
+  // owned solely by the `format:check` gate (CLAUDE.md §2.4a) and never double-reported here.
+  prettier,
 );

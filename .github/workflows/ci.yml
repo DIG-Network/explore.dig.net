@@ -31,6 +31,8 @@ jobs:
       - run: npm ci
       - name: listing metadata + assets validate against SPEC.md (the submission gate)
         run: npm run validate:apps
+      - name: format (prettier)
+        run: npm run format:check
       - name: lint
         run: npm run lint
       - name: typecheck

@@ -60,7 +60,8 @@ export const id: PartialMessages = {
   licenseLabel: "Lisensi",
   appVersionLabel: "Versi aplikasi",
   storeAddressHeading: "Baca langsung dari DIG Network",
-  storeAddressIntro: "{name} diterbitkan sebagai store DIG, jadi kamu bisa membacanya langsung dari jaringan alih-alih lewat web. Dengan node DIG terpasang, jalankan perintah di bawah.",
+  storeAddressIntro:
+    "{name} diterbitkan sebagai store DIG, jadi kamu bisa membacanya langsung dari jaringan alih-alih lewat web. Dengan node DIG terpasang, jalankan perintah di bawah.",
   storeAddressLabel: "Alamat store",
   storeCommandLabel: "Perintah",
   storeUrnLabel: "URN",
@@ -117,7 +118,8 @@ export const id: PartialMessages = {
   storeTabLabel: "Toko",
   appsTabLabel: "Aplikasi",
   appsPageHeading: "Aplikasi",
-  appsPageIntro: "Setiap dApp DIG Network, hanya satu ketukan — seperti layar utama di ponsel Anda.",
+  appsPageIntro:
+    "Setiap dApp DIG Network, hanya satu ketukan — seperti layar utama di ponsel Anda.",
   appsGridLabel: "Aplikasi DIG Network",
   viewDetailsFor: "Lihat detail {name}",
 };

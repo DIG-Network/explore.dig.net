@@ -8,6 +8,7 @@ import { loadCatalog } from "@/catalog/catalog";
 import { parseRoute } from "@/lib/route";
 import { useLauncherViewport } from "@/lib/useLauncherViewport";
 import { APP_VERSION } from "@/lib/version";
+import { useBugReportMessages } from "@/lib/bugReportMessages";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ViewTabs } from "@/components/ViewTabs";
@@ -33,6 +34,7 @@ export interface AppProps {
 
 export function App({ pathname, search }: AppProps) {
   const t = useT();
+  const bugReportMessages = useBugReportMessages();
   const rawPath = pathname ?? (typeof window !== "undefined" ? window.location.pathname : "/");
   const rawSearch = search ?? (typeof window !== "undefined" ? window.location.search : "");
   const route = useMemo(() => parseRoute(rawPath), [rawPath]);
@@ -93,7 +95,12 @@ export function App({ pathname, search }: AppProps) {
           </a>
           <span className="header-tag">{t("headerTagline")}</span>
           <div className="header-actions">
-            <a className="btn btn-ghost btn-small" href={SPEC_URL} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn btn-ghost btn-small"
+              href={SPEC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {t("submitCta")}
             </a>
             <LanguageSelector />
@@ -142,7 +149,11 @@ export function App({ pathname, search }: AppProps) {
         </div>
       </footer>
 
-      <BugReportButton repo={BUG_REPORT_REPO} appVersion={APP_VERSION} />
+      <BugReportButton
+        repo={BUG_REPORT_REPO}
+        appVersion={APP_VERSION}
+        messages={bugReportMessages}
+      />
     </>
   );
 }

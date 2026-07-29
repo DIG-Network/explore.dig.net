@@ -17,9 +17,27 @@ const HERO = (slug: string) => ({
 });
 
 const THREE = [
-  makeApp({ slug: "alpha", name: "Alpha", featured: true, url: "https://alpha.example/", assets: HERO("alpha") }),
-  makeApp({ slug: "bravo", name: "Bravo", featured: true, url: "https://bravo.example/", assets: HERO("bravo") }),
-  makeApp({ slug: "charlie", name: "Charlie", featured: true, url: "https://charlie.example/", assets: HERO("charlie") }),
+  makeApp({
+    slug: "alpha",
+    name: "Alpha",
+    featured: true,
+    url: "https://alpha.example/",
+    assets: HERO("alpha"),
+  }),
+  makeApp({
+    slug: "bravo",
+    name: "Bravo",
+    featured: true,
+    url: "https://bravo.example/",
+    assets: HERO("bravo"),
+  }),
+  makeApp({
+    slug: "charlie",
+    name: "Charlie",
+    featured: true,
+    url: "https://charlie.example/",
+    assets: HERO("charlie"),
+  }),
 ];
 
 function setReducedMotion(reduced: boolean) {
@@ -55,7 +73,10 @@ describe("<FeaturedCarousel>", () => {
     const open = within(slide).getByRole("link", { name: "Open Alpha" });
     expect(open).toHaveAttribute("href", "https://alpha.example/");
     expect(open).toHaveAttribute("rel", "noopener noreferrer");
-    expect(within(slide).getByRole("link", { name: "View details" })).toHaveAttribute("href", "/app/alpha");
+    expect(within(slide).getByRole("link", { name: "View details" })).toHaveAttribute(
+      "href",
+      "/app/alpha",
+    );
   });
 
   it("exposes the carousel ARIA structure (region + slide roledescriptions + live region)", () => {
@@ -137,7 +158,10 @@ describe("<FeaturedCarousel>", () => {
     renderWithIntl(<FeaturedCarousel apps={THREE} initialIndex={0} intervalMs={5000} />);
     const region = screen.getByTestId("featured-carousel");
     expect(region).toHaveAttribute("data-playing", "false");
-    expect(screen.getByTestId("carousel-playpause")).toHaveAttribute("aria-label", "Resume auto-rotation");
+    expect(screen.getByTestId("carousel-playpause")).toHaveAttribute(
+      "aria-label",
+      "Resume auto-rotation",
+    );
     act(() => vi.advanceTimersByTime(20000));
     expect(screen.getByTestId("featured-alpha")).toBeInTheDocument(); // never auto-advanced
   });

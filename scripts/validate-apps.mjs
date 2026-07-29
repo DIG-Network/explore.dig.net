@@ -81,7 +81,11 @@ export function validateAppDir(dir, validate) {
   try {
     meta = JSON.parse(readFileSync(metaPath, "utf-8"));
   } catch (e) {
-    return { meta: null, assets: null, errors: [`${slug}/metadata.json: invalid JSON — ${e.message}`] };
+    return {
+      meta: null,
+      assets: null,
+      errors: [`${slug}/metadata.json: invalid JSON — ${e.message}`],
+    };
   }
   // The $schema editor hint is allowed in the file but is not part of the contract.
   const { $schema: _ignored, ...candidate } = meta;
@@ -106,16 +110,25 @@ export function validateAppDir(dir, validate) {
   for (const entry of topEntries) {
     if (entry.isDirectory()) {
       if (entry.name !== "screenshots") {
-        errors.push(`${slug}/assets/${entry.name}/: unexpected directory (only screenshots/ is allowed)`);
+        errors.push(
+          `${slug}/assets/${entry.name}/: unexpected directory (only screenshots/ is allowed)`,
+        );
       }
       continue;
     }
     if (!(entry.name in ASSET_RULES)) {
-      errors.push(`${slug}/assets/${entry.name}: unexpected file (SPEC.md §4 lists the allowed set)`);
+      errors.push(
+        `${slug}/assets/${entry.name}: unexpected file (SPEC.md §4 lists the allowed set)`,
+      );
       continue;
     }
     found.files.push(entry.name);
-    checkPng(join(assetsDir, entry.name), ASSET_RULES[entry.name], errors, `${slug}/assets/${entry.name}`);
+    checkPng(
+      join(assetsDir, entry.name),
+      ASSET_RULES[entry.name],
+      errors,
+      `${slug}/assets/${entry.name}`,
+    );
   }
 
   for (const [name, rule] of Object.entries(ASSET_RULES)) {
@@ -129,12 +142,19 @@ export function validateAppDir(dir, validate) {
     for (const file of readdirSync(shotsDir).sort()) {
       const m = /^(desktop|mobile)-(\d{2})\.png$/.exec(file);
       if (!m) {
-        errors.push(`${slug}/assets/screenshots/${file}: name must be desktop-NN.png or mobile-NN.png`);
+        errors.push(
+          `${slug}/assets/screenshots/${file}: name must be desktop-NN.png or mobile-NN.png`,
+        );
         continue;
       }
       const kind = m[1];
       found.screenshots[kind].push(file);
-      checkPng(join(shotsDir, file), SCREENSHOT_RULES[kind], errors, `${slug}/assets/screenshots/${file}`);
+      checkPng(
+        join(shotsDir, file),
+        SCREENSHOT_RULES[kind],
+        errors,
+        `${slug}/assets/screenshots/${file}`,
+      );
     }
     for (const kind of ["desktop", "mobile"]) {
       const list = found.screenshots[kind];
@@ -145,7 +165,9 @@ export function validateAppDir(dir, validate) {
       list.forEach((file, i) => {
         const expected = `${kind}-${String(i + 1).padStart(2, "0")}.png`;
         if (file !== expected) {
-          errors.push(`${slug}/assets/screenshots/${file}: expected ${expected} (sequential from 01, no gaps)`);
+          errors.push(
+            `${slug}/assets/screenshots/${file}: expected ${expected} (sequential from 01, no gaps)`,
+          );
         }
       });
     }

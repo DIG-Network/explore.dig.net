@@ -59,7 +59,8 @@ export const zhTW: PartialMessages = {
   licenseLabel: "授權條款",
   appVersionLabel: "應用版本",
   storeAddressHeading: "從 DIG Network 直接讀取",
-  storeAddressIntro: "{name} 已作為 DIG 儲存發佈，因此你可以直接從網路讀取它，而不必經由網頁。安裝 DIG 節點後，執行下方指令。",
+  storeAddressIntro:
+    "{name} 已作為 DIG 儲存發佈，因此你可以直接從網路讀取它，而不必經由網頁。安裝 DIG 節點後，執行下方指令。",
   storeAddressLabel: "儲存位址",
   storeCommandLabel: "指令",
   storeUrnLabel: "URN",

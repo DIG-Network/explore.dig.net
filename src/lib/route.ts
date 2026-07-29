@@ -3,10 +3,7 @@
 // pathname address?
 
 export type Route =
-  | { kind: "home" }
-  | { kind: "apps" }
-  | { kind: "app"; slug: string }
-  | { kind: "not-found" };
+  { kind: "home" } | { kind: "apps" } | { kind: "app"; slug: string } | { kind: "not-found" };
 
 const APP_PATH = /^\/app\/([a-z0-9][a-z0-9-]*)(?:\/(?:index\.html)?)?$/;
 const APPS_PATH = /^\/apps(?:\/(?:index\.html)?)?$/;

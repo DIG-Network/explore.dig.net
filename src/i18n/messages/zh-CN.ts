@@ -60,7 +60,8 @@ export const zhCN: PartialMessages = {
   licenseLabel: "许可证",
   appVersionLabel: "应用版本",
   storeAddressHeading: "从 DIG Network 直接读取",
-  storeAddressIntro: "{name} 已作为 DIG 存储发布，因此你可以直接从网络读取它，而不必经过网页。安装 DIG 节点后，运行下面的命令。",
+  storeAddressIntro:
+    "{name} 已作为 DIG 存储发布，因此你可以直接从网络读取它，而不必经过网页。安装 DIG 节点后，运行下面的命令。",
   storeAddressLabel: "存储地址",
   storeCommandLabel: "命令",
   storeUrnLabel: "URN",

@@ -29,12 +29,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "lcov"],
       include: ["src/**/*.{ts,tsx}"],
-      exclude: [
-        "src/**/*.test.{ts,tsx}",
-        "src/test/**",
-        "src/main.tsx",
-        "src/vite-env.d.ts",
-      ],
+      exclude: ["src/**/*.test.{ts,tsx}", "src/test/**", "src/main.tsx", "src/vite-env.d.ts"],
       // CLAUDE.md §2.3 — CI-gated ≥80%.
       thresholds: {
         lines: 80,

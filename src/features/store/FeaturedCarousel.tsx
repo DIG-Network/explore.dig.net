@@ -10,7 +10,14 @@
 //   • auto-advance PAUSES on hover, on focus-within, and under prefers-reduced-motion;
 //   • a polite live region announces the current slide when rotation is not running.
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
 import type { CatalogApp } from "@/catalog/types";
 import { accentGlow } from "@/catalog/catalog";
 import { AppIcon } from "@/components/AppIcon";
@@ -31,15 +38,7 @@ export interface FeaturedCarouselProps {
 }
 
 /** The inner capsule for one featured app — shared by the single-slide and carousel layouts. */
-function FeaturedSlide({
-  app,
-  index,
-  total,
-}: {
-  app: CatalogApp;
-  index: number;
-  total: number;
-}) {
+function FeaturedSlide({ app, index, total }: { app: CatalogApp; index: number; total: number }) {
   const t = useT();
   const style = {
     "--halo": accentGlow(app.accentColor, 0.42),
@@ -95,7 +94,11 @@ function FeaturedSlide({
   );
 }
 
-export function FeaturedCarousel({ apps, initialIndex, intervalMs = DEFAULT_INTERVAL_MS }: FeaturedCarouselProps) {
+export function FeaturedCarousel({
+  apps,
+  initialIndex,
+  intervalMs = DEFAULT_INTERVAL_MS,
+}: FeaturedCarouselProps) {
   const t = useT();
   const count = apps.length;
   const reduced = useReducedMotion();
@@ -225,8 +228,16 @@ export function FeaturedCarousel({ apps, initialIndex, intervalMs = DEFAULT_INTE
           </div>
         </div>
 
-        <div className="visually-hidden" aria-live={effectivePlaying ? "off" : "polite"} data-testid="carousel-status">
-          {t("carouselSlideLabel", { n: wrapIndex(index, count) + 1, total: count, name: active.name })}
+        <div
+          className="visually-hidden"
+          aria-live={effectivePlaying ? "off" : "polite"}
+          data-testid="carousel-status"
+        >
+          {t("carouselSlideLabel", {
+            n: wrapIndex(index, count) + 1,
+            total: count,
+            name: active.name,
+          })}
         </div>
       </div>
     </section>

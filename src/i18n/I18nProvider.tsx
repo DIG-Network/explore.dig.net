@@ -5,10 +5,19 @@
 // <html lang>, and feeds react-intl the resolved (English-fallback-merged) catalog.
 
 /* eslint-disable react-refresh/only-export-components -- provider co-locates its useLocale hook by design */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { IntlProvider } from "react-intl";
 import { DEFAULT_LOCALE, initialLocale, persistLocale } from "./locales";
 import { messagesFor } from "./messages";
+import { bugReportBaseMessages } from "./messages/bugReport";
 
 interface LocaleContextValue {
   /** The active locale code (e.g. "en", "pt-BR"). */
@@ -46,7 +55,9 @@ export function I18nProvider({ children, initial }: I18nProviderProps) {
     if (typeof document !== "undefined") document.documentElement.lang = locale;
   }, [locale]);
 
-  const messages = useMemo(() => messagesFor(locale), [locale]);
+  // App copy + the shared bug-report widget's `bugReport.*` ids share one IntlProvider. The widget
+  // ids default to English (fallback per-key) until per-locale translations are added.
+  const messages = useMemo(() => ({ ...bugReportBaseMessages, ...messagesFor(locale) }), [locale]);
   const ctx = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);
 
   return (

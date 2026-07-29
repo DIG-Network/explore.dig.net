@@ -13,7 +13,10 @@ const APPS = [
 
 describe("filterFromSearch", () => {
   it("parses category and q from the URL", () => {
-    expect(filterFromSearch("?category=defi&q=vault")).toEqual({ category: "defi", query: "vault" });
+    expect(filterFromSearch("?category=defi&q=vault")).toEqual({
+      category: "defi",
+      query: "vault",
+    });
   });
   it("falls back to all on a bogus category", () => {
     expect(filterFromSearch("?category=bogus")).toEqual({ category: "all", query: "" });
