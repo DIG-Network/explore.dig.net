@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.6.1] - 2026-07-29
+
+### Chores
+- **explore:** Add Prettier format gate + localize bug widget via app i18n (#1823)
+
 ## [0.6.0] - 2026-07-28
 
 ### Features
